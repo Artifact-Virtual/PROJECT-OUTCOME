@@ -77,6 +77,15 @@ The main dashboard serves as the primary interface for strategic gameplay, featu
 - **Message Threading**: Organized conversation flows
 - **Public/Private Options**: Different message visibility levels
 
+#### 5. Advanced Social Interaction System
+- **Multi-Channel Communication**: Global, alliance, and trade-specific chat channels
+- **Real-time Player Status**: Online/away/offline status with last seen timestamps
+- **Player Interaction Requests**: Battle challenges, alliance invites, trade requests, territory challenges
+- **Live Social Events Feed**: Real-time notifications of battles, territory claims, achievements
+- **Alliance Coordination Tools**: Member status, battle planning, territory management
+- **Reputation & Achievement System**: Global rankings, alliance standings, social scoring
+- **Quick Action Interface**: One-click challenge, message, and invite systems
+
 ### Technical Implementation
 
 #### Database Schema (PostgreSQL + Drizzle)
@@ -417,6 +426,21 @@ GET    /api/messages/:id           # Get specific message
 DELETE /api/messages/:id           # Delete message
 GET    /api/messages/public        # Get public messages
 POST   /api/messages/broadcast     # Send broadcast message
+GET    /api/messages/channel/:type # Get channel-specific messages (global/alliance/trade)
+```
+
+#### Social Interaction System
+```
+GET    /api/social/players/online  # Get currently online players
+GET    /api/social/players/status  # Get player status and presence
+POST   /api/social/interactions    # Send player interaction request
+GET    /api/social/interactions    # Get pending interaction requests
+PUT    /api/social/interactions/:id # Accept/decline interaction request
+GET    /api/social/events          # Get live social events feed
+GET    /api/social/reputation/:id  # Get player reputation and rankings
+POST   /api/social/presence        # Update player presence status
+GET    /api/social/alliance/members # Get alliance member status
+POST   /api/social/alliance/coordinate # Send alliance coordination message
 ```
 
 ### PWA Terminal API Endpoints
@@ -466,7 +490,14 @@ alliance_invite          # Alliance invitation received
 alliance_joined          # New alliance member
 message_received         # New message received
 player_online           # Player status change
-system_announcement     # System-wide notifications
+player_offline          # Player disconnect
+interaction_request     # Player interaction request
+interaction_response    # Interaction accepted/declined
+social_event           # Live social event notification
+alliance_coordination  # Alliance battle coordination
+reputation_change      # Player reputation update
+achievement_unlocked   # Achievement notification
+system_announcement    # System-wide notifications
 ```
 
 #### Device Sensor Streams

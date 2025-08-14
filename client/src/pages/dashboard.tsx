@@ -9,6 +9,7 @@ import {
   SimpleWastelandLeaderboard as WastelandLeaderboard 
 } from "@/components/simple-wasteland";
 import { DarknetContinuumRelic } from "@/components/darknet-continuum";
+import { SocialInteractionHub } from "@/components/social-interaction-hub";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
@@ -120,22 +121,7 @@ export default function Dashboard() {
           <TabsContent value="communications" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <CommunicationsInterface />
-              <div className="space-y-6">
-                <Link href="/handheld" data-testid="link-handheld-terminal">
-                  <div className="pip-boy-screen p-8 text-center hover:shadow-radiation transition-all duration-300 cursor-pointer">
-                    <div className="text-6xl mb-4">📡</div>
-                    <WastelandText variant="subtitle" className="mb-2">
-                      HANDHELD TERMINAL
-                    </WastelandText>
-                    <WastelandText variant="body" className="text-ash-gray">
-                      Access offline blockchain transactions via radio/mesh networks
-                    </WastelandText>
-                    <WastelandButton variant="radiation" className="mt-4">
-                      LAUNCH TERMINAL
-                    </WastelandButton>
-                  </div>
-                </Link>
-              </div>
+              <SocialInteractionHub />
             </div>
           </TabsContent>
         </Tabs>
