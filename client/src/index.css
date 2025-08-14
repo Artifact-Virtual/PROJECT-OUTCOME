@@ -23,7 +23,7 @@
   --destructive-foreground: hsl(35 25% 85%);
   --border: hsl(20 25% 18%);
   --input: hsl(20 15% 12%);
-  --ring: hsl(28 85% 55%);
+  --ring: hsl(220 8% 35%);
   --chart-1: hsl(28 85% 55%);
   --chart-2: hsl(35 75% 45%);
   --chart-3: hsl(15 85% 50%);
@@ -74,7 +74,7 @@
   --destructive-foreground: hsl(35 25% 85%);
   --border: hsl(20 25% 18%);
   --input: hsl(20 15% 12%);
-  --ring: hsl(28 85% 55%);
+  --ring: hsl(220 8% 35%);
 }
 
 @layer base {
@@ -139,6 +139,16 @@
   
   .font-display {
     font-family: var(--font-display);
+  }
+  
+  /* Minimal input focus styles */
+  input:focus,
+  textarea:focus,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 1px hsl(220 8% 35%) !important;
+    border-color: hsl(220 8% 35%) !important;
   }
 }
 
