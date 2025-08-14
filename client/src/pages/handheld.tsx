@@ -1,450 +1,500 @@
-import { useState, useEffect } from "react";
-import { Link } from "wouter";
-import { ArrowLeft, Radio, Terminal, Wifi, WifiOff, Activity, Shield, AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useRef, useEffect } from 'react';
+import { Link } from 'wouter';
+import { WastelandText, WastelandButton, WastelandCard } from "@/components/wasteland-ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { courierApi } from "@/lib/courier-api";
 
 export default function Handheld() {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [txHex, setTxHex] = useState("");
-  const [frames, setFrames] = useState("");
-  const [encodedResult, setEncodedResult] = useState("");
-  const [decodedResult, setDecodedResult] = useState("");
-  const [isEncoding, setIsEncoding] = useState(false);
-  const [isDecoding, setIsDecoding] = useState(false);
-  const [isBroadcasting, setBroadcasting] = useState(false);
-  const { toast } = useToast();
+  const [isBooted, setIsBooted] = useState(false);
+  const [terminalLines, setTerminalLines] = useState<string[]>([]);
+  const [currentInput, setCurrentInput] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const terminalRef = useRef<HTMLDivElement>(null);
 
+  // Boot sequence
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    const bootSequence = [
+      'VAULT-TEC HANDHELD TERMINAL v2.1.4',
+      '================================',
+      '',
+      'Initializing Pip-Boy OS...',
+      'Loading GECK protocols...',
+      'Connecting to Wasteland Network...',
+      'Scanning for radio frequencies...',
+      '',
+      '⚡ POWER: 85% REMAINING',
+      '📡 SIGNAL: SEARCHING...',
+      '☢ RAD: LOW LEVELS DETECTED',
+      '',
+      'SYSTEM READY FOR OPERATION',
+      'Type "help" for available commands',
+      ''
+    ];
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < bootSequence.length) {
+        setTerminalLines(prev => [...prev, bootSequence[index]]);
+        index++;
+      } else {
+        setIsBooted(true);
+        clearInterval(interval);
+      }
+    }, 200);
 
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
+    return () => clearInterval(interval);
   }, []);
 
-  const handleEncodeTx = async () => {
-    if (!txHex.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a transaction hex",
-        variant: "destructive",
-      });
-      return;
+  // Auto-scroll terminal
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
+  }, [terminalLines]);
 
-    setIsEncoding(true);
-    try {
-      const result = await courierApi.encodeTx(txHex, "user-id"); // TODO: Get actual user ID
-      setEncodedResult(result.frames);
-      toast({
-        title: "Success",
-        description: "Transaction encoded successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to encode transaction",
-        variant: "destructive",
-      });
-    } finally {
-      setIsEncoding(false);
-    }
+  const handleCommand = (command: string) => {
+    setIsProcessing(true);
+    setTerminalLines(prev => [...prev, `> ${command}`, '']);
+    
+    setTimeout(() => {
+      let response: string[] = [];
+      
+      switch (command.toLowerCase().trim()) {
+        case 'help':
+          response = [
+            'AVAILABLE COMMANDS:',
+            '==================',
+            'help          - Show this help menu',
+            'status        - Display system status', 
+            'scan          - Scan for nearby signals',
+            'encode        - Encode blockchain transaction',
+            'decode        - Decode received transmission',
+            'broadcast     - Send transaction via radio',
+            'wallet        - View wallet information',
+            'clear         - Clear terminal screen',
+            'exit          - Return to main interface',
+            ''
+          ];
+          break;
+        case 'status':
+          response = [
+            'HANDHELD TERMINAL STATUS:',
+            '========================',
+            '⚡ Battery: 85% (4.2 hours remaining)',
+            '📡 Radio: Scanning on 2.4GHz mesh',
+            '💾 Memory: 12.7MB / 64MB used',
+            '🔐 Encryption: AES-256 active',
+            '☢ Radiation: 15 mSv (SAFE)',
+            '🌐 Network: Offline mode active',
+            ''
+          ];
+          break;
+        case 'scan':
+          response = [
+            'Scanning for radio frequencies...',
+            '',
+            '📡 Found 3 active nodes:',
+            '- Node Alpha: 127.0.0.1:8545 (STRONG)',
+            '- Node Bravo: 192.168.1.100 (WEAK)',  
+            '- Node Charlie: MESH_ID_7394 (MEDIUM)',
+            '',
+            'Ready to relay transactions.',
+            ''
+          ];
+          break;
+        case 'wallet':
+          response = [
+            'WALLET STATUS:',
+            '=============',
+            'Address: 0x742d...35Bc',
+            'Balance: 0.025 ETH',
+            'Network: Base (Chain ID: 8453)',
+            'Nonce: 42',
+            'Gas Price: 12 gwei',
+            ''
+          ];
+          break;
+        case 'clear':
+          setTerminalLines(['Terminal cleared.', '']);
+          setIsProcessing(false);
+          return;
+        case 'exit':
+          response = ['Exiting terminal mode...'];
+          setTimeout(() => {
+            // Navigate back to dashboard or close terminal
+          }, 1000);
+          break;
+        default:
+          response = [`Unknown command: ${command}`, 'Type "help" for available commands.', ''];
+      }
+      
+      setTerminalLines(prev => [...prev, ...response]);
+      setIsProcessing(false);
+    }, 1000 + Math.random() * 1000);
   };
 
-  const handleDecodeFrames = async () => {
-    if (!frames.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter frames to decode",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsDecoding(true);
-    try {
-      const result = await courierApi.decodeFrames(frames);
-      setDecodedResult(result.txHex);
-      toast({
-        title: "Success",
-        description: "Frames decoded successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to decode frames",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDecoding(false);
-    }
-  };
-
-  const handleBroadcastTx = async () => {
-    if (!decodedResult.trim()) {
-      toast({
-        title: "Error",
-        description: "No decoded transaction to broadcast",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setBroadcasting(true);
-    try {
-      const result = await courierApi.broadcastTx(decodedResult);
-      toast({
-        title: "Success",
-        description: `Transaction broadcasted: ${result.txHash}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to broadcast transaction",
-        variant: "destructive",
-      });
-    } finally {
-      setBroadcasting(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentInput.trim() && !isProcessing) {
+      handleCommand(currentInput);
+      setCurrentInput('');
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg">
-      {/* Header */}
-      <header className="border-b border-border-gray bg-darker-bg/90 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen pb-16">
+      {/* Terminal Header */}
+      <section className="relative py-8 overflow-hidden border-b-2 border-wasteland-orange">
+        <div className="absolute inset-0 bg-rusted-metal opacity-80" />
+        <div className="relative container mx-auto px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/">
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className="text-cyber-blue hover:text-cyber-blue hover:bg-cyber-blue/10"
-                  data-testid="button-back-dashboard"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  DASHBOARD
-                </Button>
-              </Link>
-              <div className="w-8 h-8 bg-warning-orange/20 border border-warning-orange rounded flex items-center justify-center">
-                <Radio className="w-4 h-4 text-warning-orange" />
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 pip-boy-screen p-2">
+                <div className="w-full h-full bg-wasteland-orange flex items-center justify-center text-2xl">
+                  📱
+                </div>
               </div>
               <div>
-                <h1 className="text-xl font-cyber font-bold text-warning-orange">HANDHELD TERMINAL</h1>
-                <p className="text-xs text-gray-400">Foundry Courier Interface</p>
+                <WastelandText variant="title" glow className="text-3xl">
+                  PIP-BOY 3000 MARK IV
+                </WastelandText>
+                <WastelandText variant="terminal" className="text-ash-gray">
+                  HANDHELD TRANSACTION TERMINAL
+                </WastelandText>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <Badge 
-                variant={isOnline ? "default" : "destructive"}
-                className={`${isOnline ? 'bg-toxic-green/20 text-toxic-green border-toxic-green' : 'bg-danger-red/20 text-danger-red border-danger-red'}`}
-              >
-                {isOnline ? <Wifi className="w-3 h-3 mr-1" /> : <WifiOff className="w-3 h-3 mr-1" />}
-                {isOnline ? "ONLINE" : "OFFLINE"}
-              </Badge>
-              <Badge className="bg-cyber-blue/20 text-cyber-blue border-cyber-blue">
-                <Activity className="w-3 h-3 mr-1" />
-                COURIER ACTIVE
-              </Badge>
-            </div>
+            <Link href="/" data-testid="link-back-to-dashboard">
+              <WastelandButton variant="secondary">
+                ← RETURN TO WASTELAND
+              </WastelandButton>
+            </Link>
           </div>
         </div>
-      </header>
+      </section>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        
-        {/* Status Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-card-bg border-border-gray">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-gray-400 flex items-center">
-                <Terminal className="w-4 h-4 mr-2" />
-                BACKEND STATUS
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Python Backend:</span>
-                  <Badge className="bg-toxic-green/20 text-toxic-green border-toxic-green">ACTIVE</Badge>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Error Correction:</span>
-                  <span className="text-cyber-blue">CRC32 + Parity</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Supported Channels:</span>
-                  <span className="text-gray-300">Radio, SMS, Mesh</span>
-                </div>
+      {/* Main Terminal Interface */}
+      <main className="container mx-auto px-6 py-8">
+        <Tabs defaultValue="terminal" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 bg-rusted-metal border-2 border-wasteland-orange mb-8">
+            <TabsTrigger value="terminal" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              TERMINAL
+            </TabsTrigger>
+            <TabsTrigger value="encoder" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              ENCODER
+            </TabsTrigger>
+            <TabsTrigger value="decoder" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              DECODER
+            </TabsTrigger>
+            <TabsTrigger value="status" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              STATUS
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="terminal">
+            <WastelandCard variant="terminal" className="p-0 overflow-hidden">
+              {/* Terminal Screen */}
+              <div 
+                ref={terminalRef}
+                className="h-96 bg-charred-earth p-4 font-mono text-sm text-radiation-green overflow-y-auto"
+                style={{ 
+                  textShadow: '0 0 10px currentColor',
+                  background: 'linear-gradient(135deg, #0a0f0a 0%, #1a2f1a 100%)'
+                }}
+              >
+                {terminalLines.map((line, index) => (
+                  <div key={index} className="leading-relaxed">
+                    {line === '' ? <br /> : line}
+                  </div>
+                ))}
+                {isProcessing && (
+                  <div className="animate-pulse">
+                    Processing command...
+                  </div>
+                )}
+                {isBooted && (
+                  <div className="flex items-center">
+                    <span className="text-wasteland-orange">VAULT-TEC&gt; </span>
+                    <span className="animate-pulse">_</span>
+                  </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
 
-          <Card className="bg-card-bg border-border-gray">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-gray-400 flex items-center">
-                <Shield className="w-4 h-4 mr-2" />
-                SECURITY STATUS
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Private Keys:</span>
-                  <Badge className="bg-toxic-green/20 text-toxic-green border-toxic-green">NEVER STORED</Badge>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Data Integrity:</span>
-                  <span className="text-cyber-blue">Verified</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Offline Ready:</span>
-                  <span className="text-toxic-green">YES</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card-bg border-border-gray">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-gray-400 flex items-center">
-                <AlertTriangle className="w-4 h-4 mr-2" />
-                TRANSMISSION
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Last TX:</span>
-                  <span className="text-gray-300">12:34:56</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Success Rate:</span>
-                  <span className="text-toxic-green">98.7%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Queue:</span>
-                  <span className="text-warning-orange">3 pending</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Interface */}
-        <Card className="bg-card-bg border-border-gray terminal-border">
-          <CardHeader>
-            <CardTitle className="text-xl font-cyber text-cyber-blue">FOUNDRY COURIER INTERFACE</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="encode" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-darker-bg">
-                <TabsTrigger 
-                  value="encode" 
-                  className="data-[state=active]:bg-cyber-blue/20 data-[state=active]:text-cyber-blue"
-                  data-testid="tab-encode"
-                >
-                  ENCODE TX
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="decode" 
-                  className="data-[state=active]:bg-toxic-green/20 data-[state=active]:text-toxic-green"
-                  data-testid="tab-decode"
-                >
-                  DECODE FRAMES
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="broadcast" 
-                  className="data-[state=active]:bg-warning-orange/20 data-[state=active]:text-warning-orange"
-                  data-testid="tab-broadcast"
-                >
-                  BROADCAST
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="encode" className="space-y-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm text-gray-400 mb-2 block">SIGNED TRANSACTION HEX</label>
-                    <Textarea
-                      placeholder="0x02f8b1012a8405f5e100825208943b2ccdd1ce0e65442045b2b7d54e8d0cbb7b3d3187b1a2bc2ec50000080c080a0..."
-                      value={txHex}
-                      onChange={(e) => setTxHex(e.target.value)}
-                      className="bg-darker-bg border-border-gray text-white min-h-[100px] font-mono text-xs"
-                      data-testid="input-tx-hex"
+              {/* Command Input */}
+              {isBooted && (
+                <form onSubmit={handleSubmit} className="border-t-2 border-wasteland-orange p-4 bg-rusted-metal">
+                  <div className="flex items-center gap-2">
+                    <WastelandText variant="terminal" className="text-wasteland-orange">
+                      VAULT-TEC&gt;
+                    </WastelandText>
+                    <Input
+                      value={currentInput}
+                      onChange={(e) => setCurrentInput(e.target.value)}
+                      className="flex-1 bg-charred-earth border-radiation-green text-radiation-green font-mono"
+                      placeholder="Enter command..."
+                      disabled={isProcessing}
+                      autoFocus
+                      data-testid="input-terminal-command"
                     />
+                    <WastelandButton 
+                      type="submit" 
+                      variant="radiation" 
+                      size="sm"
+                      disabled={isProcessing}
+                      data-testid="button-execute-command"
+                    >
+                      EXECUTE
+                    </WastelandButton>
                   </div>
-                  
-                  <Button 
-                    onClick={handleEncodeTx}
-                    disabled={isEncoding || !txHex.trim()}
-                    className="w-full bg-cyber-blue/20 border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-black"
-                    data-testid="button-encode-tx"
-                  >
-                    {isEncoding ? "ENCODING..." : "ENCODE TRANSACTION"}
-                  </Button>
+                </form>
+              )}
+            </WastelandCard>
+          </TabsContent>
 
-                  {encodedResult && (
-                    <div className="space-y-2">
-                      <label className="text-sm text-gray-400">ENCODED FRAMES (READY FOR TRANSMISSION)</label>
-                      <Textarea
-                        value={encodedResult}
-                        readOnly
-                        className="bg-darker-bg border-toxic-green text-toxic-green min-h-[100px] font-mono text-xs"
-                        data-testid="output-encoded-frames"
-                      />
-                      <p className="text-xs text-gray-500">
-                        These frames can be transmitted via radio, SMS, mesh networks, or any data carrier.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </TabsContent>
+          <TabsContent value="encoder">
+            <TransactionEncoder />
+          </TabsContent>
 
-              <TabsContent value="decode" className="space-y-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm text-gray-400 mb-2 block">RECEIVED FRAMES</label>
-                    <Textarea
-                      placeholder="FC:01:0F:1A2B3C4D..."
-                      value={frames}
-                      onChange={(e) => setFrames(e.target.value)}
-                      className="bg-darker-bg border-border-gray text-white min-h-[100px] font-mono text-xs"
-                      data-testid="input-frames"
-                    />
-                  </div>
-                  
-                  <Button 
-                    onClick={handleDecodeFrames}
-                    disabled={isDecoding || !frames.trim()}
-                    className="w-full bg-toxic-green/20 border border-toxic-green text-toxic-green hover:bg-toxic-green hover:text-black"
-                    data-testid="button-decode-frames"
-                  >
-                    {isDecoding ? "DECODING..." : "DECODE FRAMES"}
-                  </Button>
+          <TabsContent value="decoder">
+            <TransactionDecoder />
+          </TabsContent>
 
-                  {decodedResult && (
-                    <div className="space-y-2">
-                      <label className="text-sm text-gray-400">RECOVERED TRANSACTION</label>
-                      <Textarea
-                        value={decodedResult}
-                        readOnly
-                        className="bg-darker-bg border-cyber-blue text-cyber-blue min-h-[100px] font-mono text-xs"
-                        data-testid="output-decoded-tx"
-                      />
-                      <p className="text-xs text-gray-500">
-                        Transaction successfully recovered and verified. Ready for broadcast.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="broadcast" className="space-y-4">
-                <div className="space-y-4">
-                  <div className="p-4 bg-darker-bg border border-warning-orange/30 rounded">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <AlertTriangle className="w-4 h-4 text-warning-orange" />
-                      <span className="text-sm font-semibold text-warning-orange">BROADCAST STATUS</span>
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      {decodedResult ? 
-                        "Transaction ready for broadcast to blockchain network." : 
-                        "No decoded transaction available. Decode frames first."
-                      }
-                    </div>
-                  </div>
-
-                  {decodedResult && (
-                    <div>
-                      <label className="text-sm text-gray-400 mb-2 block">TRANSACTION TO BROADCAST</label>
-                      <Textarea
-                        value={decodedResult}
-                        readOnly
-                        className="bg-darker-bg border-border-gray text-white min-h-[80px] font-mono text-xs"
-                        data-testid="display-broadcast-tx"
-                      />
-                    </div>
-                  )}
-                  
-                  <Button 
-                    onClick={handleBroadcastTx}
-                    disabled={isBroadcasting || !decodedResult || !isOnline}
-                    className="w-full bg-warning-orange/20 border border-warning-orange text-warning-orange hover:bg-warning-orange hover:text-black"
-                    data-testid="button-broadcast-tx"
-                  >
-                    {isBroadcasting ? "BROADCASTING..." : "BROADCAST TO NETWORK"}
-                  </Button>
-
-                  {!isOnline && (
-                    <p className="text-xs text-danger-red text-center">
-                      Network connection required for broadcasting
-                    </p>
-                  )}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        {/* Commands Reference */}
-        <Card className="bg-card-bg border-border-gray mt-8">
-          <CardHeader>
-            <CardTitle className="text-lg font-cyber text-toxic-green">COMMAND REFERENCE</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm font-mono">
-              <div>
-                <h4 className="text-cyber-blue font-semibold mb-2">ENCODING COMMANDS</h4>
-                <div className="space-y-1 text-gray-400">
-                  <div>encode-tx --hex &lt;TX_HEX&gt; --output frames.txt</div>
-                  <div>encode-tx --hex &lt;TX_HEX&gt; --parity</div>
-                  <div>encode-tx --hex &lt;TX_HEX&gt; --frame-size 64</div>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-toxic-green font-semibold mb-2">DECODING COMMANDS</h4>
-                <div className="space-y-1 text-gray-400">
-                  <div>decode-frames --input frames.txt --output tx.hex</div>
-                  <div>decode-frames --frames "FC:01:..."</div>
-                  <div>verify-frames --input frames.txt</div>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-warning-orange font-semibold mb-2">BROADCAST COMMANDS</h4>
-                <div className="space-y-1 text-gray-400">
-                  <div>push-eth --hex &lt;TX_HEX&gt; --rpc-url &lt;URL&gt;</div>
-                  <div>push-btc --hex &lt;TX_HEX&gt; --rpc-url &lt;URL&gt;</div>
-                  <div>list-services</div>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-danger-red font-semibold mb-2">UTILITY COMMANDS</h4>
-                <div className="space-y-1 text-gray-400">
-                  <div>help</div>
-                  <div>status</div>
-                  <div>test-connectivity</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          <TabsContent value="status">
+            <SystemStatus />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
 }
+
+// Transaction Encoder Component
+const TransactionEncoder = () => {
+  const [transactionData, setTransactionData] = useState('');
+  const [encodedFrame, setEncodedFrame] = useState('');
+  const [isEncoding, setIsEncoding] = useState(false);
+
+  const handleEncode = () => {
+    setIsEncoding(true);
+    // Simulate encoding process
+    setTimeout(() => {
+      const mockFrame = `FRAME_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      setEncodedFrame(mockFrame);
+      setIsEncoding(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <WastelandCard variant="default" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4 border-b border-wasteland-orange pb-2">
+          TRANSACTION INPUT
+        </WastelandText>
+        <div className="space-y-4">
+          <Textarea
+            value={transactionData}
+            onChange={(e) => setTransactionData(e.target.value)}
+            placeholder="Paste raw transaction data here..."
+            className="h-48 bg-charred-earth border-ash-gray text-foreground font-mono text-sm"
+            data-testid="textarea-transaction-input"
+          />
+          <WastelandButton
+            onClick={handleEncode}
+            disabled={!transactionData.trim() || isEncoding}
+            variant="primary"
+            className="w-full"
+            data-testid="button-encode-transaction"
+          >
+            {isEncoding ? 'ENCODING...' : 'ENCODE FOR TRANSMISSION'}
+          </WastelandButton>
+        </div>
+      </WastelandCard>
+
+      <WastelandCard variant="terminal" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4 border-b border-radiation-green pb-2">
+          ENCODED FRAME
+        </WastelandText>
+        <div className="space-y-4">
+          <div className="h-48 bg-charred-earth border border-radiation-green p-4 font-mono text-sm text-radiation-green overflow-auto">
+            {encodedFrame ? (
+              <div>
+                <div className="text-wasteland-orange mb-2">TRANSMISSION READY:</div>
+                <div className="break-all">{encodedFrame}</div>
+                <div className="mt-4 text-ash-gray text-xs">
+                  Frame contains error correction and mesh routing data
+                </div>
+              </div>
+            ) : (
+              <div className="text-ash-gray">Encoded frame will appear here...</div>
+            )}
+          </div>
+          {encodedFrame && (
+            <WastelandButton
+              variant="radiation"
+              className="w-full"
+              data-testid="button-broadcast-frame"
+            >
+              BROADCAST VIA RADIO
+            </WastelandButton>
+          )}
+        </div>
+      </WastelandCard>
+    </div>
+  );
+};
+
+// Transaction Decoder Component  
+const TransactionDecoder = () => {
+  const [receivedFrame, setReceivedFrame] = useState('');
+  const [decodedTransaction, setDecodedTransaction] = useState('');
+  const [isDecoding, setIsDecoding] = useState(false);
+
+  const handleDecode = () => {
+    setIsDecoding(true);
+    setTimeout(() => {
+      const mockTransaction = {
+        to: '0x742d35Cc6Bf4a532...95eBc',
+        value: '0.025 ETH',
+        gasLimit: '21000',
+        gasPrice: '12 gwei',
+        nonce: 42,
+        data: '0x'
+      };
+      setDecodedTransaction(JSON.stringify(mockTransaction, null, 2));
+      setIsDecoding(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <WastelandCard variant="default" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4 border-b border-wasteland-orange pb-2">
+          RECEIVED FRAME
+        </WastelandText>
+        <div className="space-y-4">
+          <Textarea
+            value={receivedFrame}
+            onChange={(e) => setReceivedFrame(e.target.value)}
+            placeholder="Paste received transmission frame..."
+            className="h-48 bg-charred-earth border-ash-gray text-foreground font-mono text-sm"
+            data-testid="textarea-received-frame"
+          />
+          <WastelandButton
+            onClick={handleDecode}
+            disabled={!receivedFrame.trim() || isDecoding}
+            variant="primary"
+            className="w-full"
+            data-testid="button-decode-frame"
+          >
+            {isDecoding ? 'DECODING...' : 'DECODE TRANSMISSION'}
+          </WastelandButton>
+        </div>
+      </WastelandCard>
+
+      <WastelandCard variant="terminal" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4 border-b border-radiation-green pb-2">
+          DECODED TRANSACTION
+        </WastelandText>
+        <div className="space-y-4">
+          <div className="h-48 bg-charred-earth border border-radiation-green p-4 font-mono text-sm text-radiation-green overflow-auto">
+            {decodedTransaction ? (
+              <pre>{decodedTransaction}</pre>
+            ) : (
+              <div className="text-ash-gray">Decoded transaction will appear here...</div>
+            )}
+          </div>
+          {decodedTransaction && (
+            <WastelandButton
+              variant="radiation"
+              className="w-full"
+              data-testid="button-execute-transaction"
+            >
+              EXECUTE TRANSACTION
+            </WastelandButton>
+          )}
+        </div>
+      </WastelandCard>
+    </div>
+  );
+};
+
+// System Status Component
+const SystemStatus = () => {
+  const [systemInfo] = useState({
+    battery: 85,
+    signal: 'SEARCHING',
+    radiation: 15,
+    temperature: 42,
+    uptime: '2h 34m',
+    memory: 12.7,
+    storage: 45.2
+  });
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <WastelandCard variant="default" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4">
+          POWER SYSTEMS
+        </WastelandText>
+        <div className="space-y-3">
+          <div className="flex justify-between">
+            <span className="text-ash-gray">Battery:</span>
+            <span className="text-wasteland-orange font-mono">{systemInfo.battery}%</span>
+          </div>
+          <div className="w-full bg-charred-earth h-2 border border-ash-gray">
+            <div 
+              className="h-full bg-wasteland-orange animate-radiation-pulse"
+              style={{ width: `${systemInfo.battery}%` }}
+            />
+          </div>
+          <div className="text-sm text-ash-gray">
+            Estimated: 4.2 hours remaining
+          </div>
+        </div>
+      </WastelandCard>
+
+      <WastelandCard variant="terminal" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4">
+          COMMUNICATIONS
+        </WastelandText>
+        <div className="space-y-3">
+          <div className="flex justify-between">
+            <span className="text-ash-gray">Signal:</span>
+            <Badge className="bg-toxic-yellow text-dark-wasteland text-xs animate-pulse">
+              {systemInfo.signal}
+            </Badge>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-ash-gray">Nodes:</span>
+            <span className="text-radiation-green font-mono">3 ACTIVE</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-ash-gray">Frequency:</span>
+            <span className="text-steel-blue font-mono">2.4 GHz</span>
+          </div>
+        </div>
+      </WastelandCard>
+
+      <WastelandCard variant="radiation" className="p-6">
+        <WastelandText variant="subtitle" className="mb-4">
+          ENVIRONMENTAL
+        </WastelandText>
+        <div className="space-y-3">
+          <div className="flex justify-between">
+            <span className="text-ash-gray">Radiation:</span>
+            <span className="text-radiation-green font-mono">{systemInfo.radiation} mSv</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-ash-gray">Temperature:</span>
+            <span className="text-burnt-amber font-mono">{systemInfo.temperature}°C</span>
+          </div>
+          <Badge className="bg-radiation-green text-dark-wasteland text-xs">
+            SAFE LEVELS
+          </Badge>
+        </div>
+      </WastelandCard>
+    </div>
+  );
+};

@@ -1,185 +1,144 @@
-import { useState } from "react";
 import { Link } from "wouter";
-import { Shield, Users, Radio, Crown, User, Map, Trophy, X, Wifi } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import PlayerStatus from "@/components/player-status";
-import TerritoryMap from "@/components/territory-map";
-import BattleInterface from "@/components/battle-interface";
-import AllianceCard from "@/components/alliance-card";
-import MessagingInterface from "@/components/messaging-interface";
-import CourierInterface from "@/components/courier-interface";
-import Leaderboard from "@/components/leaderboard";
+import { WastelandText, WastelandButton } from "@/components/wasteland-ui";
+import { 
+  SimpleWastelandMap as WastelandMap, 
+  SimpleSurvivorStatus as SurvivorStatus, 
+  SimpleAllianceControl as AllianceControl, 
+  SimpleBattleInterface as BattleInterface, 
+  SimpleCommunicationsInterface as CommunicationsInterface, 
+  SimpleWastelandLeaderboard as WastelandLeaderboard 
+} from "@/components/simple-wasteland";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
-  const [isConnected, setIsConnected] = useState(false);
-
-  const handleConnectWallet = () => {
-    // TODO: Implement Web3 wallet connection
-    setIsConnected(!isConnected);
-  };
-
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="border-b border-border-gray bg-darker-bg/90 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo and branding */}
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-cyber-blue/20 border border-cyber-blue rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-cyber-blue" />
-              </div>
-              <div>
-                <h1 
-                  className="text-2xl font-cyber font-bold text-cyber-blue text-shadow-cyber glitch-text relative" 
-                  data-text="OCSH"
-                >
-                  OCSH
-                </h1>
-                <p className="text-sm text-gray-400">Onchain Survival Kit</p>
-              </div>
+    <div className="min-h-screen pb-16">
+      {/* Wasteland Welcome */}
+      <section className="relative py-16 overflow-hidden">
+        <div className="absolute inset-0 bg-wasteland-atmosphere opacity-40" />
+        <div className="relative container mx-auto px-6 text-center">
+          <WastelandText 
+            variant="title" 
+            glow 
+            glitch 
+            className="text-6xl md:text-8xl mb-4"
+            data-text="WELCOME TO THE WASTELAND"
+          >
+            WELCOME TO THE WASTELAND
+          </WastelandText>
+          <WastelandText variant="body" className="text-xl md:text-2xl text-ash-gray max-w-3xl mx-auto">
+            Survive. Adapt. Conquer. The old world is gone. Build your legacy in the ashes.
+          </WastelandText>
+          <div className="mt-8 flex gap-4 justify-center">
+            <div className="flex items-center gap-2 text-radiation-green animate-pulse">
+              <div className="w-2 h-2 bg-radiation-green rounded-full" />
+              <WastelandText variant="terminal">SYSTEMS ONLINE</WastelandText>
             </div>
-            
-            {/* Connection status and wallet */}
-            <div className="flex items-center space-x-4">
-              {/* Network status */}
-              <div className="hidden md:flex items-center space-x-2 px-3 py-2 bg-card-bg border border-toxic-green/30 rounded">
-                <div className="w-2 h-2 bg-toxic-green rounded-full animate-pulse" />
-                <span className="text-sm text-toxic-green">BASE NETWORK</span>
-              </div>
-              
-              {/* Wallet connection */}
-              <Button 
-                onClick={handleConnectWallet}
-                className="px-4 py-2 bg-cyber-blue/20 border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-black transition-all duration-300 rounded font-semibold"
-                data-testid="button-connect-wallet"
-              >
-                {isConnected ? "CONNECTED" : "CONNECT WALLET"}
-              </Button>
-              
-              {/* Handheld link */}
-              <Link href="/handheld">
-                <Button 
-                  variant="outline"
-                  className="px-4 py-2 bg-warning-orange/20 border border-warning-orange text-warning-orange hover:bg-warning-orange hover:text-black transition-all duration-300 rounded font-semibold"
-                  data-testid="button-launch-handheld"
-                >
-                  <Radio className="w-4 h-4 mr-2" />
-                  HANDHELD
-                </Button>
-              </Link>
+            <div className="flex items-center gap-2 text-wasteland-orange">
+              <div className="w-2 h-2 bg-wasteland-orange rounded-full animate-radiation-pulse" />
+              <WastelandText variant="terminal">BASE NETWORK</WastelandText>
             </div>
           </div>
         </div>
-      </header>
+      </section>
 
-      {/* Main content */}
-      <main className="container mx-auto px-4 py-8">
-        
-        {/* Hero section */}
-        <section className="mb-12 text-center">
-          <div className="mb-8">
-            <h2 className="text-5xl md:text-7xl font-cyber font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue via-toxic-green to-warning-orange animate-flicker">
-              SURVIVAL PROTOCOL
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Enter the post-apocalyptic world where only the strongest survive. Control territories, forge alliances, and dominate the wasteland.
-            </p>
-          </div>
-          
-          {/* Quick stats bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
-              <div className="text-2xl font-bold text-cyber-blue" data-testid="text-total-survivors">2,847</div>
-              <div className="text-sm text-gray-400">SURVIVORS</div>
+      {/* Main Operations Center */}
+      <main className="relative container mx-auto px-6 py-8">
+        {/* Wasteland Statistics */}
+        <section className="mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="pip-boy-screen p-4 text-center">
+              <div className="text-3xl font-title text-wasteland-orange mb-1 animate-hologram-flicker" data-testid="text-total-survivors">2,847</div>
+              <WastelandText variant="terminal">ACTIVE SURVIVORS</WastelandText>
             </div>
-            <div className="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
-              <div className="text-2xl font-bold text-toxic-green" data-testid="text-total-territories">156</div>
-              <div className="text-sm text-gray-400">TERRITORIES</div>
+            <div className="pip-boy-screen p-4 text-center">
+              <div className="text-3xl font-title text-radiation-green mb-1 animate-radiation-pulse" data-testid="text-total-territories">156</div>
+              <WastelandText variant="terminal">CLAIMED ZONES</WastelandText>
             </div>
-            <div className="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
-              <div className="text-2xl font-bold text-warning-orange" data-testid="text-total-alliances">89</div>
-              <div className="text-sm text-gray-400">ALLIANCES</div>
+            <div className="pip-boy-screen p-4 text-center">
+              <div className="text-3xl font-title text-steel-blue mb-1" data-testid="text-total-alliances">89</div>
+              <WastelandText variant="terminal">ACTIVE FACTIONS</WastelandText>
             </div>
-            <div className="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
-              <div className="text-2xl font-bold text-danger-red" data-testid="text-total-battles">12,439</div>
-              <div className="text-sm text-gray-400">BATTLES</div>
+            <div className="pip-boy-screen p-4 text-center">
+              <div className="text-3xl font-title text-rust-red mb-1 animate-wasteland-glitch" data-testid="text-total-battles">12,439</div>
+              <WastelandText variant="terminal">TOTAL CONFLICTS</WastelandText>
             </div>
           </div>
         </section>
 
-        {/* Main dashboard grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Left column - Player status and territory map */}
-          <div className="lg:col-span-2 space-y-8">
-            
-            {/* Player status card */}
-            <PlayerStatus />
-            
-            {/* Territory control map */}
-            <TerritoryMap />
-            
-            {/* Battle system */}
-            <BattleInterface />
-            
-          </div>
-          
-          {/* Right column - Alliance and messaging */}
-          <div className="space-y-8">
-            
-            {/* Alliance status */}
-            <AllianceCard />
-            
-            {/* Messaging system */}
-            <MessagingInterface />
-            
-            {/* Foundry Courier Integration */}
-            <CourierInterface />
-            
-            {/* Leaderboard */}
-            <Leaderboard />
-            
-          </div>
-        </div>
-      </main>
+        {/* Control Panels */}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-5 bg-rusted-metal border-2 border-wasteland-orange mb-8">
+            <TabsTrigger value="overview" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              OVERVIEW
+            </TabsTrigger>
+            <TabsTrigger value="territories" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              TERRITORIES  
+            </TabsTrigger>
+            <TabsTrigger value="combat" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              COMBAT
+            </TabsTrigger>
+            <TabsTrigger value="factions" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              FACTIONS
+            </TabsTrigger>
+            <TabsTrigger value="communications" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
+              COMMS
+            </TabsTrigger>
+          </TabsList>
 
-      {/* Footer */}
-      <footer className="border-t border-border-gray bg-darker-bg/90 backdrop-blur-sm mt-16">
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h4 className="text-lg font-bold text-cyber-blue mb-4">SURVIVAL PROTOCOL</h4>
-              <p className="text-gray-400 text-sm">
-                The post-apocalyptic Web3 gaming experience where survival depends on strategy, alliances, and technological resilience.
-              </p>
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <SurvivorStatus />
+              </div>
+              <div>
+                <WastelandLeaderboard />
+              </div>
             </div>
-            <div>
-              <h4 className="text-lg font-bold text-toxic-green mb-4">SYSTEMS</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Territory Control</li>
-                <li>Alliance Formation</li>
-                <li>Battle Mechanics</li>
-                <li>On-Chain Messaging</li>
-                <li>Offline Transactions</li>
-              </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <AllianceControl />
+              <CommunicationsInterface />
             </div>
-            <div>
-              <h4 className="text-lg font-bold text-warning-orange mb-4">NETWORK</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Base Network</li>
-                <li>Foundry Courier</li>
-                <li>IPFS Storage</li>
-                <li>ENS Domains</li>
-                <li>Offline-First</li>
-              </ul>
+          </TabsContent>
+
+          <TabsContent value="territories" className="space-y-6">
+            <WastelandMap />
+          </TabsContent>
+
+          <TabsContent value="combat" className="space-y-6">
+            <BattleInterface />
+          </TabsContent>
+
+          <TabsContent value="factions" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <AllianceControl />
+              <WastelandLeaderboard />
             </div>
-          </div>
-          <div className="border-t border-border-gray mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; 2024 OCSH - Onchain Survival Kit. Built for the post-digital wasteland.</p>
-          </div>
-        </div>
-      </footer>
+          </TabsContent>
+
+          <TabsContent value="communications" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <CommunicationsInterface />
+              <div className="space-y-6">
+                <Link href="/handheld" data-testid="link-handheld-terminal">
+                  <div className="pip-boy-screen p-8 text-center hover:shadow-radiation transition-all duration-300 cursor-pointer">
+                    <div className="text-6xl mb-4">📡</div>
+                    <WastelandText variant="subtitle" className="mb-2">
+                      HANDHELD TERMINAL
+                    </WastelandText>
+                    <WastelandText variant="body" className="text-ash-gray">
+                      Access offline blockchain transactions via radio/mesh networks
+                    </WastelandText>
+                    <WastelandButton variant="radiation" className="mt-4">
+                      LAUNCH TERMINAL
+                    </WastelandButton>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </main>
     </div>
   );
 }
