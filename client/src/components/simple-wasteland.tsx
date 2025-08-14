@@ -32,7 +32,7 @@ export const SimpleWastelandMap = () => {
               key={i}
               onClick={() => console.log('Territory action:', { x, y })}
               className={`
-                aspect-square text-xs border transition-all duration-200 hover:scale-110 hover:z-10 relative
+                aspect-square text-xs border transition-all duration-200 hover:z-10 relative
                 ${isEmpty ? 'bg-gray-800 border-gray-700 hover:border-wasteland-orange' :
                   isOwned ? 'bg-green-600 border-green-400 animate-pulse' :
                   isAlliance ? 'bg-blue-600 border-blue-400' :

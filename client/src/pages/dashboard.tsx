@@ -8,6 +8,7 @@ import {
   SimpleCommunicationsInterface as CommunicationsInterface, 
   SimpleWastelandLeaderboard as WastelandLeaderboard 
 } from "@/components/simple-wasteland";
+import { DarknetContinuumRelic } from "@/components/darknet-continuum";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
@@ -61,7 +62,7 @@ export default function Dashboard() {
 
         {/* Control Panels */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-rusted-metal border-2 border-wasteland-orange mb-8">
+          <TabsList className="grid w-full grid-cols-6 bg-rusted-metal border-2 border-wasteland-orange mb-8">
             <TabsTrigger value="overview" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
               OVERVIEW
             </TabsTrigger>
@@ -73,6 +74,9 @@ export default function Dashboard() {
             </TabsTrigger>
             <TabsTrigger value="factions" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
               FACTIONS
+            </TabsTrigger>
+            <TabsTrigger value="continuum" className="font-title text-xs data-[state=active]:bg-radiation-green data-[state=active]:text-dark-wasteland">
+              CONTINUUM
             </TabsTrigger>
             <TabsTrigger value="communications" className="font-title text-xs data-[state=active]:bg-wasteland-orange data-[state=active]:text-dark-wasteland">
               COMMS
@@ -107,6 +111,10 @@ export default function Dashboard() {
               <AllianceControl />
               <WastelandLeaderboard />
             </div>
+          </TabsContent>
+
+          <TabsContent value="continuum" className="space-y-6">
+            <DarknetContinuumRelic />
           </TabsContent>
 
           <TabsContent value="communications" className="space-y-6">

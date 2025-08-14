@@ -6,12 +6,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { getContinuumText } from "@/components/darknet-continuum";
 
 export default function Handheld() {
   const [isBooted, setIsBooted] = useState(false);
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const [currentInput, setCurrentInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isTypingContinuum, setIsTypingContinuum] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
 
   // Boot sequence
@@ -55,6 +57,23 @@ export default function Handheld() {
     }
   }, [terminalLines]);
 
+  const typewriter = (text: string, callback?: () => void) => {
+    const lines = text.split('\n');
+    let lineIndex = 0;
+    
+    const typeLine = () => {
+      if (lineIndex < lines.length) {
+        setTerminalLines(prev => [...prev, lines[lineIndex]]);
+        lineIndex++;
+        setTimeout(typeLine, 30); // Fast typing speed
+      } else if (callback) {
+        callback();
+      }
+    };
+    
+    typeLine();
+  };
+
   const handleCommand = (command: string) => {
     setIsProcessing(true);
     setTerminalLines(prev => [...prev, `> ${command}`, '']);
@@ -63,6 +82,14 @@ export default function Handheld() {
       let response: string[] = [];
       
       switch (command.toLowerCase().trim()) {
+        case 'continuum':
+          setIsTypingContinuum(true);
+          const continuumText = getContinuumText();
+          typewriter(continuumText, () => {
+            setIsTypingContinuum(false);
+            setIsProcessing(false);
+          });
+          return;
         case 'help':
           response = [
             'AVAILABLE COMMANDS:',
@@ -74,6 +101,7 @@ export default function Handheld() {
             'decode        - Decode received transmission',
             'broadcast     - Send transaction via radio',
             'wallet        - View wallet information',
+            'continuum     - Access Darknet Continuum protocols',
             'clear         - Clear terminal screen',
             'exit          - Return to main interface',
             ''
