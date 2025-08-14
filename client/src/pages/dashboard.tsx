@@ -13,30 +13,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function Dashboard() {
   return (
     <div className="min-h-screen pb-16">
-      {/* Wasteland Welcome */}
-      <section className="relative py-16 overflow-hidden">
-        <div className="absolute inset-0 bg-wasteland-atmosphere opacity-40" />
-        <div className="relative container mx-auto px-6 text-center">
-          <WastelandText 
-            variant="title" 
-            glow 
-            glitch 
-            className="text-6xl md:text-8xl mb-4"
-            data-text="WELCOME TO THE WASTELAND"
-          >
-            WELCOME TO THE WASTELAND
-          </WastelandText>
-          <WastelandText variant="body" className="text-xl md:text-2xl text-ash-gray max-w-3xl mx-auto">
-            Survive. Adapt. Conquer. The old world is gone. Build your legacy in the ashes.
-          </WastelandText>
-          <div className="mt-8 flex gap-4 justify-center">
-            <div className="flex items-center gap-2 text-radiation-green animate-pulse">
-              <div className="w-2 h-2 bg-radiation-green rounded-full" />
-              <WastelandText variant="terminal">SYSTEMS ONLINE</WastelandText>
+      {/* Quick Game Header */}
+      <section className="relative py-8 border-b-2 border-wasteland-orange">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <WastelandText variant="title" glow className="text-4xl mb-2">
+                WASTELAND CONTROL
+              </WastelandText>
+              <div className="flex gap-6 text-sm">
+                <span className="text-radiation-green">⚡ ONLINE</span>
+                <span className="text-steel-blue">📡 BASE NETWORK</span>
+                <span className="text-toxic-yellow">⚔️ 3 BATTLES</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-wasteland-orange">
-              <div className="w-2 h-2 bg-wasteland-orange rounded-full animate-radiation-pulse" />
-              <WastelandText variant="terminal">BASE NETWORK</WastelandText>
+            <div className="flex gap-4">
+              <WastelandButton variant="primary" size="sm">CLAIM TERRITORY</WastelandButton>
+              <WastelandButton variant="danger" size="sm">START BATTLE</WastelandButton>
             </div>
           </div>
         </div>
@@ -44,24 +37,24 @@ export default function Dashboard() {
 
       {/* Main Operations Center */}
       <main className="relative container mx-auto px-6 py-8">
-        {/* Wasteland Statistics */}
-        <section className="mb-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="pip-boy-screen p-4 text-center">
-              <div className="text-3xl font-title text-wasteland-orange mb-1 animate-hologram-flicker" data-testid="text-total-survivors">2,847</div>
-              <WastelandText variant="terminal">ACTIVE SURVIVORS</WastelandText>
+        {/* Quick Stats */}
+        <section className="mb-8">
+          <div className="grid grid-cols-4 gap-4">
+            <div className="pip-boy-screen p-3 text-center">
+              <div className="text-2xl font-title text-wasteland-orange" data-testid="text-total-survivors">2,847</div>
+              <div className="text-xs text-ash-gray">PLAYERS</div>
             </div>
-            <div className="pip-boy-screen p-4 text-center">
-              <div className="text-3xl font-title text-radiation-green mb-1 animate-radiation-pulse" data-testid="text-total-territories">156</div>
-              <WastelandText variant="terminal">CLAIMED ZONES</WastelandText>
+            <div className="pip-boy-screen p-3 text-center">
+              <div className="text-2xl font-title text-radiation-green" data-testid="text-total-territories">156</div>
+              <div className="text-xs text-ash-gray">ZONES</div>
             </div>
-            <div className="pip-boy-screen p-4 text-center">
-              <div className="text-3xl font-title text-steel-blue mb-1" data-testid="text-total-alliances">89</div>
-              <WastelandText variant="terminal">ACTIVE FACTIONS</WastelandText>
+            <div className="pip-boy-screen p-3 text-center">
+              <div className="text-2xl font-title text-steel-blue" data-testid="text-total-alliances">89</div>
+              <div className="text-xs text-ash-gray">FACTIONS</div>
             </div>
-            <div className="pip-boy-screen p-4 text-center">
-              <div className="text-3xl font-title text-rust-red mb-1 animate-wasteland-glitch" data-testid="text-total-battles">12,439</div>
-              <WastelandText variant="terminal">TOTAL CONFLICTS</WastelandText>
+            <div className="pip-boy-screen p-3 text-center">
+              <div className="text-2xl font-title text-rust-red" data-testid="text-total-battles">12,439</div>
+              <div className="text-xs text-ash-gray">BATTLES</div>
             </div>
           </div>
         </section>

@@ -6,36 +6,43 @@ import { Badge } from "@/components/ui/badge";
 
 export const SimpleWastelandMap = () => {
   return (
-    <WastelandCard variant="terminal" className="p-6">
-      <WastelandText variant="subtitle" className="mb-4 border-b border-rust-red pb-2">
-        TERRITORIAL CONTROL
-      </WastelandText>
+    <WastelandCard variant="terminal" className="p-4">
+      <div className="flex items-center justify-between mb-4">
+        <WastelandText variant="subtitle" className="text-lg">
+          TERRITORY MAP
+        </WastelandText>
+        <WastelandButton variant="primary" size="sm">
+          CLAIM ZONE
+        </WastelandButton>
+      </div>
       
-      <div className="grid grid-cols-10 gap-1 aspect-square max-w-lg mx-auto mb-6">
+      <div className="grid grid-cols-10 gap-1 aspect-square max-w-md mx-auto mb-4">
         {Array.from({ length: 100 }, (_, i) => {
           const x = i % 10;
           const y = Math.floor(i / 10);
           const random = Math.random();
-          const isEmpty = random > 0.3;
-          const isOwned = !isEmpty && random > 0.8;
-          const isAlliance = !isEmpty && !isOwned && random > 0.6;
-          const isContested = !isEmpty && !isOwned && !isAlliance;
+          const isEmpty = random > 0.4;
+          const isOwned = !isEmpty && random > 0.75;
+          const isAlliance = !isEmpty && !isOwned && random > 0.55;
+          const isEnemy = !isEmpty && !isOwned && !isAlliance && random > 0.35;
+          const isContested = !isEmpty && !isOwned && !isAlliance && !isEnemy;
           
           return (
             <button
               key={i}
-              onClick={() => console.log('Claiming territory:', { x, y })}
+              onClick={() => console.log('Territory action:', { x, y })}
               className={`
-                aspect-square text-xs font-mono border relative overflow-hidden transition-all duration-300 hover:scale-110 hover:z-10
-                ${isEmpty ? 'bg-charred-earth border-ash-gray hover:bg-rusted-metal hover:border-wasteland-orange' :
-                  isOwned ? 'bg-wasteland-orange border-burnt-amber shadow-amber animate-radiation-pulse' :
-                  isAlliance ? 'bg-steel-blue border-radiation-green' :
-                  'bg-blood-maroon border-rust-red animate-wasteland-glitch'}
+                aspect-square text-xs border transition-all duration-200 hover:scale-110 hover:z-10 relative
+                ${isEmpty ? 'bg-gray-800 border-gray-700 hover:border-wasteland-orange' :
+                  isOwned ? 'bg-green-600 border-green-400 animate-pulse' :
+                  isAlliance ? 'bg-blue-600 border-blue-400' :
+                  isEnemy ? 'bg-red-600 border-red-400' :
+                  'bg-yellow-600 border-yellow-400 animate-pulse'}
               `}
             >
               {!isEmpty && (
-                <span className="absolute inset-0 flex items-center justify-center text-shadow-wasteland">
-                  {isOwned ? '⚡' : isAlliance ? '🤝' : '⚔️'}
+                <span className="absolute inset-0 flex items-center justify-center">
+                  {isOwned ? '👑' : isAlliance ? '🤝' : isEnemy ? '💀' : '⚔️'}
                 </span>
               )}
             </button>
@@ -43,22 +50,22 @@ export const SimpleWastelandMap = () => {
         })}
       </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-charred-earth border border-ash-gray"></div>
-          <span className="text-ash-gray">UNCLAIMED</span>
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="flex items-center gap-1">
+          <div className="w-2 h-2 bg-green-600"></div>
+          <span className="text-green-400">YOURS</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-wasteland-orange border border-burnt-amber"></div>
-          <span className="text-wasteland-orange">YOUR TERRITORY</span>
+        <div className="flex items-center gap-1">
+          <div className="w-2 h-2 bg-blue-600"></div>
+          <span className="text-blue-400">ALLIES</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-steel-blue border border-radiation-green"></div>
-          <span className="text-steel-blue">ALLIANCE</span>
+        <div className="flex items-center gap-1">
+          <div className="w-2 h-2 bg-red-600"></div>
+          <span className="text-red-400">ENEMIES</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-blood-maroon border border-rust-red"></div>
-          <span className="text-rust-red">CONTESTED</span>
+        <div className="flex items-center gap-1">
+          <div className="w-2 h-2 bg-yellow-600"></div>
+          <span className="text-yellow-400">WAR ZONES</span>
         </div>
       </div>
     </WastelandCard>
@@ -67,82 +74,82 @@ export const SimpleWastelandMap = () => {
 
 export const SimpleSurvivorStatus = () => {
   return (
-    <WastelandCard variant="default" className="p-6">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 bg-wasteland-orange rounded-full border-2 border-rust-red flex items-center justify-center animate-hologram-flicker">
-          <span className="text-2xl font-title text-dark-wasteland">W</span>
+    <WastelandCard variant="default" className="p-4">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-12 h-12 bg-green-600 rounded border-2 border-green-400 flex items-center justify-center">
+          <span className="text-lg font-bold">W</span>
         </div>
         <div>
-          <WastelandText variant="subtitle" glow>
+          <WastelandText variant="subtitle" className="text-lg">
             WastelandSurvivor
           </WastelandText>
-          <WastelandText variant="terminal" className="mt-1">
-            VAULT DWELLER #0001
-          </WastelandText>
+          <div className="flex gap-4 text-sm">
+            <span className="text-green-400">LVL 12</span>
+            <span className="text-blue-400">342 XP</span>
+            <span className="text-yellow-400">8 WINS</span>
+          </div>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <WastelandProgress value={342} max={1000} label="EXPERIENCE" variant="xp" />
-        <WastelandProgress value={8} max={25} label="VICTORIES" variant="health" />
-        <WastelandProgress value={85} max={100} label="HEALTH" variant="health" />
-        <WastelandProgress value={15} max={100} label="RADIATION" variant="radiation" />
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="pip-boy-screen p-2 text-center">
+          <div className="text-green-400 font-mono">85%</div>
+          <div className="text-xs">HEALTH</div>
+        </div>
+        <div className="pip-boy-screen p-2 text-center">
+          <div className="text-red-400 font-mono">3</div>
+          <div className="text-xs">TERRITORIES</div>
+        </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-rust-red">
-        <WastelandText variant="terminal" className="mb-2">
-          WALLET: DISCONNECTED
-        </WastelandText>
-        <WastelandButton
-          variant="secondary"
-          size="sm"
-          onClick={() => console.log('Connect wallet clicked')}
-          className="w-full"
-        >
-          CONNECT WALLET
-        </WastelandButton>
-      </div>
+      <WastelandButton
+        variant="secondary"
+        size="sm"
+        onClick={() => console.log('Connect wallet clicked')}
+        className="w-full"
+      >
+        CONNECT WALLET
+      </WastelandButton>
     </WastelandCard>
   );
 };
 
 export const SimpleAllianceControl = () => {
   return (
-    <WastelandCard variant="rusted" className="p-6">
-      <WastelandText variant="subtitle" className="mb-4 border-b border-burnt-amber pb-2">
-        FACTION ALLIANCES
-      </WastelandText>
+    <WastelandCard variant="rusted" className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <WastelandText variant="subtitle" className="text-lg">
+          FACTION
+        </WastelandText>
+        <Badge className="bg-blue-600 text-white font-mono text-xs">
+          LEADER
+        </Badge>
+      </div>
       
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <WastelandText variant="body" className="text-burnt-amber font-semibold">
-            Brotherhood of Steel
-          </WastelandText>
-          <Badge className="bg-steel-blue text-dark-wasteland font-mono text-xs">
-            3 MEMBERS
-          </Badge>
+          <span className="text-blue-400 font-semibold">Brotherhood of Steel</span>
+          <span className="text-sm text-gray-400">3 members</span>
         </div>
         
-        <WastelandText variant="terminal">
-          STATUS: ACTIVE MEMBER
-        </WastelandText>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="pip-boy-screen p-2 text-center">
+            <div className="text-blue-400 font-mono">12</div>
+            <div className="text-gray-400">TERRITORIES</div>
+          </div>
+          <div className="pip-boy-screen p-2 text-center">
+            <div className="text-green-400 font-mono">847</div>
+            <div className="text-gray-400">POWER</div>
+          </div>
+        </div>
         
-        <div className="space-y-2">
-          <WastelandText variant="body" className="text-sm text-ash-gray">
-            FACTION MEMBERS:
-          </WastelandText>
-          <div className="flex justify-between text-sm font-mono">
-            <span className="text-foreground">WastelandSurvivor</span>
-            <span className="text-steel-blue">LEADER</span>
-          </div>
-          <div className="flex justify-between text-sm font-mono">
-            <span className="text-foreground">VaultHunter</span>
-            <span className="text-steel-blue">MEMBER</span>
-          </div>
-          <div className="flex justify-between text-sm font-mono">
-            <span className="text-foreground">RadscorpionSlayer</span>
-            <span className="text-steel-blue">MEMBER</span>
-          </div>
+        <div className="flex gap-2">
+          <WastelandButton variant="primary" size="sm" className="flex-1">
+            INVITE
+          </WastelandButton>
+          <WastelandButton variant="secondary" size="sm" className="flex-1">
+            ATTACK
+          </WastelandButton>
         </div>
       </div>
     </WastelandCard>
@@ -151,35 +158,46 @@ export const SimpleAllianceControl = () => {
 
 export const SimpleBattleInterface = () => {
   return (
-    <WastelandCard variant="terminal" className="p-6">
-      <WastelandText variant="subtitle" className="mb-4 border-b border-rust-red pb-2">
-        COMBAT OPERATIONS
-      </WastelandText>
+    <WastelandCard variant="terminal" className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <WastelandText variant="subtitle" className="text-lg">
+          COMBAT
+        </WastelandText>
+        <Badge className="bg-red-600 text-white font-mono text-xs animate-pulse">
+          3 ACTIVE
+        </Badge>
+      </div>
       
-      <div className="space-y-4">
-        <WastelandButton
-          variant="danger"
-          onClick={() => console.log('Initiate combat clicked')}
-          glitch
-        >
-          INITIATE COMBAT
-        </WastelandButton>
+      <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-2">
+          <WastelandButton
+            variant="danger"
+            size="sm"
+            onClick={() => console.log('Attack clicked')}
+          >
+            ATTACK
+          </WastelandButton>
+          <WastelandButton
+            variant="secondary"
+            size="sm"
+            onClick={() => console.log('Defend clicked')}
+          >
+            DEFEND  
+          </WastelandButton>
+        </div>
         
-        <div className="space-y-2">
-          <WastelandText variant="body" className="text-sm text-ash-gray">
-            ACTIVE CONFLICTS:
-          </WastelandText>
-          <div className="p-3 bg-blood-maroon/20 border border-rust-red">
-            <div className="flex justify-between items-center text-sm font-mono">
-              <span className="text-foreground">Battle #001</span>
-              <Badge className="bg-rust-red text-xs">ACTIVE</Badge>
-            </div>
+        <div className="space-y-1">
+          <div className="flex justify-between items-center p-2 bg-red-900/30 border border-red-600 text-xs">
+            <span className="text-red-400">vs VaultHunter</span>
+            <span className="text-yellow-400">⚔️ FIGHTING</span>
           </div>
-          <div className="p-3 bg-blood-maroon/10 border border-ash-gray">
-            <div className="flex justify-between items-center text-sm font-mono">
-              <span className="text-foreground">Battle #002</span>
-              <Badge className="bg-wasteland-orange text-dark-wasteland text-xs">COMPLETED</Badge>
-            </div>
+          <div className="flex justify-between items-center p-2 bg-orange-900/30 border border-orange-600 text-xs">
+            <span className="text-orange-400">vs Enclave</span>
+            <span className="text-green-400">🏆 WON</span>
+          </div>
+          <div className="flex justify-between items-center p-2 bg-gray-800 border border-gray-600 text-xs">
+            <span className="text-gray-400">vs Raiders</span>
+            <span className="text-gray-400">⏳ PENDING</span>
           </div>
         </div>
       </div>
@@ -189,36 +207,43 @@ export const SimpleBattleInterface = () => {
 
 export const SimpleCommunicationsInterface = () => {
   return (
-    <WastelandCard variant="terminal" className="p-6">
-      <WastelandText variant="subtitle" className="mb-4 border-b border-radiation-green pb-2">
-        RADIO COMMUNICATIONS
-      </WastelandText>
+    <WastelandCard variant="terminal" className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <WastelandText variant="subtitle" className="text-lg">
+          RADIO
+        </WastelandText>
+        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+      </div>
       
-      <div className="space-y-4">
-        <div className="space-y-2 max-h-40 overflow-y-auto bg-charred-earth/50 p-3 border border-radiation-green">
-          <div className="text-sm font-mono">
-            <span className="text-radiation-green">[22:14:32]</span>
-            <span className="text-burnt-amber ml-2">VaultTec:</span>
-            <span className="text-foreground ml-2">Emergency broadcast system test</span>
+      <div className="space-y-3">
+        <div className="space-y-1 max-h-24 overflow-y-auto bg-gray-900 p-2 border border-green-600 text-xs">
+          <div className="text-green-400 font-mono">
+            <span className="text-yellow-400">Brotherhood:</span> Moving to sector 7
           </div>
-          <div className="text-sm font-mono">
-            <span className="text-radiation-green">[22:13:15]</span>
-            <span className="text-burnt-amber ml-2">Brotherhood:</span>
-            <span className="text-foreground ml-2">All units report to checkpoint alpha</span>
+          <div className="text-green-400 font-mono">
+            <span className="text-red-400">Enclave:</span> Under attack!
           </div>
-          <div className="text-sm font-mono">
-            <span className="text-radiation-green">[22:11:47]</span>
-            <span className="text-burnt-amber ml-2">Enclave:</span>
-            <span className="text-foreground ml-2">Hostile activity detected in sector 7</span>
+          <div className="text-green-400 font-mono">
+            <span className="text-blue-400">VaultTec:</span> Emergency broadcast
           </div>
         </div>
         
-        <WastelandButton
-          variant="radiation"
-          onClick={() => console.log('Broadcast message clicked')}
-        >
-          BROADCAST MESSAGE
-        </WastelandButton>
+        <div className="grid grid-cols-2 gap-2">
+          <WastelandButton
+            variant="radiation"
+            size="sm"
+            onClick={() => console.log('Send message clicked')}
+          >
+            SEND
+          </WastelandButton>
+          <WastelandButton
+            variant="secondary"
+            size="sm"
+            onClick={() => console.log('Scan clicked')}
+          >
+            SCAN
+          </WastelandButton>
+        </div>
       </div>
     </WastelandCard>
   );
@@ -226,36 +251,36 @@ export const SimpleCommunicationsInterface = () => {
 
 export const SimpleWastelandLeaderboard = () => {
   const topUsers = [
-    { id: 1, username: 'WastelandSurvivor', xp: 342, wins: 8 },
-    { id: 2, username: 'VaultHunter', xp: 289, wins: 12 },
-    { id: 3, username: 'RadscorpionSlayer', xp: 245, wins: 6 },
-    { id: 4, username: 'Brotherhood', xp: 198, wins: 15 },
-    { id: 5, username: 'Enclave', xp: 167, wins: 4 }
+    { id: 1, username: 'WastelandSurvivor', power: 847, territories: 3, color: 'text-yellow-400' },
+    { id: 2, username: 'VaultHunter', power: 692, territories: 5, color: 'text-blue-400' },
+    { id: 3, username: 'RadscorpionSlayer', power: 534, territories: 2, color: 'text-red-400' },
+    { id: 4, username: 'Brotherhood', power: 421, territories: 8, color: 'text-green-400' },
+    { id: 5, username: 'Enclave', power: 298, territories: 1, color: 'text-purple-400' }
   ];
 
   return (
-    <WastelandCard variant="default" className="p-6">
-      <WastelandText variant="subtitle" className="mb-4 border-b border-wasteland-orange pb-2">
-        SURVIVOR RANKINGS
+    <WastelandCard variant="default" className="p-4">
+      <WastelandText variant="subtitle" className="mb-3 text-lg">
+        TOP PLAYERS
       </WastelandText>
       
-      <div className="space-y-2">
+      <div className="space-y-1">
         {topUsers.map((user, index) => (
-          <div key={user.id} className="flex items-center justify-between p-2 bg-rusted-metal border border-ash-gray">
-            <div className="flex items-center gap-3">
-              <span className={`w-6 h-6 flex items-center justify-center text-xs font-bold ${
-                index === 0 ? 'bg-wasteland-orange text-dark-wasteland' :
-                index === 1 ? 'bg-burnt-amber text-dark-wasteland' :
-                index === 2 ? 'bg-rust-red text-foreground' :
-                'bg-ash-gray text-foreground'
+          <div key={user.id} className="flex items-center justify-between p-2 bg-gray-800 border border-gray-700 text-xs">
+            <div className="flex items-center gap-2">
+              <span className={`w-4 h-4 flex items-center justify-center font-bold ${
+                index === 0 ? 'bg-yellow-600 text-black' :
+                index === 1 ? 'bg-gray-600 text-white' :
+                index === 2 ? 'bg-orange-600 text-black' :
+                'bg-gray-700 text-white'
               }`}>
                 {index + 1}
               </span>
-              <span className="font-mono text-foreground">{user.username}</span>
+              <span className={`font-mono ${user.color}`}>{user.username}</span>
             </div>
-            <div className="flex items-center gap-4 text-sm font-mono">
-              <span className="text-burnt-amber">{user.xp} XP</span>
-              <span className="text-radiation-green">{user.wins} WINS</span>
+            <div className="flex items-center gap-3 text-gray-400">
+              <span>{user.power}💪</span>
+              <span>{user.territories}🏁</span>
             </div>
           </div>
         ))}
