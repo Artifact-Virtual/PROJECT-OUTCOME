@@ -14,6 +14,8 @@ export default function RealisticHandheld() {
   const [currentInput, setCurrentInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
+  const [refreshRate, setRefreshRate] = useState(60.0);
+  const [hasGlitch, setHasGlitch] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
 
   // Responsive screen tracking
@@ -32,6 +34,45 @@ export default function RealisticHandheld() {
     return () => {
       window.removeEventListener('resize', updateScreenSize);
       window.removeEventListener('orientationchange', updateScreenSize);
+    };
+  }, []);
+
+  // Subtle refresh rate monitoring with erratic glitches
+  useEffect(() => {
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let animationId: number;
+
+    const updateRefreshRate = () => {
+      const currentTime = performance.now();
+      frameCount++;
+      
+      if (frameCount % 60 === 0) { // Update every ~1 second
+        const deltaTime = currentTime - lastTime;
+        const fps = (frameCount * 1000) / deltaTime;
+        setRefreshRate(Number(fps.toFixed(1)));
+        lastTime = currentTime;
+        frameCount = 0;
+      }
+      
+      animationId = requestAnimationFrame(updateRefreshRate);
+    };
+
+    // Erratic glitch system - very infrequent and random
+    const glitchInterval = setInterval(() => {
+      // Only glitch occasionally (every 45-120 seconds)
+      if (Math.random() < 0.008) { // ~0.8% chance every interval
+        setHasGlitch(true);
+        // Quick recovery
+        setTimeout(() => setHasGlitch(false), 150 + Math.random() * 200);
+      }
+    }, 1000);
+
+    animationId = requestAnimationFrame(updateRefreshRate);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      clearInterval(glitchInterval);
     };
   }, []);
 
@@ -229,9 +270,20 @@ export default function RealisticHandheld() {
           <TabsContent value="terminal" className={`${isMobile ? 'mt-4' : 'mt-6'}`}>
             <RealisticWastelandCard variant="dark" className="p-0 overflow-hidden">
               <div className={`${isMobile ? 'p-3' : 'p-4'} border-b border-neutral-800`}>
-                <RealisticText variant="terminal" className="text-neutral-500">
-                  Terminal Session Active
-                </RealisticText>
+                <div className="flex items-center justify-between">
+                  <RealisticText variant="terminal" className="text-neutral-500">
+                    Terminal Session Active
+                  </RealisticText>
+                  <div className={`text-xs font-mono transition-all duration-200 ${
+                    hasGlitch 
+                      ? 'text-red-400 animate-pulse' 
+                      : refreshRate < 30 
+                        ? 'text-yellow-400' 
+                        : 'text-neutral-600'
+                  }`}>
+                    {hasGlitch ? `${(refreshRate + Math.random() * 10 - 5).toFixed(1)}` : refreshRate.toFixed(1)}Hz
+                  </div>
+                </div>
               </div>
               
               <div 
