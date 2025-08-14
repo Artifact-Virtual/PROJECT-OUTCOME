@@ -262,6 +262,273 @@ export const HamRadioDiagram = () => (
   </TechnicalBlueprint>
 );
 
+// Physical Handshake Diagram
+export const PhysicalHandshakeDiagram = () => (
+  <TechnicalBlueprint 
+    title="PHYSICAL HANDSHAKE PROTOCOL - COURIER NETWORK"
+    specs={["SPEC: PHY-TX-003", "TRANSPORT: HUMAN COURIER", "SECURITY: MULTI-LAYER"]}
+  >
+    <svg viewBox="0 0 800 500" className="w-full h-64 border border-cyan-400/30">
+      <defs>
+        <filter id="courierGlow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <pattern id="securePattern" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="none"/>
+          <circle cx="2" cy="2" r="0.5" fill="rgba(34,211,238,0.3)"/>
+        </pattern>
+      </defs>
+      
+      {/* Offline Wallet */}
+      <g filter="url(#courierGlow)">
+        <rect x="50" y="200" width="80" height="60" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" strokeWidth="2"/>
+        <rect x="60" y="210" width="60" height="20" fill="rgba(34,211,238,0.3)"/>
+        <text x="90" y="285" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">OFFLINE WALLET</text>
+        <text x="90" y="295" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">LEDGER/TREZOR</text>
+        <text x="90" y="305" textAnchor="middle" fill="#22d3ee" fontSize="6" fontFamily="monospace">AIR-GAPPED</text>
+      </g>
+      
+      {/* Transaction Packaging */}
+      <rect x="200" y="180" width="100" height="100" fill="url(#securePattern)" stroke="#22d3ee" strokeWidth="2"/>
+      <text x="250" y="200" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">SECURE PACKAGE</text>
+      <text x="250" y="220" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">• QR CODE</text>
+      <text x="250" y="235" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">• USB ENCRYPTED</text>
+      <text x="250" y="250" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">• TAMPER SEAL</text>
+      <text x="250" y="265" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">• CHECKSUM</text>
+      
+      {/* Courier Transport */}
+      <g>
+        <ellipse cx="450" cy="230" rx="60" ry="40" fill="rgba(34,211,238,0.1)" stroke="#22d3ee" strokeWidth="2"/>
+        <circle cx="430" cy="220" r="8" fill="rgba(34,211,238,0.4)"/>
+        <rect x="440" y="215" width="20" height="10" fill="rgba(34,211,238,0.3)"/>
+        <path d="M 460 225 L 470 235 L 460 245 L 450 235 Z" fill="rgba(34,211,238,0.3)"/>
+        <text x="450" y="285" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">COURIER TRANSPORT</text>
+        <text x="450" y="295" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">VERIFIED CARRIER</text>
+      </g>
+      
+      {/* Broadcast Station */}
+      <g filter="url(#courierGlow)">
+        <rect x="620" y="200" width="80" height="60" fill="rgba(34,211,238,0.2)" stroke="#22d3ee" strokeWidth="2"/>
+        <rect x="630" y="210" width="60" height="20" fill="rgba(34,211,238,0.4)"/>
+        <circle cx="660" cy="170" r="8" fill="#22d3ee" opacity="0.6"/>
+        <text x="660" y="285" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">BROADCAST STN</text>
+        <text x="660" y="295" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">ONLINE NODE</text>
+        <text x="660" y="305" textAnchor="middle" fill="#22d3ee" fontSize="6" fontFamily="monospace">ETH MAINNET</text>
+      </g>
+      
+      {/* Data Flow Arrows */}
+      <g stroke="#22d3ee" strokeWidth="3" fill="none" markerEnd="url(#arrowhead)">
+        <line x1="130" y1="230" x2="190" y2="230"/>
+        <line x1="300" y1="230" x2="380" y2="230"/>
+        <line x1="520" y1="230" x2="610" y2="230"/>
+      </g>
+      
+      {/* Security Verification Steps */}
+      <rect x="50" y="350" width="700" height="120" fill="rgba(0,0,0,0.8)" stroke="rgba(34,211,238,0.5)" strokeWidth="1"/>
+      <text x="60" y="370" fill="#22d3ee" fontSize="9" fontFamily="monospace" fontWeight="bold">SECURITY VERIFICATION PROTOCOL:</text>
+      
+      <text x="70" y="390" fill="#22d3ee" fontSize="7" fontFamily="monospace">1. OFFLINE SIGNING: Hardware wallet creates signed transaction in air-gapped environment</text>
+      <text x="70" y="405" fill="#22d3ee" fontSize="7" fontFamily="monospace">2. PACKAGE CREATION: Transaction encoded with AES-256, checksum generated, tamper seal applied</text>
+      <text x="70" y="420" fill="#22d3ee" fontSize="7" fontFamily="monospace">3. COURIER VERIFICATION: Multi-factor authentication, GPS tracking, chain of custody logging</text>
+      <text x="70" y="435" fill="#22d3ee" fontSize="7" fontFamily="monospace">4. BROADCAST VALIDATION: Seal verification, checksum validation, signature verification before broadcast</text>
+      <text x="70" y="450" fill="#22d3ee" fontSize="7" fontFamily="monospace">5. NETWORK CONFIRMATION: Transaction broadcast to Ethereum mainnet with gas optimization</text>
+      
+      {/* Transport path indicator */}
+      <path d="M 90 320 Q 250 100 450 150 Q 550 120 660 180" stroke="rgba(34,211,238,0.4)" strokeWidth="2" strokeDasharray="10,5" fill="none">
+        <animate attributeName="stroke-dashoffset" values="0;-20" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <text x="400" y="130" textAnchor="middle" fill="#22d3ee" fontSize="6" fontFamily="monospace">SECURE TRANSPORT ROUTE</text>
+    </svg>
+  </TechnicalBlueprint>
+);
+
+// USB Sneakernet Diagram  
+export const USBSneakernetDiagram = () => (
+  <TechnicalBlueprint 
+    title="USB SNEAKERNET PROTOCOL - DATA RELIC SYSTEM"
+    specs={["SPEC: USB-TX-004", "STORAGE: USB 3.0/3.1", "ENCRYPTION: AES-256"]}
+  >
+    <svg viewBox="0 0 800 500" className="w-full h-64 border border-cyan-400/30">
+      <defs>
+        <filter id="usbGlow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      
+      {/* Offline Computer */}
+      <g filter="url(#usbGlow)">
+        <rect x="80" y="150" width="120" height="80" fill="rgba(34,211,238,0.1)" stroke="#22d3ee" strokeWidth="2"/>
+        <rect x="90" y="160" width="100" height="60" fill="rgba(34,211,238,0.2)"/>
+        <circle cx="150" cy="190" r="3" fill="#ff4444"/>
+        <text x="140" y="250" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">OFFLINE PC</text>
+        <text x="140" y="260" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">AIR-GAPPED</text>
+        <text x="140" y="270" textAnchor="middle" fill="#ff4444" fontSize="6" fontFamily="monospace">NO NETWORK</text>
+      </g>
+      
+      {/* USB Device */}
+      <g filter="url(#usbGlow)">
+        <rect x="350" y="180" width="100" height="20" rx="10" fill="rgba(34,211,238,0.3)" stroke="#22d3ee" strokeWidth="2"/>
+        <rect x="340" y="185" width="10" height="10" fill="#22d3ee"/>
+        <rect x="335" y="187" width="5" height="6" fill="#22d3ee"/>
+        <text x="400" y="220" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">USB DATA RELIC</text>
+        <text x="400" y="235" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">ENCRYPTED STORAGE</text>
+        <text x="400" y="245" textAnchor="middle" fill="#22d3ee" fontSize="6" fontFamily="monospace">32GB CAPACITY</text>
+      </g>
+      
+      {/* Online Computer */}
+      <g filter="url(#usbGlow)">
+        <rect x="600" y="150" width="120" height="80" fill="rgba(34,211,238,0.1)" stroke="#22d3ee" strokeWidth="2"/>
+        <rect x="610" y="160" width="100" height="60" fill="rgba(34,211,238,0.2)"/>
+        <circle cx="670" cy="190" r="3" fill="#44ff44"/>
+        <text x="660" y="250" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">ONLINE PC</text>
+        <text x="660" y="260" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">CONNECTED</text>
+        <text x="660" y="270" textAnchor="middle" fill="#44ff44" fontSize="6" fontFamily="monospace">ETHERNET/WIFI</text>
+      </g>
+      
+      {/* File System Structure */}
+      <rect x="50" y="300" width="300" height="150" fill="rgba(0,0,0,0.8)" stroke="rgba(34,211,238,0.5)" strokeWidth="1"/>
+      <text x="60" y="320" fill="#22d3ee" fontSize="8" fontFamily="monospace" fontWeight="bold">USB FILE STRUCTURE:</text>
+      <text x="70" y="340" fill="#22d3ee" fontSize="7" fontFamily="monospace">/transaction_queue/</text>
+      <text x="80" y="355" fill="#22d3ee" fontSize="7" fontFamily="monospace">├── pending/</text>
+      <text x="90" y="370" fill="#22d3ee" fontSize="7" fontFamily="monospace">│   ├── tx_001.json (2.1KB)</text>
+      <text x="90" y="385" fill="#22d3ee" fontSize="7" fontFamily="monospace">│   ├── tx_002.json (1.8KB)</text>
+      <text x="90" y="400" fill="#22d3ee" fontSize="7" fontFamily="monospace">│   └── tx_003.json (2.3KB)</text>
+      <text x="80" y="415" fill="#22d3ee" fontSize="7" fontFamily="monospace">├── signed/</text>
+      <text x="90" y="430" fill="#22d3ee" fontSize="7" fontFamily="monospace">│   └── batch_001.sig (512B)</text>
+      <text x="80" y="445" fill="#22d3ee" fontSize="7" fontFamily="monospace">└── broadcasted/</text>
+      
+      {/* Network Connection */}
+      <rect x="450" y="300" width="300" height="150" fill="rgba(0,0,0,0.8)" stroke="rgba(34,211,238,0.5)" strokeWidth="1"/>
+      <text x="460" y="320" fill="#22d3ee" fontSize="8" fontFamily="monospace" fontWeight="bold">BROADCAST SEQUENCE:</text>
+      <text x="470" y="340" fill="#22d3ee" fontSize="7" fontFamily="monospace">1. Insert USB → Mount filesystem</text>
+      <text x="470" y="355" fill="#22d3ee" fontSize="7" fontFamily="monospace">2. Scan pending/ directory</text>
+      <text x="470" y="370" fill="#22d3ee" fontSize="7" fontFamily="monospace">3. Validate transaction signatures</text>
+      <text x="470" y="385" fill="#22d3ee" fontSize="7" fontFamily="monospace">4. Estimate gas prices</text>
+      <text x="470" y="400" fill="#22d3ee" fontSize="7" fontFamily="monospace">5. Broadcast to network</text>
+      <text x="470" y="415" fill="#22d3ee" fontSize="7" fontFamily="monospace">6. Move to broadcasted/</text>
+      <text x="470" y="430" fill="#22d3ee" fontSize="7" fontFamily="monospace">7. Generate confirmation receipt</text>
+      
+      {/* Data flow arrows */}
+      <g stroke="#22d3ee" strokeWidth="3" fill="none">
+        <path d="M 200 190 Q 275 160 340 190" markerEnd="url(#arrowhead)">
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 450 190 Q 525 160 600 190" markerEnd="url(#arrowhead)">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite" begin="1s"/>
+        </path>
+      </g>
+      
+      {/* Transport indicator */}
+      <text x="400" y="140" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">PHYSICAL TRANSPORT</text>
+      <path d="M 270 170 Q 400 120 530 170" stroke="rgba(34,211,238,0.4)" strokeWidth="2" strokeDasharray="8,4" fill="none">
+        <animate attributeName="stroke-dashoffset" values="0;-24" dur="4s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+  </TechnicalBlueprint>
+);
+
+// Radio Broadcast Diagram
+export const RadioBroadcastDiagram = () => (
+  <TechnicalBlueprint 
+    title="RADIO BROADCAST SYSTEM - GHOST MODE PROTOCOL"
+    specs={["SPEC: RF-TX-006", "FREQ: VHF/UHF", "MODULATION: PSK/FSK"]}
+  >
+    <svg viewBox="0 0 800 500" className="w-full h-64 border border-cyan-400/30">
+      <defs>
+        <filter id="broadcastGlow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      
+      {/* Transmitter Station */}
+      <g filter="url(#broadcastGlow)">
+        <rect x="100" y="250" width="80" height="60" fill="rgba(34,211,238,0.2)" stroke="#22d3ee" strokeWidth="2"/>
+        <rect x="130" y="200" width="20" height="50" fill="#22d3ee" opacity="0.8"/>
+        <line x1="140" y1="200" x2="140" y2="150" stroke="#22d3ee" strokeWidth="4"/>
+        <line x1="120" y1="170" x2="160" y2="170" stroke="#22d3ee" strokeWidth="3"/>
+        <line x1="125" y1="185" x2="155" y2="185" stroke="#22d3ee" strokeWidth="2"/>
+        <text x="140" y="330" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">TX STATION</text>
+        <text x="140" y="340" textAnchor="middle" fill="#22d3ee" fontSize="8" fontFamily="monospace">50W VHF</text>
+      </g>
+      
+      {/* Receiver Stations */}
+      <g filter="url(#broadcastGlow)">
+        <rect x="550" y="180" width="60" height="40" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" strokeWidth="1"/>
+        <rect x="570" y="160" width="20" height="20" fill="#22d3ee" opacity="0.6"/>
+        <line x1="580" y1="160" x2="580" y2="140" stroke="#22d3ee" strokeWidth="2"/>
+        <text x="580" y="240" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">RX-A</text>
+        
+        <rect x="650" y="280" width="60" height="40" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" strokeWidth="1"/>
+        <rect x="670" y="260" width="20" height="20" fill="#22d3ee" opacity="0.6"/>
+        <line x1="680" y1="260" x2="680" y2="240" stroke="#22d3ee" strokeWidth="2"/>
+        <text x="680" y="340" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">RX-B</text>
+        
+        <rect x="600" y="380" width="60" height="40" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" strokeWidth="1"/>
+        <rect x="620" y="360" width="20" height="20" fill="#22d3ee" opacity="0.6"/>
+        <line x1="630" y1="360" x2="630" y2="340" stroke="#22d3ee" strokeWidth="2"/>
+        <text x="630" y="440" textAnchor="middle" fill="#22d3ee" fontSize="7" fontFamily="monospace">RX-C</text>
+      </g>
+      
+      {/* Radio Waves */}
+      <g stroke="#22d3ee" fill="none" opacity="0.7">
+        <circle cx="140" cy="280" r="80" strokeWidth="1">
+          <animate attributeName="r" values="80;120;80" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.7;0.3;0.7" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="140" cy="280" r="120" strokeWidth="1">
+          <animate attributeName="r" values="120;160;120" dur="2.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="140" cy="280" r="160" strokeWidth="1">
+          <animate attributeName="r" values="160;200;160" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+      
+      {/* Signal Path Lines */}
+      <g stroke="#22d3ee" strokeWidth="2" fill="none" opacity="0.6">
+        <line x1="180" y1="280" x2="550" y2="200">
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+        </line>
+        <line x1="180" y1="280" x2="650" y2="300">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.8s" repeatCount="indefinite" begin="0.5s"/>
+        </line>
+        <line x1="180" y1="280" x2="600" y2="400">
+          <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.2s" repeatCount="indefinite" begin="1s"/>
+        </line>
+      </g>
+      
+      {/* Modulation Info */}
+      <rect x="250" y="50" width="300" height="120" fill="rgba(0,0,0,0.8)" stroke="rgba(34,211,238,0.5)" strokeWidth="1"/>
+      <text x="260" y="70" fill="#22d3ee" fontSize="8" fontFamily="monospace" fontWeight="bold">MODULATION SCHEMES:</text>
+      <text x="270" y="90" fill="#22d3ee" fontSize="7" fontFamily="monospace">• PSK31: Phase Shift Keying - 31.25 baud</text>
+      <text x="270" y="105" fill="#22d3ee" fontSize="7" fontFamily="monospace">• FSK: Frequency Shift Keying - 300 baud</text>
+      <text x="270" y="120" fill="#22d3ee" fontSize="7" fontFamily="monospace">• RTTY: Radio Teletype - 45.45 baud</text>
+      <text x="270" y="135" fill="#22d3ee" fontSize="7" fontFamily="monospace">• MFSK: Multi-FSK - Variable rate</text>
+      <text x="270" y="150" fill="#22d3ee" fontSize="7" fontFamily="monospace">• Spread Spectrum: Anti-jam capable</text>
+      
+      {/* Technical specs */}
+      <rect x="50" y="380" width="200" height="80" fill="rgba(0,0,0,0.8)" stroke="rgba(34,211,238,0.5)" strokeWidth="1"/>
+      <text x="60" y="400" fill="#22d3ee" fontSize="8" fontFamily="monospace">FREQUENCY BANDS:</text>
+      <text x="70" y="415" fill="#22d3ee" fontSize="7" fontFamily="monospace">VHF: 144-148 MHz</text>
+      <text x="70" y="430" fill="#22d3ee" fontSize="7" fontFamily="monospace">UHF: 420-450 MHz</text>
+      <text x="70" y="445" fill="#22d3ee" fontSize="7" fontFamily="monospace">RANGE: 50-500 km</text>
+    </svg>
+  </TechnicalBlueprint>
+);
+
 // Satellite Communication Diagram
 export const SatelliteDiagram = () => (
   <TechnicalBlueprint 

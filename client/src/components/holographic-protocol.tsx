@@ -4,7 +4,10 @@ import { RealisticWastelandCard, RealisticText, RealisticButton } from "./realis
 import { 
   MeshNetworkDiagram, 
   SMSGatewayDiagram, 
+  PhysicalHandshakeDiagram,
+  USBSneakernetDiagram,
   HamRadioDiagram, 
+  RadioBroadcastDiagram,
   SatelliteDiagram 
 } from './blueprint-diagrams';
 import { getProtocolIcon } from './protocol-icons';
@@ -95,18 +98,7 @@ function decodeSMSTransaction(smsText) {
     name: "PHYSICAL HANDSHAKE",
     category: "Offline Hardware Transfer",
     description: "Physical-delivery method for transactions. One person signs a transaction, another physically carries the data to a location with internet access.",
-    diagram: `
-    [WALLET A] → [SIGN TX] → [USB/QR] → [COURIER] → [BROADCAST STATION]
-                     │                      │              │
-                [OFFLINE]            [TRANSPORT]      [ONLINE]
-                     │                      │              │
-                [LOCAL SIGN]          [SNEAKERNET]    [BLOCKCHAIN]
-    
-    SECURITY LAYERS:
-    • Hardware wallet signing
-    • Encrypted data containers  
-    • Multiple courier verification
-    • Tamper-evident seals`,
+    diagram: <PhysicalHandshakeDiagram />,
     code: `// Physical Handshake Protocol
 class PhysicalHandshake {
   static createTransportPackage(signedTx) {
@@ -141,20 +133,7 @@ class PhysicalHandshake {
     name: "DATA RELIC",
     category: "USB Sneakernet",
     description: "Use a portable storage device as the data carrier. A signed transaction file is saved to a USB stick, physically moved to a device that has network access.",
-    diagram: `
-    [OFFLINE PC] → [USB STICK] → [ONLINE PC] → [BLOCKCHAIN]
-         │             │             │             │
-    [SIGN & SAVE] → [TRANSPORT] → [LOAD & TX] → [BROADCAST]
-    
-    FILE STRUCTURE:
-    /transaction_queue/
-    ├── pending/
-    │   ├── tx_001.json
-    │   └── tx_002.json
-    ├── signed/
-    │   └── batch_001.sig
-    └── broadcasted/
-        └── confirmed_001.json`,
+    diagram: <USBSneakernetDiagram />,
     code: `// Data Relic USB Protocol
 class DataRelic {
   static saveTransaction(usbPath, transaction) {
@@ -230,16 +209,7 @@ class StaticHaul {
     name: "GHOST MODE",
     category: "Radio Broadcast",
     description: "Leverage radio broadcasts to transmit transactions. Signed, compressed data packets converted to radio waves and broadcast over air.",
-    diagram: `
-    [TX DATA] → [MODULATE] → [BROADCAST] ~~~~ [RECEIVE] → [DEMOD] → [DECODE]
-         │           │           │      RF       │         │         │
-    [COMPRESS]   [FM/AM/SSB]  [ANTENNA]     [ANTENNA]  [SDR/RADIO] [EXTRACT]
-    
-    MODULATION SCHEMES:
-    • FSK: Frequency Shift Keying
-    • PSK: Phase Shift Keying  
-    • OFDM: Orthogonal Frequency Division
-    • Spread Spectrum: Anti-jam`,
+    diagram: <RadioBroadcastDiagram />,
     code: `// Ghost Mode Broadcast Protocol  
 class GhostMode {
   constructor(frequency, modulation = 'PSK31') {
