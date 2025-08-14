@@ -11,7 +11,27 @@ export default function RealisticHandheld() {
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const [currentInput, setCurrentInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
   const terminalRef = useRef<HTMLDivElement>(null);
+
+  // Responsive screen tracking
+  useEffect(() => {
+    const updateScreenSize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    updateScreenSize();
+    window.addEventListener('resize', updateScreenSize);
+    window.addEventListener('orientationchange', updateScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', updateScreenSize);
+      window.removeEventListener('orientationchange', updateScreenSize);
+    };
+  }, []);
 
   useEffect(() => {
     const bootSequence = [
@@ -149,57 +169,64 @@ export default function RealisticHandheld() {
     }
   };
 
+  // Calculate responsive dimensions
+  const isMobile = screenSize.width < 768;
+  const isTablet = screenSize.width >= 768 && screenSize.width < 1024;
+  const terminalHeight = isMobile ? 'h-64' : isTablet ? 'h-80' : 'h-96';
+  const headerPadding = isMobile ? 'px-4 py-3' : 'px-6 py-4';
+  const containerPadding = isMobile ? 'px-4 py-4' : 'px-6 py-8';
+
   return (
-    <div className="min-h-screen bg-black text-neutral-100">
-      {/* Terminal Header */}
-      <header className="border-b border-neutral-800 bg-neutral-900">
-        <div className="container mx-auto px-6 py-4">
+    <div className="min-h-screen bg-black text-neutral-100 overflow-x-hidden">
+      {/* Terminal Header - Fully Responsive */}
+      <header className="border-b border-neutral-800 bg-neutral-900 sticky top-0 z-40">
+        <div className={`container mx-auto ${headerPadding}`}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-neutral-800 border border-neutral-700 p-2">
-                <div className="w-full h-full bg-neutral-700 flex items-center justify-center text-lg">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className={`${isMobile ? 'w-10 h-10' : 'w-12 h-12'} bg-neutral-800 border border-neutral-700 p-1.5 md:p-2`}>
+                <div className="w-full h-full bg-neutral-700 flex items-center justify-center text-base md:text-lg">
                   📱
                 </div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-100 font-mono tracking-tight">
+                <h1 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-neutral-100 font-mono tracking-tight`}>
                   BLOKBOY 1000
                 </h1>
-                <p className="text-xs text-neutral-500 uppercase tracking-wider">
+                <p className={`${isMobile ? 'text-xs' : 'text-xs'} text-neutral-500 uppercase tracking-wider`}>
                   Handheld Transaction Terminal
                 </p>
               </div>
             </div>
             <Link href="/">
-              <RealisticButton variant="secondary" size="sm">
-                ← Return to Dashboard
+              <RealisticButton variant="secondary" size={isMobile ? "sm" : "sm"}>
+                {isMobile ? '←' : '← Return to Dashboard'}
               </RealisticButton>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Main Terminal Interface */}
-      <main className="container mx-auto px-6 py-8">
+      {/* Main Terminal Interface - Fully Responsive */}
+      <main className={`container mx-auto ${containerPadding}`}>
         <Tabs defaultValue="terminal" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-neutral-900 border border-neutral-800 h-10">
-            <TabsTrigger value="terminal" className="text-xs font-mono uppercase data-[state=active]:bg-neutral-700">
-              Terminal
+          <TabsList className={`grid w-full grid-cols-4 bg-neutral-900 border border-neutral-800 ${isMobile ? 'h-9' : 'h-10'}`}>
+            <TabsTrigger value="terminal" className={`${isMobile ? 'text-xs' : 'text-xs'} font-mono uppercase data-[state=active]:bg-neutral-700`}>
+              {isMobile ? 'Term' : 'Terminal'}
             </TabsTrigger>
-            <TabsTrigger value="encoder" className="text-xs font-mono uppercase data-[state=active]:bg-neutral-700">
-              Encoder
+            <TabsTrigger value="encoder" className={`${isMobile ? 'text-xs' : 'text-xs'} font-mono uppercase data-[state=active]:bg-neutral-700`}>
+              {isMobile ? 'Enc' : 'Encoder'}
             </TabsTrigger>
-            <TabsTrigger value="decoder" className="text-xs font-mono uppercase data-[state=active]:bg-neutral-700">
-              Decoder
+            <TabsTrigger value="decoder" className={`${isMobile ? 'text-xs' : 'text-xs'} font-mono uppercase data-[state=active]:bg-neutral-700`}>
+              {isMobile ? 'Dec' : 'Decoder'}
             </TabsTrigger>
-            <TabsTrigger value="status" className="text-xs font-mono uppercase data-[state=active]:bg-neutral-700">
+            <TabsTrigger value="status" className={`${isMobile ? 'text-xs' : 'text-xs'} font-mono uppercase data-[state=active]:bg-neutral-700`}>
               Status
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="terminal" className="mt-6">
+          <TabsContent value="terminal" className={`${isMobile ? 'mt-4' : 'mt-6'}`}>
             <RealisticWastelandCard variant="dark" className="p-0 overflow-hidden">
-              <div className="p-4 border-b border-neutral-800">
+              <div className={`${isMobile ? 'p-3' : 'p-4'} border-b border-neutral-800`}>
                 <RealisticText variant="terminal" className="text-neutral-500">
                   Terminal Session Active
                 </RealisticText>
@@ -207,7 +234,10 @@ export default function RealisticHandheld() {
               
               <div 
                 ref={terminalRef}
-                className="h-96 overflow-y-auto p-4 bg-black font-mono text-sm text-neutral-300 leading-relaxed"
+                className={`${terminalHeight} overflow-y-auto ${isMobile ? 'p-3' : 'p-4'} bg-black font-mono ${isMobile ? 'text-xs' : 'text-sm'} text-neutral-300 leading-relaxed`}
+                style={{
+                  maxHeight: isMobile ? `${screenSize.height * 0.4}px` : undefined
+                }}
               >
                 {!isBooted ? (
                   <div className="text-neutral-500">Booting system...</div>
@@ -224,13 +254,13 @@ export default function RealisticHandheld() {
               </div>
               
               {isBooted && (
-                <form onSubmit={handleSubmit} className="p-4 border-t border-neutral-800">
+                <form onSubmit={handleSubmit} className={`${isMobile ? 'p-3' : 'p-4'} border-t border-neutral-800`}>
                   <div className="flex gap-2">
-                    <span className="text-neutral-500 font-mono">{'>'}</span>
+                    <span className={`text-neutral-500 font-mono ${isMobile ? 'text-xs' : 'text-sm'}`}>{'>'}</span>
                     <Input
                       value={currentInput}
                       onChange={(e) => setCurrentInput(e.target.value)}
-                      className="flex-1 bg-transparent border-none text-neutral-100 font-mono focus:ring-0 p-0"
+                      className={`flex-1 bg-transparent border-none text-neutral-100 font-mono focus:ring-0 p-0 ${isMobile ? 'text-xs' : 'text-sm'}`}
                       placeholder="Enter command..."
                       disabled={isProcessing}
                       autoFocus
@@ -241,16 +271,16 @@ export default function RealisticHandheld() {
             </RealisticWastelandCard>
           </TabsContent>
 
-          <TabsContent value="encoder" className="mt-6">
-            <TransactionEncoder />
+          <TabsContent value="encoder" className={`${isMobile ? 'mt-4' : 'mt-6'}`}>
+            <TransactionEncoder isMobile={isMobile} />
           </TabsContent>
 
-          <TabsContent value="decoder" className="mt-6">
-            <TransactionDecoder />
+          <TabsContent value="decoder" className={`${isMobile ? 'mt-4' : 'mt-6'}`}>
+            <TransactionDecoder isMobile={isMobile} />
           </TabsContent>
 
-          <TabsContent value="status" className="mt-6">
-            <SystemStatus />
+          <TabsContent value="status" className={`${isMobile ? 'mt-4' : 'mt-6'}`}>
+            <SystemStatus isMobile={isMobile} />
           </TabsContent>
         </Tabs>
       </main>
@@ -259,7 +289,7 @@ export default function RealisticHandheld() {
 }
 
 // Transaction Encoder Component
-const TransactionEncoder = () => {
+const TransactionEncoder = ({ isMobile }: { isMobile: boolean }) => {
   const [transactionData, setTransactionData] = useState('');
   const [encodedFrame, setEncodedFrame] = useState('');
   const [isEncoding, setIsEncoding] = useState(false);
@@ -274,31 +304,32 @@ const TransactionEncoder = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <RealisticWastelandCard variant="default" className="p-6">
+    <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'lg:grid-cols-2 gap-6'}`}>
+      <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <RealisticText variant="subtitle" className="mb-4">Transaction Input</RealisticText>
         <div className="space-y-4">
           <Textarea
             value={transactionData}
             onChange={(e) => setTransactionData(e.target.value)}
             placeholder="Paste raw transaction data here..."
-            className="h-48 bg-neutral-900 border-neutral-700 text-neutral-100 font-mono text-sm resize-none"
+            className={`${isMobile ? 'h-32' : 'h-48'} bg-neutral-900 border-neutral-700 text-neutral-100 font-mono ${isMobile ? 'text-xs' : 'text-sm'} resize-none`}
           />
           <RealisticButton
             onClick={handleEncode}
             disabled={!transactionData.trim() || isEncoding}
             variant="primary"
             className="w-full"
+            size={isMobile ? "sm" : "md"}
           >
             {isEncoding ? 'Encoding...' : 'Encode for Transmission'}
           </RealisticButton>
         </div>
       </RealisticWastelandCard>
 
-      <RealisticWastelandCard variant="dark" className="p-6">
+      <RealisticWastelandCard variant="dark" className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <RealisticText variant="subtitle" className="mb-4">Encoded Frame</RealisticText>
         <div className="space-y-4">
-          <div className="h-48 bg-black border border-neutral-700 p-4 font-mono text-sm text-neutral-300 overflow-auto">
+          <div className={`${isMobile ? 'h-32' : 'h-48'} bg-black border border-neutral-700 ${isMobile ? 'p-3' : 'p-4'} font-mono ${isMobile ? 'text-xs' : 'text-sm'} text-neutral-300 overflow-auto`}>
             {encodedFrame ? (
               <div>
                 <div className="text-amber-400 mb-2">TRANSMISSION READY:</div>
@@ -312,7 +343,7 @@ const TransactionEncoder = () => {
             )}
           </div>
           {encodedFrame && (
-            <RealisticButton variant="danger" className="w-full">
+            <RealisticButton variant="danger" className="w-full" size={isMobile ? "sm" : "md"}>
               Broadcast via Radio
             </RealisticButton>
           )}
@@ -323,7 +354,7 @@ const TransactionEncoder = () => {
 };
 
 // Transaction Decoder Component  
-const TransactionDecoder = () => {
+const TransactionDecoder = ({ isMobile }: { isMobile: boolean }) => {
   const [receivedFrame, setReceivedFrame] = useState('');
   const [decodedTransaction, setDecodedTransaction] = useState('');
   const [isDecoding, setIsDecoding] = useState(false);
@@ -344,31 +375,32 @@ const TransactionDecoder = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <RealisticWastelandCard variant="default" className="p-6">
+    <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'lg:grid-cols-2 gap-6'}`}>
+      <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <RealisticText variant="subtitle" className="mb-4">Received Frame</RealisticText>
         <div className="space-y-4">
           <Textarea
             value={receivedFrame}
             onChange={(e) => setReceivedFrame(e.target.value)}
             placeholder="Paste received frame data here..."
-            className="h-48 bg-neutral-900 border-neutral-700 text-neutral-100 font-mono text-sm resize-none"
+            className={`${isMobile ? 'h-32' : 'h-48'} bg-neutral-900 border-neutral-700 text-neutral-100 font-mono ${isMobile ? 'text-xs' : 'text-sm'} resize-none`}
           />
           <RealisticButton
             onClick={handleDecode}
             disabled={!receivedFrame.trim() || isDecoding}
             variant="primary"
             className="w-full"
+            size={isMobile ? "sm" : "md"}
           >
             {isDecoding ? 'Decoding...' : 'Decode Transaction'}
           </RealisticButton>
         </div>
       </RealisticWastelandCard>
 
-      <RealisticWastelandCard variant="dark" className="p-6">
+      <RealisticWastelandCard variant="dark" className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <RealisticText variant="subtitle" className="mb-4">Decoded Transaction</RealisticText>
         <div className="space-y-4">
-          <div className="h-48 bg-black border border-neutral-700 p-4 font-mono text-sm text-neutral-300 overflow-auto">
+          <div className={`${isMobile ? 'h-32' : 'h-48'} bg-black border border-neutral-700 ${isMobile ? 'p-3' : 'p-4'} font-mono ${isMobile ? 'text-xs' : 'text-sm'} text-neutral-300 overflow-auto`}>
             {decodedTransaction ? (
               <pre className="text-neutral-100">{decodedTransaction}</pre>
             ) : (
@@ -376,7 +408,7 @@ const TransactionDecoder = () => {
             )}
           </div>
           {decodedTransaction && (
-            <RealisticButton variant="primary" className="w-full">
+            <RealisticButton variant="primary" className="w-full" size={isMobile ? "sm" : "md"}>
               Broadcast to Network
             </RealisticButton>
           )}
@@ -387,10 +419,10 @@ const TransactionDecoder = () => {
 };
 
 // System Status Component
-const SystemStatus = () => {
+const SystemStatus = ({ isMobile }: { isMobile: boolean }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <RealisticWastelandCard variant="default" className="p-6">
+    <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'md:grid-cols-2 gap-6'}`}>
+      <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <RealisticText variant="subtitle" className="mb-4">Device Status</RealisticText>
         <div className="space-y-3">
           <div className="flex justify-between">
@@ -416,7 +448,7 @@ const SystemStatus = () => {
         </div>
       </RealisticWastelandCard>
 
-      <RealisticWastelandCard variant="default" className="p-6">
+      <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <RealisticText variant="subtitle" className="mb-4">Network Status</RealisticText>
         <div className="space-y-3">
           <div className="flex justify-between">
