@@ -6,8 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AtmosphericEffects, ParallaxBackground, ScanLines } from "@/components/atmospheric-effects";
 import { WastelandText, WastelandButton } from "@/components/wasteland-ui";
 import NotFound from "@/pages/not-found";
-import Dashboard from "@/pages/dashboard";
-import Handheld from "@/pages/handheld";
+import Dashboard from "@/pages/dashboard-realistic";
+import Handheld from "@/pages/handheld-realistic";
 
 function Router() {
   return (
