@@ -15,14 +15,15 @@ export default function RealisticHandheld() {
 
   useEffect(() => {
     const bootSequence = [
-      'AV BLOKBOY 1000 INITIALIZING...',
+      'BLOKBOY 1000 INITIALIZING...',
       'HARDWARE CHECK: OK',
       'RADIO MODULE: ACTIVE',
       'MESH PROTOCOL: READY',
       'BLOCKCHAIN INTERFACE: CONNECTED',
+      'OCSH PROTOCOLS: LOADED',
       '',
       'Type "help" for available commands.',
-      'Type "continuum" for offline protocols.',
+      'Type "continuum" for OCSH protocols.',
       ''
     ];
     
@@ -80,7 +81,7 @@ export default function RealisticHandheld() {
             'decode        - Decode received transmission',
             'broadcast     - Send transaction via radio',
             'wallet        - View wallet information',
-            'continuum     - Access Darknet Continuum protocols',
+            'continuum     - Access OCSH protocols',
             'clear         - Clear terminal screen',
             'exit          - Return to main interface',
             ''
@@ -90,7 +91,7 @@ export default function RealisticHandheld() {
           response = [
             'SYSTEM STATUS:',
             '=============',
-            'Device: AV Blokboy 1000',
+            'Device: BLOKBOY 1000',
             'Radio: OPERATIONAL',
             'Mesh: 3 nodes connected',
             'Battery: 87%',
@@ -162,7 +163,7 @@ export default function RealisticHandheld() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-neutral-100 font-mono tracking-tight">
-                  AV BLOKBOY 1000
+                  BLOKBOY 1000
                 </h1>
                 <p className="text-xs text-neutral-500 uppercase tracking-wider">
                   Handheld Transaction Terminal
