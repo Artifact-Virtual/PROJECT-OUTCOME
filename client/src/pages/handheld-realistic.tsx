@@ -696,6 +696,49 @@ const SystemStatus = ({ isMobile }: { isMobile: boolean }) => {
           </div>
         </RealisticWastelandCard>
       </div>
+
+      {/* Footer with AV Logo */}
+      <footer className="mt-8 py-4 flex justify-center">
+        <div className="text-center">
+          <svg width="32" height="20" viewBox="0 0 32 20" className="text-cyan-400 opacity-60">
+            <defs>
+              <pattern id="digitalGrid" width="2" height="2" patternUnits="userSpaceOnUse">
+                <rect width="2" height="2" fill="none"/>
+                <rect width="1" height="1" fill="currentColor" opacity="0.1"/>
+              </pattern>
+            </defs>
+            
+            {/* Background grid pattern */}
+            <rect width="32" height="20" fill="url(#digitalGrid)"/>
+            
+            {/* A letter */}
+            <g fill="currentColor" stroke="currentColor" strokeWidth="0.5">
+              <polygon points="2,16 6,4 7,4 11,16 9.5,16 8.5,13 4.5,13 3.5,16" opacity="0.8"/>
+              <rect x="5" y="11" width="3" height="1" opacity="0.9"/>
+            </g>
+            
+            {/* V letter */}
+            <g fill="currentColor" stroke="currentColor" strokeWidth="0.5">
+              <polygon points="16,4 17.5,4 21,16 19.5,16 18,12 16,16 14,16 12,12 10.5,16 9,16 12.5,4 14,4" opacity="0.8"/>
+            </g>
+            
+            {/* Digital scan lines */}
+            <g opacity="0.2">
+              <line x1="0" y1="5" x2="32" y2="5" stroke="currentColor" strokeWidth="0.5"/>
+              <line x1="0" y1="10" x2="32" y2="10" stroke="currentColor" strokeWidth="0.5"/>
+              <line x1="0" y1="15" x2="32" y2="15" stroke="currentColor" strokeWidth="0.5"/>
+            </g>
+            
+            {/* Corner brackets */}
+            <g stroke="currentColor" strokeWidth="0.5" fill="none" opacity="0.4">
+              <path d="M1,1 L1,4 M1,1 L4,1"/>
+              <path d="M31,1 L31,4 M31,1 L28,1"/>
+              <path d="M1,19 L1,16 M1,19 L4,19"/>
+              <path d="M31,19 L31,16 M31,19 L28,19"/>
+            </g>
+          </svg>
+        </div>
+      </footer>
     </div>
   );
 };
