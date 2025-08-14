@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RealisticWastelandCard, RealisticText, RealisticButton } from "./realistic-wasteland";
+import { 
+  MeshNetworkDiagram, 
+  SMSGatewayDiagram, 
+  HamRadioDiagram, 
+  SatelliteDiagram 
+} from './blueprint-diagrams';
 
 interface Protocol {
   id: string;
   name: string;
   category: string;
   description: string;
-  diagram: string;
+  diagram: React.ReactNode;
   code: string;
   frequency?: string;
   range?: string;
@@ -20,16 +26,7 @@ const PROTOCOLS: Protocol[] = [
     name: "BONE NET",
     category: "Mesh Networking",
     description: "Create a decentralized, peer-to-peer network where devices connect directly to each other. Transactions are passed from device to device like whispers through a crowd.",
-    diagram: `
-    [NODE A] ←→ [NODE B] ←→ [NODE C]
-       ↑           ↕           ↓
-    [NODE D] ←→ [NODE E] ←→ [NODE F]
-    
-    MESH TOPOLOGY:
-    • Each node connects to 2-3 neighbors
-    • Data packets hop through network
-    • No central point of failure
-    • Self-healing network structure`,
+    diagram: <MeshNetworkDiagram />,
     code: `// BONE NET Protocol Implementation
 class BoneNetNode {
   constructor(nodeId) {
@@ -65,21 +62,7 @@ class BoneNetNode {
     name: "SIGNAL SCRIPT",
     category: "SMS Transactions",
     description: "Utilize existing cellular towers for basic communication. Transactions can be sent via plain-text SMS containing simple commands, wallet addresses, and signatures.",
-    diagram: `
-    [PHONE A] ──SMS──→ [CELL TOWER] ──SMS──→ [PHONE B]
-                          ↓
-                    [RELAY NODE]
-                          ↓
-                   [BLOCKCHAIN NET]
-    
-    MESSAGE FORMAT:
-    TX:0x742d35Cc:0.025ETH:SIGN:a7b3c9d2...
-    │  │         │       │    │
-    │  │         │       │    └─ Signature
-    │  │         │       └────── Command
-    │  │         └────────────── Amount  
-    │  └─────────────────────── To Address
-    └────────────────────────── Transaction`,
+    diagram: <SMSGatewayDiagram />,
     code: `// SMS Transaction Protocol
 function encodeSMSTransaction(tx) {
   const message = [
@@ -210,18 +193,7 @@ class DataRelic {
     name: "STATIC HAUL",
     category: "Ham Radio Blockchain",
     description: "Harness amateur radio power. If ham radio transmits emails across vast distances, it can transmit blockchain data - resilient, cross-border communication.",
-    diagram: `
-    [TX NODE] → [HAM RADIO] ~~~~ [HAM RADIO] → [RX NODE]
-                     │     RF      │               │
-                [ENCODE]        [DECODE]      [BROADCAST]
-                     │             │               │
-               [PACKET RADIO]  [PACKET RADIO] [BLOCKCHAIN]
-    
-    FREQUENCY BANDS:
-    • HF: 3-30MHz (long distance)
-    • VHF: 30-300MHz (regional)  
-    • UHF: 300-3000MHz (local)
-    • Packet Radio: AX.25 Protocol`,
+    diagram: <HamRadioDiagram />,
     code: `// Ham Radio Protocol Implementation
 class StaticHaul {
   constructor(callsign, frequency) {
@@ -304,18 +276,7 @@ class GhostMode {
     name: "SKYCHAIN RELAY",
     category: "Satellite Link",
     description: "Broadcast transactions directly into space using satellite dish. Satellite relays data back to receiving station connected to blockchain network.",
-    diagram: `
-    [GROUND STN] ──→ [SATELLITE] ──→ [GROUND STN]
-         │               │               │
-    [UPLINK DISH]   [TRANSPONDER]   [DOWNLINK]
-         │               │               │
-    [TX BLOCKCHAIN] [AMPLIFY/RELAY] [RX BLOCKCHAIN]
-    
-    ORBITAL MECHANICS:
-    • LEO: 90min orbit, frequent passes
-    • GEO: Stationary, constant coverage  
-    • MEO: Regional coverage, moderate delay
-    • Store-and-forward capability`,
+    diagram: <SatelliteDiagram />,
     code: `// Skychain Satellite Protocol
 class SkychainRelay {
   constructor(satellite, groundStation) {
@@ -475,10 +436,10 @@ export const HolographicProtocol = ({ protocolId, onClose }: HolographicProtocol
                 className="space-y-4"
               >
                 <RealisticText variant="subtitle" className="text-cyan-200 border-b border-cyan-400/30 pb-2">
-                  NETWORK TOPOLOGY
+                  TECHNICAL BLUEPRINT
                 </RealisticText>
-                <div className="p-4 bg-black border border-cyan-400/50 font-mono text-xs text-cyan-300 leading-relaxed overflow-auto">
-                  <pre className="whitespace-pre-wrap">{protocol.diagram}</pre>
+                <div className="border border-cyan-400/50 overflow-hidden">
+                  {protocol.diagram}
                 </div>
               </motion.div>
             </div>
