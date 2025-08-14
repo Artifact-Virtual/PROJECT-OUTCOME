@@ -535,12 +535,12 @@ export const ProtocolGrid = () => {
   const [selectedProtocol, setSelectedProtocol] = useState<string | null>(null);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {PROTOCOLS.map((protocol) => (
           <motion.div
             key={protocol.id}
-            className="p-4 bg-neutral-800 border border-neutral-700 hover:border-cyan-400/50 transition-all cursor-pointer relative overflow-hidden"
+            className="p-4 bg-neutral-800 border border-neutral-700 hover:border-cyan-400/50 transition-all cursor-pointer relative overflow-hidden group"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setSelectedProtocol(protocol.id)}
@@ -559,18 +559,20 @@ export const ProtocolGrid = () => {
             
             {/* Hover glow */}
             <motion.div
-              className="absolute inset-0 bg-cyan-400/5 opacity-0"
-              whileHover={{ opacity: 1 }}
+              className="absolute inset-0 bg-cyan-400/5 opacity-0 group-hover:opacity-100"
               transition={{ duration: 0.3 }}
             />
           </motion.div>
         ))}
       </div>
 
-      <HolographicProtocol 
-        protocolId={selectedProtocol || undefined}
-        onClose={() => setSelectedProtocol(null)}
-      />
+      {/* Ensure modal renders properly */}
+      {selectedProtocol && (
+        <HolographicProtocol 
+          protocolId={selectedProtocol}
+          onClose={() => setSelectedProtocol(null)}
+        />
+      )}
     </div>
   );
 };
