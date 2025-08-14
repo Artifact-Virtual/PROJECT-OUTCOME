@@ -337,99 +337,11 @@ export default function RealisticHandheld() {
           </TabsContent>
         </Tabs>
 
-        {/* Professional AV Logo Footer - Appears on All Tabs */}
+        {/* Simple Footer - Appears on All Tabs */}
         <footer className="mt-8 py-6 flex justify-center border-t border-neutral-800/50">
           <div className="text-center">
-            <svg width="64" height="40" viewBox="0 0 64 40" className="text-cyan-400 drop-shadow-md">
-              <defs>
-                {/* Advanced grid pattern */}
-                <pattern id="militaryGrid" width="4" height="4" patternUnits="userSpaceOnUse">
-                  <rect width="4" height="4" fill="none"/>
-                  <rect width="1" height="1" fill="currentColor" opacity="0.08"/>
-                  <rect x="2" y="2" width="1" height="1" fill="currentColor" opacity="0.05"/>
-                </pattern>
-                
-                {/* Holographic glow effect */}
-                <filter id="holoGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-                
-                {/* Circuit pattern */}
-                <pattern id="circuitPattern" width="8" height="8" patternUnits="userSpaceOnUse">
-                  <rect width="8" height="8" fill="none"/>
-                  <path d="M0,4 L2,4 L2,2 L6,2 L6,6 L8,6" stroke="currentColor" strokeWidth="0.3" opacity="0.15" fill="none"/>
-                  <circle cx="2" cy="4" r="0.5" fill="currentColor" opacity="0.1"/>
-                  <circle cx="6" cy="2" r="0.5" fill="currentColor" opacity="0.1"/>
-                </pattern>
-              </defs>
-              
-              {/* Main container with military border */}
-              <rect width="64" height="40" fill="rgba(0,0,0,0.4)" stroke="currentColor" strokeWidth="0.8" opacity="0.7"/>
-              <rect x="2" y="2" width="60" height="36" fill="url(#militaryGrid)" stroke="currentColor" strokeWidth="0.4" opacity="0.5"/>
-              
-              {/* Background circuit pattern */}
-              <rect x="4" y="4" width="56" height="32" fill="url(#circuitPattern)" opacity="0.3"/>
-              
-              {/* Enhanced A letter - Military stencil style */}
-              <g filter="url(#holoGlow)" fill="currentColor" stroke="currentColor" strokeWidth="0.3">
-                <polygon points="12,32 18,8 22,8 28,32 24.5,32 23,27 17,27 15.5,32" opacity="0.9"/>
-                <rect x="18" y="23" width="4" height="2" opacity="1"/>
-                {/* A letter reinforcement bars */}
-                <rect x="17.5" y="8" width="5" height="1" opacity="0.6"/>
-                <rect x="16" y="30" width="2" height="2" opacity="0.4"/>
-                <rect x="26" y="30" width="2" height="2" opacity="0.4"/>
-              </g>
-              
-              {/* Enhanced V letter - Military stencil style */}
-              <g filter="url(#holoGlow)" fill="currentColor" stroke="currentColor" strokeWidth="0.3">
-                <polygon points="34,8 38,8 44,32 40,32 38,24 36,32 32,32 30,24 28,32 24,32 30,8" opacity="0.9"/>
-                {/* V letter reinforcement elements */}
-                <rect x="33.5" y="8" width="5" height="1" opacity="0.6"/>
-                <circle cx="34" cy="20" r="0.8" opacity="0.3"/>
-                <circle cx="38" cy="20" r="0.8" opacity="0.3"/>
-              </g>
-              
-              {/* Professional corner brackets - Technical drawing style */}
-              <g stroke="currentColor" strokeWidth="1" fill="none" opacity="0.8">
-                <path d="M4,4 L4,10 M4,4 L10,4"/>
-                <path d="M60,4 L60,10 M60,4 L54,4"/>
-                <path d="M4,36 L4,30 M4,36 L10,36"/>
-                <path d="M60,36 L60,30 M60,36 L54,36"/>
-              </g>
-              
-              {/* Digital scan lines - Enhanced */}
-              <g stroke="currentColor" strokeWidth="0.4" opacity="0.25">
-                <line x1="0" y1="10" x2="64" y2="10"/>
-                <line x1="0" y1="20" x2="64" y2="20"/>
-                <line x1="0" y1="30" x2="64" y2="30"/>
-                <line x1="16" y1="0" x2="16" y2="40"/>
-                <line x1="32" y1="0" x2="32" y2="40"/>
-                <line x1="48" y1="0" x2="48" y2="40"/>
-              </g>
-              
-              {/* Status indicators */}
-              <g>
-                <circle cx="8" cy="8" r="1" fill="currentColor" opacity="0.6"/>
-                <circle cx="56" cy="8" r="1" fill="currentColor" opacity="0.6"/>
-                <circle cx="8" cy="32" r="1" fill="currentColor" opacity="0.6"/>
-                <circle cx="56" cy="32" r="1" fill="currentColor" opacity="0.6"/>
-              </g>
-              
-              {/* Central data flow indicator */}
-              <rect x="28" y="18" width="8" height="4" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.4"/>
-              <circle cx="32" cy="20" r="0.8" fill="currentColor" opacity="0.5"/>
-              
-              {/* Manufacturing spec text */}
-              <text x="32" y="37" textAnchor="middle" fill="currentColor" fontSize="2.5" fontFamily="monospace" opacity="0.4">MIL-STD-810</text>
-            </svg>
-            
-            {/* Manufacturer info */}
-            <div className="mt-2 text-xs font-mono text-neutral-600 opacity-60">
-              AUTONOMOUS VENTURES
+            <div className="text-xs font-mono text-neutral-600 opacity-60">
+              ARTIFACT VIRTUAL
             </div>
           </div>
         </footer>
