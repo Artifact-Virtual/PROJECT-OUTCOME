@@ -4,7 +4,9 @@
 
 This is a decentralized gaming platform built around the OCSH (On-Chain Survival Handbook) NFT collection. The application implements a hybrid web3 gaming experience with both on-chain and off-chain components, featuring real-time multiplayer gameplay, territory control, alliance systems, and an innovative Foundry Courier integration for offline transaction handling.
 
-The project follows a full-stack architecture with React/TypeScript frontend, Express.js backend, PostgreSQL database with Drizzle ORM, and WebSocket support for real-time features. The application is designed to work seamlessly both online and offline, with special emphasis on Web3 functionality through the Courier service.
+The project consists of two integrated applications: Part 1 (Main Dashboard) for strategic gameplay and Part 2 (Handheld PWA Terminal) for offline blockchain transaction handling. The project follows a full-stack architecture with React/TypeScript frontend, Express.js backend, PostgreSQL database with Drizzle ORM, and WebSocket support for real-time features.
+
+**Latest Major Update (January 2025)**: Comprehensive project documentation created in README.md with complete technical specifications, API endpoint mapping, and integration guidelines for final assembly.
 
 ## User Preferences
 
