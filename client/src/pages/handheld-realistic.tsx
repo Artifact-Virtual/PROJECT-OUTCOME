@@ -317,7 +317,6 @@ export default function RealisticHandheld() {
                       className={`flex-1 bg-transparent border-none text-neutral-100 font-mono focus:ring-0 p-0 ${isMobile ? 'text-xs' : 'text-sm'}`}
                       placeholder="Enter command..."
                       disabled={isProcessing}
-                      autoFocus
                     />
                   </div>
                 </form>
