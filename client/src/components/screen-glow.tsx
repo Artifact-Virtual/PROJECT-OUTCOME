@@ -117,14 +117,14 @@ export const ScreenGlow = () => {
           }}
         />
 
-        {/* Inner screen border glow */}
+        {/* Inner screen border glow - maximized to screen size */}
         <div 
-          className="absolute inset-4 border border-emerald-500/20 pointer-events-none"
+          className="absolute inset-0 border border-emerald-500/10 pointer-events-none"
           style={{
             boxShadow: `
-              inset 0 0 50px rgba(34, 197, 94, 0.1),
-              inset 0 0 100px rgba(34, 197, 94, 0.05),
-              0 0 50px rgba(34, 197, 94, 0.1)
+              inset 0 0 50px rgba(34, 197, 94, 0.05),
+              inset 0 0 100px rgba(34, 197, 94, 0.02),
+              0 0 30px rgba(34, 197, 94, 0.05)
             `
           }}
         />
