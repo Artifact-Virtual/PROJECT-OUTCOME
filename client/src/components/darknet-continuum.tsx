@@ -60,33 +60,33 @@ export const DarknetContinuumRelic = () => {
     <div className="space-y-6">
       {/* Relic Header */}
       <WastelandCard variant="terminal" className="p-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-radiation-green/5 to-steel-blue/5 animate-hologram-flicker" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ash-gray/10 to-charred-earth/15" />
         <div className="relative">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-radiation-green/20 border-2 border-radiation-green rounded flex items-center justify-center animate-radiation-pulse">
-              <span className="text-2xl">📡</span>
+            <div className="w-16 h-16 bg-ash-gray/30 border-2 border-ash-gray rounded flex items-center justify-center">
+              <span className="text-2xl opacity-70">📡</span>
             </div>
             <div>
-              <WastelandText variant="title" className="text-2xl text-radiation-green">
+              <WastelandText variant="title" className="text-2xl text-ash-gray">
                 DIGITAL RELIC RECOVERED
               </WastelandText>
-              <WastelandText variant="terminal" className="text-steel-blue">
+              <WastelandText variant="terminal" className="text-ash-gray/70">
                 CLEARANCE LEVEL: OMEGA
               </WastelandText>
             </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
-            <div className="pip-boy-screen p-3">
-              <div className="text-radiation-green font-bold">ORIGIN</div>
+            <div className="bg-charred-earth border border-ash-gray p-3">
+              <div className="text-burnt-amber font-bold">ORIGIN</div>
               <div className="text-ash-gray">PRE-COLLAPSE ARCHIVES</div>
             </div>
-            <div className="pip-boy-screen p-3">
-              <div className="text-radiation-green font-bold">STATUS</div>
+            <div className="bg-charred-earth border border-ash-gray p-3">
+              <div className="text-burnt-amber font-bold">STATUS</div>
               <div className="text-ash-gray">DECLASSIFIED</div>
             </div>
-            <div className="pip-boy-screen p-3">
-              <div className="text-radiation-green font-bold">PROTOCOLS</div>
+            <div className="bg-charred-earth border border-ash-gray p-3">
+              <div className="text-burnt-amber font-bold">PROTOCOLS</div>
               <div className="text-ash-gray">7 ACTIVE</div>
             </div>
           </div>
@@ -95,10 +95,10 @@ export const DarknetContinuumRelic = () => {
 
       {/* Manual Content */}
       <WastelandCard variant="default" className="p-6">
-        <WastelandText variant="title" className="text-3xl mb-2 text-center border-b-2 border-wasteland-orange pb-4">
+        <WastelandText variant="title" className="text-3xl mb-2 text-center border-b-2 border-ash-gray pb-4">
           {CONTINUUM_DATA.title}
         </WastelandText>
-        <WastelandText variant="subtitle" className="text-lg text-center text-steel-blue mb-6">
+        <WastelandText variant="subtitle" className="text-lg text-center text-ash-gray/70 mb-6">
           {CONTINUUM_DATA.subtitle}
         </WastelandText>
 
@@ -116,8 +116,8 @@ export const DarknetContinuumRelic = () => {
               key={protocol.id}
               className={`p-4 border-2 cursor-pointer transition-all duration-300 ${
                 selectedProtocol === index
-                  ? 'border-radiation-green bg-radiation-green/10'
-                  : 'border-ash-gray bg-charred-earth hover:border-steel-blue'
+                  ? 'border-burnt-amber bg-charred-earth border-opacity-80'
+                  : 'border-ash-gray bg-charred-earth hover:border-ash-gray hover:border-opacity-80'
               }`}
               onClick={() => setSelectedProtocol(selectedProtocol === index ? null : index)}
             >
@@ -144,11 +144,11 @@ export const DarknetContinuumRelic = () => {
         </div>
 
         {/* Core Doctrine */}
-        <WastelandCard variant="radiation" className="p-6">
-          <WastelandText variant="subtitle" className="mb-4 text-radiation-green border-b border-radiation-green pb-2">
+        <WastelandCard variant="default" className="p-6 border-2 border-ash-gray bg-charred-earth">
+          <WastelandText variant="subtitle" className="mb-4 text-burnt-amber border-b border-ash-gray pb-2">
             CORE DOCTRINE
           </WastelandText>
-          <WastelandText variant="body" className="text-foreground leading-relaxed">
+          <WastelandText variant="body" className="text-ash-gray leading-relaxed">
             {CONTINUUM_DATA.coreDoctrine}
           </WastelandText>
         </WastelandCard>

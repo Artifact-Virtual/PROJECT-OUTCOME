@@ -180,14 +180,14 @@ export default function Handheld() {
         <div className="relative container mx-auto px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 pip-boy-screen p-2">
-                <div className="w-full h-full bg-wasteland-orange flex items-center justify-center text-2xl">
+              <div className="w-16 h-16 bg-charred-earth border-2 border-ash-gray p-2">
+                <div className="w-full h-full bg-ash-gray/30 flex items-center justify-center text-2xl opacity-80">
                   📱
                 </div>
               </div>
               <div>
                 <WastelandText variant="title" glow className="text-3xl">
-                  PIP-BOY 3000 MARK IV
+                  AV BLOKBOY 1000
                 </WastelandText>
                 <WastelandText variant="terminal" className="text-ash-gray">
                   HANDHELD TRANSACTION TERMINAL
