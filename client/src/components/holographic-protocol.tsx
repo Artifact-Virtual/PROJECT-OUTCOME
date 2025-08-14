@@ -7,6 +7,7 @@ import {
   HamRadioDiagram, 
   SatelliteDiagram 
 } from './blueprint-diagrams';
+import { getProtocolIcon } from './protocol-icons';
 
 interface Protocol {
   id: string;
@@ -361,20 +362,11 @@ export const HolographicProtocol = ({ protocolId, onClose }: HolographicProtocol
             <div className="p-6 border-b border-neutral-700 bg-gradient-to-r from-neutral-900 to-neutral-800 relative">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <motion.div
-                    className="w-16 h-16 bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center relative"
-                    animate={{
-                      boxShadow: [
-                        "0 0 20px rgba(34,211,238,0.5)",
-                        "0 0 40px rgba(34,211,238,0.8)",
-                        "0 0 20px rgba(34,211,238,0.5)"
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <span className="text-2xl text-cyan-300">📡</span>
-                    <div className="absolute inset-0 bg-cyan-400/10 animate-pulse"></div>
-                  </motion.div>
+                  <div className="w-16 h-16 bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center">
+                    <div className="scale-150">
+                      {getProtocolIcon(protocol.id)}
+                    </div>
+                  </div>
                   <div>
                     <RealisticText variant="title" className="text-2xl text-cyan-100">
                       {protocol.name}
@@ -459,32 +451,7 @@ export const HolographicProtocol = ({ protocolId, onClose }: HolographicProtocol
               </div>
             </motion.div>
 
-            {/* Floating holographic elements */}
-            <motion.div
-              className="absolute top-4 right-4 w-4 h-4 bg-cyan-400 rounded-full opacity-60"
-              animate={{
-                y: [0, -10, 0],
-                opacity: [0.6, 1, 0.6]
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            <motion.div
-              className="absolute bottom-4 left-4 w-3 h-3 bg-cyan-300 rounded-full opacity-40"
-              animate={{
-                y: [0, -15, 0],
-                opacity: [0.4, 0.8, 0.4]
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-            />
+
           </RealisticWastelandCard>
         </motion.div>
       </motion.div>
@@ -506,7 +473,10 @@ export const ProtocolGrid = () => {
             whileTap={{ scale: 0.98 }}
             onClick={() => setSelectedProtocol(protocol.id)}
           >
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 flex items-center justify-center bg-cyan-500/10 border border-cyan-400/30">
+                {getProtocolIcon(protocol.id)}
+              </div>
               <div className="px-2 py-1 bg-cyan-500/20 border border-cyan-400/50 text-xs font-mono text-cyan-300">
                 {protocol.id}
               </div>
@@ -518,11 +488,8 @@ export const ProtocolGrid = () => {
               {protocol.category}
             </RealisticText>
             
-            {/* Hover glow */}
-            <motion.div
-              className="absolute inset-0 bg-cyan-400/5 opacity-0 group-hover:opacity-100"
-              transition={{ duration: 0.3 }}
-            />
+            {/* Hover glow - subtle */}
+            <div className="absolute inset-0 bg-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </motion.div>
         ))}
       </div>
