@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RealisticWastelandCard, RealisticText, RealisticButton } from "@/components/realistic-wasteland";
 import { getContinuumText } from "@/components/darknet-continuum";
+import { useDeviceSensors } from "@/hooks/use-device-sensors";
+import { useWeather } from "@/hooks/use-weather";
 
 export default function RealisticHandheld() {
   const [isBooted, setIsBooted] = useState(false);
@@ -420,59 +422,228 @@ const TransactionDecoder = ({ isMobile }: { isMobile: boolean }) => {
 
 // System Status Component
 const SystemStatus = ({ isMobile }: { isMobile: boolean }) => {
-  return (
-    <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'md:grid-cols-2 gap-6'}`}>
-      <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
-        <RealisticText variant="subtitle" className="mb-4">Device Status</RealisticText>
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Model</span>
-            <span className="text-neutral-100 font-mono">AV Blokboy 1000</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Battery</span>
-            <span className="text-emerald-400">87%</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Radio Module</span>
-            <span className="text-emerald-400">OPERATIONAL</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Mesh Network</span>
-            <span className="text-emerald-400">CONNECTED</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Signal Strength</span>
-            <span className="text-emerald-400">STRONG</span>
-          </div>
-        </div>
-      </RealisticWastelandCard>
+  const { 
+    deviceInfo, 
+    systemMetrics, 
+    isScanning, 
+    errors, 
+    startDeviceScan,
+    requestPermission,
+    updateLocationInfo 
+  } = useDeviceSensors();
+  
+  const { weatherData, isLoading: weatherLoading, error: weatherError, refreshWeather } = useWeather();
 
-      <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
-        <RealisticText variant="subtitle" className="mb-4">Network Status</RealisticText>
-        <div className="space-y-3">
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Network</span>
-            <span className="text-neutral-100">Base (8453)</span>
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const getStatusColor = (value: number, thresholds: { good: number; warning: number }) => {
+    if (value >= thresholds.good) return 'text-emerald-400';
+    if (value >= thresholds.warning) return 'text-yellow-400';
+    return 'text-red-400';
+  };
+
+  const getPermissionColor = (state: PermissionState | null) => {
+    switch (state) {
+      case 'granted': return 'text-emerald-400';
+      case 'prompt': return 'text-yellow-400';
+      case 'denied': return 'text-red-400';
+      default: return 'text-neutral-400';
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Scan Controls */}
+      <div className="flex gap-2 mb-4">
+        <RealisticButton 
+          onClick={startDeviceScan} 
+          disabled={isScanning}
+          size={isMobile ? "sm" : "md"}
+          variant="primary"
+        >
+          {isScanning ? 'Scanning...' : 'Refresh Sensors'}
+        </RealisticButton>
+        <RealisticButton 
+          onClick={refreshWeather}
+          disabled={weatherLoading}
+          size={isMobile ? "sm" : "md"}
+          variant="secondary"
+        >
+          {weatherLoading ? 'Loading...' : 'Update Weather'}
+        </RealisticButton>
+      </div>
+
+      {/* Error Display */}
+      {errors.length > 0 && (
+        <RealisticWastelandCard variant="dark" className={`${isMobile ? 'p-3' : 'p-4'} border-red-500/30`}>
+          <RealisticText variant="caption" className="text-red-400 mb-2">SYSTEM ALERTS</RealisticText>
+          {errors.map((error, index) => (
+            <div key={index} className="text-xs text-red-300 font-mono">{error}</div>
+          ))}
+        </RealisticWastelandCard>
+      )}
+
+      <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'lg:grid-cols-2 gap-6'}`}>
+        {/* Hardware Status */}
+        <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
+          <RealisticText variant="subtitle" className="mb-4">Hardware Status</RealisticText>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-neutral-400">Battery</span>
+              <span className={deviceInfo.battery ? getStatusColor(deviceInfo.battery.level, { good: 50, warning: 20 }) : 'text-neutral-500'}>
+                {deviceInfo.battery ? `${deviceInfo.battery.level}% ${deviceInfo.battery.charging ? '⚡' : ''}` : 'N/A'}
+              </span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span className="text-neutral-400">Memory</span>
+              <span className="text-emerald-400">
+                {systemMetrics.memoryUsage 
+                  ? `${formatBytes(systemMetrics.memoryUsage.usedJSHeapSize)} / ${formatBytes(systemMetrics.memoryUsage.jsHeapSizeLimit)}`
+                  : `${deviceInfo.deviceMemory || 'Unknown'} GB`
+                }
+              </span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span className="text-neutral-400">CPU Cores</span>
+              <span className="text-emerald-400">{deviceInfo.hardwareConcurrency}</span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span className="text-neutral-400">Screen</span>
+              <span className="text-emerald-400">{systemMetrics.screenResolution} @{systemMetrics.devicePixelRatio}x</span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span className="text-neutral-400">Timezone</span>
+              <span className="text-emerald-400">{systemMetrics.timezone}</span>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Connected Nodes</span>
-            <span className="text-emerald-400">3</span>
+        </RealisticWastelandCard>
+
+        {/* Network & Location */}
+        <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
+          <RealisticText variant="subtitle" className="mb-4">Network & Location</RealisticText>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-neutral-400">Connection</span>
+              <span className={deviceInfo.connection.online ? 'text-emerald-400' : 'text-red-400'}>
+                {deviceInfo.connection.online ? 'ONLINE' : 'OFFLINE'}
+              </span>
+            </div>
+            
+            {deviceInfo.network && (
+              <>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Network Type</span>
+                  <span className="text-emerald-400">{deviceInfo.network.effectiveType.toUpperCase()}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Downlink</span>
+                  <span className="text-emerald-400">{deviceInfo.network.downlink} Mbps</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Latency</span>
+                  <span className="text-emerald-400">{deviceInfo.network.rtt}ms</span>
+                </div>
+              </>
+            )}
+            
+            {deviceInfo.location ? (
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">GPS</span>
+                  <span className="text-emerald-400">ACTIVE</span>
+                </div>
+                <div className="text-xs font-mono text-neutral-300">
+                  {deviceInfo.location.latitude.toFixed(6)}, {deviceInfo.location.longitude.toFixed(6)}
+                </div>
+                <div className="text-xs text-neutral-400">
+                  Accuracy: ±{Math.round(deviceInfo.location.accuracy)}m
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-between">
+                <span className="text-neutral-400">GPS</span>
+                <RealisticButton 
+                  onClick={() => requestPermission('geolocation')}
+                  size="sm"
+                  variant="ghost"
+                  className="text-yellow-400 h-auto p-1"
+                >
+                  REQUEST ACCESS
+                </RealisticButton>
+              </div>
+            )}
           </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Transactions Queued</span>
-            <span className="text-amber-400">2</span>
+        </RealisticWastelandCard>
+
+        {/* Weather Data */}
+        {weatherData && (
+          <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
+            <RealisticText variant="subtitle" className="mb-4">Environmental</RealisticText>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Location</span>
+                <span className="text-emerald-400">{weatherData.location}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Temperature</span>
+                <span className="text-emerald-400">{weatherData.temperature}°C</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Humidity</span>
+                <span className="text-emerald-400">{weatherData.humidity}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Pressure</span>
+                <span className="text-emerald-400">{weatherData.pressure} hPa</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Wind</span>
+                <span className="text-emerald-400">{weatherData.windSpeed} m/s</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Conditions</span>
+                <span className="text-emerald-400">{weatherData.description}</span>
+              </div>
+            </div>
+          </RealisticWastelandCard>
+        )}
+
+        {/* Permissions */}
+        <RealisticWastelandCard variant="default" className={`${isMobile ? 'p-4' : 'p-6'}`}>
+          <RealisticText variant="subtitle" className="mb-4">Hardware Access</RealisticText>
+          <div className="space-y-3">
+            {Object.entries(deviceInfo.permissions).map(([permission, state]) => (
+              <div key={permission} className="flex justify-between items-center">
+                <span className="text-neutral-400 capitalize">{permission}</span>
+                {state === 'granted' ? (
+                  <span className={getPermissionColor(state)}>GRANTED</span>
+                ) : (
+                  <RealisticButton 
+                    onClick={() => requestPermission(permission as any)}
+                    size="sm"
+                    variant="ghost"
+                    className={`${getPermissionColor(state)} h-auto p-1`}
+                  >
+                    {state === 'denied' ? 'DENIED' : 'REQUEST'}
+                  </RealisticButton>
+                )}
+              </div>
+            ))}
           </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Last Sync</span>
-            <span className="text-neutral-100">12 seconds ago</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-400">Status</span>
-            <span className="text-emerald-400">SYNCHRONIZED</span>
-          </div>
-        </div>
-      </RealisticWastelandCard>
+        </RealisticWastelandCard>
+      </div>
     </div>
   );
 };
