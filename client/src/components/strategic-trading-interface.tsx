@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { STRATEGIC_ITEMS, getItemsByCategory, getItemsByTier, type GameItem, type ItemCategory, type ItemTier } from "@shared/game-items";
+import { ALL_GAME_ITEMS, STRATEGIC_ITEMS, CONSUMABLE_ITEMS, COLLECTIBLE_ITEMS, getItemsByCategory, getItemsByTier, type GameItem, type ItemCategory, type ItemTier, type MintCost } from "@shared/game-items";
 
 // Strategic Item Listing for marketplace
 interface StrategicListing {
@@ -150,6 +150,9 @@ export function StrategicTradingInterface() {
       case 'resource_generation': return '⚡';
       case 'intelligence': return '🔍';
       case 'defense_systems': return '🛡️';
+      case 'consumables': return '⚗️';
+      case 'collectibles': return '💎';
+      case 'materials': return '🔧';
       default: return '📦';
     }
   };
@@ -190,12 +193,18 @@ export function StrategicTradingInterface() {
       </div>
 
       <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-neutral-900 border border-neutral-700">
+        <TabsList className="grid w-full grid-cols-4 bg-neutral-900 border border-neutral-700">
           <TabsTrigger 
             value="marketplace" 
             className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700"
           >
             Marketplace
+          </TabsTrigger>
+          <TabsTrigger 
+            value="mint" 
+            className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700"
+          >
+            Mint Items
           </TabsTrigger>
           <TabsTrigger 
             value="inventory" 
@@ -234,6 +243,9 @@ export function StrategicTradingInterface() {
                 <SelectItem value="resource_generation">Resource Generation</SelectItem>
                 <SelectItem value="intelligence">Intelligence</SelectItem>
                 <SelectItem value="defense_systems">Defense Systems</SelectItem>
+                <SelectItem value="consumables">Consumables</SelectItem>
+                <SelectItem value="collectibles">Collectibles</SelectItem>
+                <SelectItem value="materials">Materials</SelectItem>
               </SelectContent>
             </Select>
             <Select value={selectedTier} onValueChange={(value) => setSelectedTier(value as ItemTier | "all")}>
@@ -348,6 +360,133 @@ export function StrategicTradingInterface() {
               </RealisticText>
             </RealisticWastelandCard>
           )}
+        </TabsContent>
+
+        <TabsContent value="mint" className="space-y-6 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Strategic Items Minting */}
+            <RealisticWastelandCard variant="dark" className="p-4">
+              <RealisticText variant="body" className="font-semibold mb-3 text-center">Strategic Equipment</RealisticText>
+              <ScrollArea className="h-64">
+                <div className="space-y-2">
+                  {STRATEGIC_ITEMS.filter(item => item.mintable).map((item) => (
+                    <div key={item.id} className="p-2 bg-neutral-800 border border-neutral-700 rounded">
+                      <div className="flex items-center justify-between mb-1">
+                        <RealisticText variant="caption" className="font-medium">{item.name}</RealisticText>
+                        <Badge variant="outline" className={getTierColor(item.tier)}>
+                          {item.tier.toUpperCase()}
+                        </Badge>
+                      </div>
+                      <RealisticText variant="caption" className="text-neutral-400 text-xs mb-2">
+                        {item.description}
+                      </RealisticText>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-emerald-400">
+                          Mint: {item.mintCost?.baseETH ? `${parseFloat(item.mintCost.baseETH) / 1e18} ETH` : 'Free'}
+                        </span>
+                        <RealisticButton size="sm" variant="primary" disabled={!canAffordItem({ item, currency: 'ETH' } as StrategicListing)}>
+                          Mint
+                        </RealisticButton>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </RealisticWastelandCard>
+
+            {/* Consumable Items Minting */}
+            <RealisticWastelandCard variant="dark" className="p-4">
+              <RealisticText variant="body" className="font-semibold mb-3 text-center">Consumables</RealisticText>
+              <ScrollArea className="h-64">
+                <div className="space-y-2">
+                  {CONSUMABLE_ITEMS.filter(item => item.mintable).map((item) => (
+                    <div key={item.id} className="p-2 bg-neutral-800 border border-neutral-700 rounded">
+                      <div className="flex items-center justify-between mb-1">
+                        <RealisticText variant="caption" className="font-medium">{item.name}</RealisticText>
+                        <Badge variant="outline" className={getRarityColor(item.rarity)}>
+                          {item.rarity.toUpperCase()}
+                        </Badge>
+                      </div>
+                      <RealisticText variant="caption" className="text-neutral-400 text-xs mb-2">
+                        Single use: {getEffectDescription(item)}
+                      </RealisticText>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-emerald-400">
+                          Mint: {item.mintCost?.baseETH ? `${parseFloat(item.mintCost.baseETH) / 1e18} ETH` : 'Free'}
+                        </span>
+                        <RealisticButton size="sm" variant="primary" disabled={!canAffordItem({ item, currency: 'ETH' } as StrategicListing)}>
+                          Mint
+                        </RealisticButton>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </RealisticWastelandCard>
+
+            {/* Materials Minting */}
+            <RealisticWastelandCard variant="dark" className="p-4">
+              <RealisticText variant="body" className="font-semibold mb-3 text-center">Crafting Materials</RealisticText>
+              <ScrollArea className="h-64">
+                <div className="space-y-2">
+                  {ALL_GAME_ITEMS.filter(item => item.category === 'materials' && item.mintable).map((item) => (
+                    <div key={item.id} className="p-2 bg-neutral-800 border border-neutral-700 rounded">
+                      <div className="flex items-center justify-between mb-1">
+                        <RealisticText variant="caption" className="font-medium">{item.name}</RealisticText>
+                        <Badge variant="outline" className="text-gray-400">
+                          MATERIAL
+                        </Badge>
+                      </div>
+                      <RealisticText variant="caption" className="text-neutral-400 text-xs mb-2">
+                        Stack: {item.maxStack} • {item.description}
+                      </RealisticText>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-emerald-400">
+                          Mint: {item.mintCost?.baseETH ? `${parseFloat(item.mintCost.baseETH) / 1e18} ETH` : 'Free'}
+                        </span>
+                        <div className="flex gap-1">
+                          <Input 
+                            type="number" 
+                            placeholder="Qty" 
+                            className="w-16 h-6 text-xs bg-neutral-700 border-neutral-600"
+                            min="1"
+                            max={item.maxStack}
+                          />
+                          <RealisticButton size="sm" variant="primary">
+                            Mint
+                          </RealisticButton>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </RealisticWastelandCard>
+          </div>
+
+          <RealisticWastelandCard variant="default" className="p-4 mt-6">
+            <RealisticText variant="subtitle" className="mb-3">Minting Information</RealisticText>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <RealisticText variant="body" className="text-amber-400 font-semibold">Strategic Equipment</RealisticText>
+                <RealisticText variant="caption" className="text-neutral-400">
+                  Permanent items that enhance your capabilities. Most require materials and energy.
+                </RealisticText>
+              </div>
+              <div>
+                <RealisticText variant="body" className="text-blue-400 font-semibold">Consumables</RealisticText>
+                <RealisticText variant="caption" className="text-neutral-400">
+                  Single-use items with powerful temporary effects. Perfect for critical battles.
+                </RealisticText>
+              </div>
+              <div>
+                <RealisticText variant="body" className="text-green-400 font-semibold">Materials</RealisticText>
+                <RealisticText variant="caption" className="text-neutral-400">
+                  Essential components for crafting advanced equipment. Cheaply mintable in bulk.
+                </RealisticText>
+              </div>
+            </div>
+          </RealisticWastelandCard>
         </TabsContent>
 
         <TabsContent value="inventory" className="space-y-6 mt-6">

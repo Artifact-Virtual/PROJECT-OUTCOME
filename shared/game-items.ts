@@ -15,6 +15,10 @@ export interface GameItem {
   craftingRecipe?: CraftingRecipe;
   requiredLevel?: number;
   rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  itemType: 'permanent' | 'consumable' | 'depleting' | 'collectible';
+  durability?: number; // For depleting items
+  mintable: boolean; // Whether players can mint this item
+  mintCost?: MintCost; // Cost to mint the item
 }
 
 export type ItemCategory = 
@@ -24,7 +28,10 @@ export type ItemCategory =
   | 'battle_enhancement' 
   | 'resource_generation' 
   | 'intelligence'
-  | 'defense_systems';
+  | 'defense_systems'
+  | 'consumables'
+  | 'collectibles'
+  | 'materials';
 
 export type ItemTier = 'basic' | 'advanced' | 'military' | 'experimental';
 
@@ -33,6 +40,8 @@ export interface GameplayEffect {
   value: number;
   duration?: number; // in hours, null for permanent
   stacksWith?: string[]; // item IDs that can stack with this effect
+  consumesOnUse?: boolean; // Whether item is consumed when activated
+  cooldown?: number; // Cooldown in hours before reuse
 }
 
 export type EffectType = 
@@ -54,6 +63,13 @@ export interface CraftingRecipe {
   skillRequirement?: number;
 }
 
+export interface MintCost {
+  baseETH?: string; // Base ETH cost in wei
+  arcxTokens?: string; // ARCx token cost
+  materials?: { itemId: string; quantity: number }[]; // Required materials
+  energyCost?: number; // Energy/resource cost
+}
+
 // Strategic Items that enhance gameplay
 export const STRATEGIC_ITEMS: GameItem[] = [
   // Communication Enhancement
@@ -71,7 +87,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Reduces message transmission costs by 25% and adds basic encryption',
     stackable: false,
     requiredLevel: 3,
-    rarity: 'common'
+    rarity: 'common',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '3000000000000000', // 0.003 ETH
+      materials: [{ itemId: 'electronic_components', quantity: 2 }]
+    }
   },
   {
     id: 'quantum_relay_mk3',
@@ -88,7 +110,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Military-grade comms with 75% cost reduction and +10% alliance coordination',
     stackable: false,
     requiredLevel: 15,
-    rarity: 'rare'
+    rarity: 'rare',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '15000000000000000', // 0.015 ETH
+      materials: [{ itemId: 'quantum_crystal', quantity: 1 }, { itemId: 'military_chipset', quantity: 1 }]
+    }
   },
 
   // Territory Control
@@ -107,7 +135,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     stackable: true,
     maxStack: 3,
     requiredLevel: 5,
-    rarity: 'common'
+    rarity: 'common',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '5000000000000000',
+      materials: [{ itemId: 'electronic_components', quantity: 3 }]
+    }
   },
   {
     id: 'fortress_protocol_chip',
@@ -124,7 +158,14 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Experimental tech: +50% territory defense, +25% supply efficiency, stealth mode',
     stackable: false,
     requiredLevel: 25,
-    rarity: 'legendary'
+    rarity: 'legendary',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '25000000000000000',
+      materials: [{ itemId: 'quantum_crystal', quantity: 3 }, { itemId: 'military_chipset', quantity: 2 }],
+      energyCost: 500
+    }
   },
 
   // Battle Enhancement
@@ -143,7 +184,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     stackable: true,
     maxStack: 5,
     requiredLevel: 8,
-    rarity: 'uncommon'
+    rarity: 'uncommon',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '8000000000000000',
+      materials: [{ itemId: 'military_chipset', quantity: 1 }]
+    }
   },
   {
     id: 'war_machine_core',
@@ -159,7 +206,14 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Permanent +100% individual battle power and +25% alliance coordination',
     stackable: false,
     requiredLevel: 20,
-    rarity: 'epic'
+    rarity: 'epic',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '20000000000000000',
+      materials: [{ itemId: 'quantum_crystal', quantity: 2 }, { itemId: 'military_chipset', quantity: 3 }],
+      energyCost: 300
+    }
   },
 
   // Resource Generation
@@ -177,7 +231,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     stackable: true,
     maxStack: 10,
     requiredLevel: 4,
-    rarity: 'common'
+    rarity: 'common',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '4000000000000000',
+      materials: [{ itemId: 'electronic_components', quantity: 2 }]
+    }
   },
   {
     id: 'nano_fabricator',
@@ -193,7 +253,14 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Advanced fabricator: +200% resource generation, +50% supply efficiency',
     stackable: false,
     requiredLevel: 30,
-    rarity: 'legendary'
+    rarity: 'legendary',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '30000000000000000',
+      materials: [{ itemId: 'quantum_crystal', quantity: 5 }, { itemId: 'military_chipset', quantity: 3 }],
+      energyCost: 800
+    }
   },
 
   // Intelligence Gathering
@@ -212,7 +279,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     stackable: true,
     maxStack: 3,
     requiredLevel: 10,
-    rarity: 'uncommon'
+    rarity: 'uncommon',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '7000000000000000',
+      materials: [{ itemId: 'electronic_components', quantity: 2 }]
+    }
   },
 
   // Alliance Management
@@ -231,7 +304,14 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Alliance-wide benefits: +50% coordination, encrypted comms, +30% supply efficiency',
     stackable: false,
     requiredLevel: 18,
-    rarity: 'rare'
+    rarity: 'rare',
+    itemType: 'permanent',
+    mintable: true,
+    mintCost: {
+      baseETH: '18000000000000000',
+      materials: [{ itemId: 'quantum_crystal', quantity: 2 }, { itemId: 'military_chipset', quantity: 2 }],
+      energyCost: 250
+    }
   },
 
   // Defense Systems
@@ -249,7 +329,13 @@ export const STRATEGIC_ITEMS: GameItem[] = [
     description: 'Powerful shield: +75% territory defense and +25% battle power for 72 hours',
     stackable: false,
     requiredLevel: 12,
-    rarity: 'rare'
+    rarity: 'rare',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '10000000000000000',
+      materials: [{ itemId: 'military_chipset', quantity: 1 }, { itemId: 'electronic_components', quantity: 3 }]
+    }
   }
 ];
 
@@ -266,7 +352,12 @@ export const CRAFTING_MATERIALS: GameItem[] = [
     description: 'Essential component for advanced technology crafting',
     stackable: true,
     maxStack: 50,
-    rarity: 'common'
+    rarity: 'common',
+    itemType: 'collectible',
+    mintable: true,
+    mintCost: {
+      baseETH: '1000000000000000'
+    }
   },
   {
     id: 'military_chipset',
@@ -279,8 +370,177 @@ export const CRAFTING_MATERIALS: GameItem[] = [
     description: 'Required for crafting military-tier combat equipment',
     stackable: true,
     maxStack: 20,
-    rarity: 'uncommon'
+    rarity: 'uncommon',
+    itemType: 'collectible',
+    mintable: true,
+    mintCost: {
+      baseETH: '5000000000000000'
+    }
   }
+];
+
+// Consumable Items - Single-use items with powerful temporary effects
+export const CONSUMABLE_ITEMS: GameItem[] = [
+  {
+    id: 'combat_stim_pack',
+    name: 'Combat Stimulant Pack',
+    category: 'consumables',
+    tier: 'basic',
+    priceETH: '0.003',
+    priceARCX: '90',
+    gameplayEffects: [
+      { type: 'battle_power_boost', value: 50, duration: 6, consumesOnUse: true }
+    ],
+    description: 'Massive +50% battle power for 6 hours. Single use.',
+    stackable: true,
+    maxStack: 10,
+    requiredLevel: 5,
+    rarity: 'common',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '2000000000000000',
+      materials: [{ itemId: 'electronic_components', quantity: 1 }]
+    }
+  },
+  {
+    id: 'territory_fortifier',
+    name: 'Emergency Territory Fortifier',
+    category: 'consumables',
+    tier: 'advanced',
+    priceETH: '0.007',
+    priceARCX: '210',
+    gameplayEffects: [
+      { type: 'territory_defense_bonus', value: 100, duration: 12, consumesOnUse: true },
+      { type: 'stealth_operations', value: 3, duration: 12, consumesOnUse: true }
+    ],
+    description: 'Emergency use: +100% territory defense and stealth for 12 hours',
+    stackable: true,
+    maxStack: 5,
+    requiredLevel: 10,
+    rarity: 'uncommon',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '5000000000000000',
+      materials: [{ itemId: 'military_chipset', quantity: 1 }]
+    }
+  },
+  {
+    id: 'alliance_rally_beacon',
+    name: 'Alliance Rally Beacon',
+    category: 'consumables',
+    tier: 'military',
+    priceETH: '0.015',
+    priceARCX: '450',
+    gameplayEffects: [
+      { type: 'alliance_coordination_bonus', value: 75, duration: 24, consumesOnUse: true },
+      { type: 'communication_encryption', value: 5, duration: 24, consumesOnUse: true }
+    ],
+    description: 'Rally your alliance: +75% coordination and max encryption for 24 hours',
+    stackable: true,
+    maxStack: 3,
+    requiredLevel: 15,
+    rarity: 'rare',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '10000000000000000',
+      materials: [{ itemId: 'quantum_crystal', quantity: 1 }, { itemId: 'military_chipset', quantity: 2 }],
+      energyCost: 200
+    }
+  },
+  {
+    id: 'resource_surge_catalyst',
+    name: 'Resource Surge Catalyst',
+    category: 'consumables',
+    tier: 'experimental',
+    priceETH: '0.025',
+    priceARCX: '750',
+    gameplayEffects: [
+      { type: 'resource_generation_rate', value: 500, duration: 8, consumesOnUse: true }
+    ],
+    description: 'Experimental catalyst: +500% resource generation for 8 hours. Extremely rare.',
+    stackable: true,
+    maxStack: 2,
+    requiredLevel: 25,
+    rarity: 'legendary',
+    itemType: 'consumable',
+    mintable: true,
+    mintCost: {
+      baseETH: '20000000000000000',
+      materials: [{ itemId: 'quantum_crystal', quantity: 3 }],
+      energyCost: 400
+    }
+  }
+];
+
+// Collectible Items - Rare items with lore value and potential future utility
+export const COLLECTIBLE_ITEMS: GameItem[] = [
+  {
+    id: 'wasteland_relic_mk1',
+    name: 'Pre-War Technology Fragment',
+    category: 'collectibles',
+    tier: 'basic',
+    priceETH: '0.01',
+    priceARCX: '300',
+    gameplayEffects: [],
+    description: 'Ancient tech from before the collapse. Valuable to collectors and researchers.',
+    stackable: true,
+    maxStack: 1,
+    requiredLevel: 1,
+    rarity: 'uncommon',
+    itemType: 'collectible',
+    mintable: false // These are found, not minted
+  },
+  {
+    id: 'commander_insignia',
+    name: 'Elite Commander Insignia',
+    category: 'collectibles',
+    tier: 'military',
+    priceETH: '0.1',
+    priceARCX: '3000',
+    gameplayEffects: [
+      { type: 'alliance_coordination_bonus', value: 5 } // Small permanent bonus
+    ],
+    description: 'Proof of legendary leadership. Grants permanent +5% alliance coordination.',
+    stackable: false,
+    requiredLevel: 20,
+    rarity: 'legendary',
+    itemType: 'collectible',
+    mintable: false
+  }
+];
+
+// Electronic Components - Basic crafting material
+export const BASIC_MATERIALS: GameItem[] = [
+  {
+    id: 'electronic_components',
+    name: 'Salvaged Electronic Components',
+    category: 'materials',
+    tier: 'basic',
+    priceETH: '0.001',
+    priceARCX: '30',
+    gameplayEffects: [],
+    description: 'Essential crafting material salvaged from wasteland ruins',
+    stackable: true,
+    maxStack: 100,
+    rarity: 'common',
+    itemType: 'collectible',
+    mintable: true,
+    mintCost: {
+      baseETH: '500000000000000' // Very cheap
+    }
+  }
+];
+
+// Combine all items
+export const ALL_GAME_ITEMS = [
+  ...STRATEGIC_ITEMS,
+  ...CONSUMABLE_ITEMS,
+  ...COLLECTIBLE_ITEMS,
+  ...CRAFTING_MATERIALS,
+  ...BASIC_MATERIALS
 ];
 
 // Utility functions

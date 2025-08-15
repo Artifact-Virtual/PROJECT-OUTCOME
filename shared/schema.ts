@@ -125,8 +125,30 @@ export const playerItems = pgTable("player_items", {
   itemId: text("item_id").notNull(), // References game-items.ts strategic items
   quantity: integer("quantity").notNull().default(1),
   isActive: boolean("is_active").notNull().default(false), // Whether item effects are currently applied
+  durability: integer("durability"), // For depleting items
   expiresAt: timestamp("expires_at"), // For temporary items
   acquiredAt: timestamp("acquired_at").notNull().default(sql`now()`),
+});
+
+// Item Usage Tracking - Track when consumables/temporary items are used
+export const itemUsageLog = pgTable("item_usage_log", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  itemId: text("item_id").notNull(),
+  usageType: text("usage_type").notNull(), // 'consumed', 'activated', 'expired', 'depleted'
+  effectsApplied: jsonb("effects_applied"), // What effects were applied
+  usedAt: timestamp("used_at").notNull().default(sql`now()`),
+});
+
+// Active Item Effects - Track currently active temporary effects
+export const activeItemEffects = pgTable("active_item_effects", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  itemId: text("item_id").notNull(),
+  effectType: text("effect_type").notNull(),
+  effectValue: integer("effect_value").notNull(),
+  expiresAt: timestamp("expires_at"), // When effect ends
+  appliedAt: timestamp("applied_at").notNull().default(sql`now()`),
 });
 
 // Strategic Item Marketplace (Base ETH + ARCx tokens)
