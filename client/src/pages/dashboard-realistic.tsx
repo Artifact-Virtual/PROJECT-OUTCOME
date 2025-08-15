@@ -14,7 +14,7 @@ import {
 // Removed social-interaction-hub import
 import { StrategicTradingInterface } from "../components/strategic-trading-interface";
 import { NFTGate } from "@/pages/nft-gate";
-import { ContinuumTerminal } from "@/components/continuum-terminal";
+import { DigitalArchives } from "@/components/digital-archives";
 
 export default function RealisticDashboard() {
   // Development mode indicator
@@ -184,7 +184,7 @@ export default function RealisticDashboard() {
           </TabsContent>
 
           <TabsContent value="continuum" className="space-y-6 mt-8">
-            <ContinuumTerminal />
+            <DigitalArchives />
           </TabsContent>
 
           <TabsContent value="trading" className="space-y-6 mt-8">
