@@ -82,6 +82,84 @@ export const courierTransactions = pgTable("courier_transactions", {
   confirmedAt: timestamp("confirmed_at"),
 });
 
+// Trading System Tables
+export const items = pgTable("items", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tokenId: text("token_id").notNull().unique(),
+  contractAddress: text("contract_address").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  category: text("category").notNull(), // weapon, armor, tool, consumable, blueprint, territory_deed
+  rarity: text("rarity").notNull().default("common"), // common, uncommon, rare, epic, legendary, artifact
+  attributes: jsonb("attributes"), // item stats, abilities, etc.
+  imageUrl: text("image_url"),
+  ownerId: varchar("owner_id").notNull().references(() => users.id),
+  isListed: boolean("is_listed").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const marketplaceListings = pgTable("marketplace_listings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  itemId: varchar("item_id").notNull().references(() => items.id),
+  sellerId: varchar("seller_id").notNull().references(() => users.id),
+  price: text("price").notNull(), // in wei
+  currency: text("currency").notNull().default("ETH"), // ETH, USDC, etc.
+  listingType: text("listing_type").notNull().default("fixed"), // fixed, auction, bundle
+  status: text("status").notNull().default("active"), // active, sold, cancelled, expired
+  auctionEndTime: timestamp("auction_end_time"),
+  reservePrice: text("reserve_price"),
+  txHash: text("tx_hash"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  soldAt: timestamp("sold_at"),
+});
+
+export const tradeOffers = pgTable("trade_offers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fromUserId: varchar("from_user_id").notNull().references(() => users.id),
+  toUserId: varchar("to_user_id").notNull().references(() => users.id),
+  offeredItems: jsonb("offered_items").notNull(), // array of item IDs
+  requestedItems: jsonb("requested_items").notNull(), // array of item IDs or tokens
+  offeredTokens: text("offered_tokens").default("0"), // additional tokens in wei
+  requestedTokens: text("requested_tokens").default("0"),
+  message: text("message"),
+  status: text("status").notNull().default("pending"), // pending, accepted, declined, cancelled, executed
+  expiresAt: timestamp("expires_at"),
+  txHash: text("tx_hash"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  respondedAt: timestamp("responded_at"),
+  executedAt: timestamp("executed_at"),
+});
+
+export const escrowContracts = pgTable("escrow_contracts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  contractAddress: text("contract_address").notNull().unique(),
+  buyerId: varchar("buyer_id").notNull().references(() => users.id),
+  sellerId: varchar("seller_id").notNull().references(() => users.id),
+  itemId: varchar("item_id").references(() => items.id),
+  tradeOfferId: varchar("trade_offer_id").references(() => tradeOffers.id),
+  amount: text("amount").notNull(), // in wei
+  status: text("status").notNull().default("created"), // created, funded, completed, disputed, cancelled
+  disputeReason: text("dispute_reason"),
+  resolutionData: jsonb("resolution_data"),
+  createdTxHash: text("created_tx_hash"),
+  completedTxHash: text("completed_tx_hash"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  completedAt: timestamp("completed_at"),
+});
+
+export const tradingPosts = pgTable("trading_posts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  territoryId: varchar("territory_id").notNull().references(() => territories.id),
+  ownerId: varchar("owner_id").notNull().references(() => users.id),
+  name: text("name").notNull(),
+  description: text("description"),
+  taxRate: integer("tax_rate").notNull().default(0), // percentage * 100 (e.g., 250 = 2.5%)
+  specializations: jsonb("specializations"), // array of item categories this post specializes in
+  volume24h: text("volume_24h").default("0"), // trading volume in wei
+  status: text("status").notNull().default("active"), // active, inactive, destroyed
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ one, many }) => ({
   alliance: one(allianceMembers, {
@@ -94,6 +172,13 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   wonBattles: many(battles, { relationName: "battleWinner" }),
   sentMessages: many(messages),
   courierTransactions: many(courierTransactions),
+  ownedItems: many(items),
+  listings: many(marketplaceListings),
+  sentTradeOffers: many(tradeOffers, { relationName: "tradeOfferFrom" }),
+  receivedTradeOffers: many(tradeOffers, { relationName: "tradeOfferTo" }),
+  buyerEscrows: many(escrowContracts, { relationName: "escrowBuyer" }),
+  sellerEscrows: many(escrowContracts, { relationName: "escrowSeller" }),
+  tradingPosts: many(tradingPosts),
 }));
 
 export const alliancesRelations = relations(alliances, ({ one, many }) => ({
@@ -170,6 +255,73 @@ export const courierTransactionsRelations = relations(courierTransactions, ({ on
   }),
 }));
 
+// Trading Relations
+export const itemsRelations = relations(items, ({ one, many }) => ({
+  owner: one(users, {
+    fields: [items.ownerId],
+    references: [users.id],
+  }),
+  listing: one(marketplaceListings),
+  escrowContracts: many(escrowContracts),
+}));
+
+export const marketplaceListingsRelations = relations(marketplaceListings, ({ one }) => ({
+  item: one(items, {
+    fields: [marketplaceListings.itemId],
+    references: [items.id],
+  }),
+  seller: one(users, {
+    fields: [marketplaceListings.sellerId],
+    references: [users.id],
+  }),
+}));
+
+export const tradeOffersRelations = relations(tradeOffers, ({ one, many }) => ({
+  fromUser: one(users, {
+    fields: [tradeOffers.fromUserId],
+    references: [users.id],
+    relationName: "tradeOfferFrom",
+  }),
+  toUser: one(users, {
+    fields: [tradeOffers.toUserId],
+    references: [users.id],
+    relationName: "tradeOfferTo",
+  }),
+  escrowContracts: many(escrowContracts),
+}));
+
+export const escrowContractsRelations = relations(escrowContracts, ({ one }) => ({
+  buyer: one(users, {
+    fields: [escrowContracts.buyerId],
+    references: [users.id],
+    relationName: "escrowBuyer",
+  }),
+  seller: one(users, {
+    fields: [escrowContracts.sellerId],
+    references: [users.id],
+    relationName: "escrowSeller",
+  }),
+  item: one(items, {
+    fields: [escrowContracts.itemId],
+    references: [items.id],
+  }),
+  tradeOffer: one(tradeOffers, {
+    fields: [escrowContracts.tradeOfferId],
+    references: [tradeOffers.id],
+  }),
+}));
+
+export const tradingPostsRelations = relations(tradingPosts, ({ one }) => ({
+  territory: one(territories, {
+    fields: [tradingPosts.territoryId],
+    references: [territories.id],
+  }),
+  owner: one(users, {
+    fields: [tradingPosts.ownerId],
+    references: [users.id],
+  }),
+}));
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -207,6 +359,32 @@ export const insertCourierTransactionSchema = createInsertSchema(courierTransact
   createdAt: true,
 });
 
+// Trading Insert Schemas
+export const insertItemSchema = createInsertSchema(items).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertMarketplaceListingSchema = createInsertSchema(marketplaceListings).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertTradeOfferSchema = createInsertSchema(tradeOffers).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertEscrowContractSchema = createInsertSchema(escrowContracts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertTradingPostSchema = createInsertSchema(tradingPosts).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -222,3 +400,15 @@ export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type CourierTransaction = typeof courierTransactions.$inferSelect;
 export type InsertCourierTransaction = z.infer<typeof insertCourierTransactionSchema>;
+
+// Trading Types
+export type Item = typeof items.$inferSelect;
+export type InsertItem = z.infer<typeof insertItemSchema>;
+export type MarketplaceListing = typeof marketplaceListings.$inferSelect;
+export type InsertMarketplaceListing = z.infer<typeof insertMarketplaceListingSchema>;
+export type TradeOffer = typeof tradeOffers.$inferSelect;
+export type InsertTradeOffer = z.infer<typeof insertTradeOfferSchema>;
+export type EscrowContract = typeof escrowContracts.$inferSelect;
+export type InsertEscrowContract = z.infer<typeof insertEscrowContractSchema>;
+export type TradingPost = typeof tradingPosts.$inferSelect;
+export type InsertTradingPost = z.infer<typeof insertTradingPostSchema>;

@@ -1,572 +1,262 @@
-# OCSH NFT Game - Hybrid Web3 Gaming dApp
+# OCSH NFT Game - Comprehensive Web3 Trading Platform
 
-## Project Overview
+## Overview
 
-OCSH (On-Chain Survival Handbook) is a decentralized gaming platform featuring a post-apocalyptic web3 social gaming experience with territorial control mechanics. The platform consists of two integrated applications: a main dashboard for strategic gameplay and a companion PWA for offline blockchain transaction handling.
+The OCSH (On-Chain Survival Handbook) NFT Game is a cutting-edge post-apocalyptic web3 social gaming platform that revolutionizes digital interaction through advanced technological integration and immersive user experiences. This document details the complete trading system implementation.
 
-### Key Features
-- **Territorial Control**: Risk-inspired gameplay with 24-hour territory claiming mechanics
-- **Alliance System**: Multi-role alliance management with leader/member hierarchies
-- **Battle System**: Turn-based combat with XP rewards and reputation tracking
-- **On-Chain Messaging**: Blockchain-based communication with anti-spam mechanisms
-- **Offline Transaction Handling**: Foundry Courier integration for radio/mesh/SMS networks
-- **Real-time Updates**: WebSocket integration for multiplayer features
-- **Progressive Web App**: Dedicated handheld terminal for offline blockchain operations
+## 🎮 Game Features
 
-## Technical Architecture
+### Core Gameplay
+- **Strategic Territory Control**: Risk-inspired gameplay with alliance systems
+- **Real-time Combat**: Turn-based battles with XP rewards and reputation tracking  
+- **Alliance Management**: Multi-role alliance system (leader, member, invited)
+- **On-chain Messaging**: Decentralized communication with anti-spam mechanisms
+- **Territory Claiming**: 24-hour territory control with strategic positioning
 
-### Technology Stack
-- **Frontend**: React 18 + TypeScript + Vite
-- **Backend**: Node.js + Express.js + TypeScript
-- **Database**: PostgreSQL + Drizzle ORM
-- **UI Framework**: Tailwind CSS + Shadcn/ui + Radix UI
-- **Real-time**: WebSocket (ws library)
-- **Web3**: Browser wallet integration (MetaMask)
-- **Blockchain**: Base Network (primary), Ethereum (expansion)
-- **Offline Handling**: Foundry Courier (Python-based CLI)
+### Trading System
+- **NFT Marketplace**: Complete marketplace with fixed-price and auction listings
+- **Direct Trading**: Peer-to-peer trade offers with multi-item exchanges
+- **Escrow Contracts**: Smart contract-based secure trading
+- **Trading Posts**: Territory-based trading hubs with specializations
+- **Web3 Integration**: Full blockchain integration with MetaMask support
 
-### Project Structure
-```
-├── client/                 # React frontend application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── lib/            # Utility libraries
-│   │   └── pages/          # Application pages/routes
-├── server/                 # Express.js backend
-│   ├── services/           # Business logic services
-│   ├── index.ts           # Main server entry point
-│   ├── routes.ts          # API route definitions
-│   ├── storage.ts         # Database storage interface
-│   └── db.ts              # Database connection setup
-├── shared/                 # Shared types and schemas
-│   └── schema.ts          # Drizzle database schema
-└── attached_assets/        # Static assets and documentation
-```
+## 🏗️ Technical Architecture
 
----
+### Frontend Stack
+- **React 18** with TypeScript and Vite for fast development
+- **Shadcn/ui** components built on Radix UI primitives
+- **Tailwind CSS** with custom cyberpunk theme and CSS variables
+- **TanStack Query** for server state management
+- **Wouter** for lightweight client-side routing
+- **WebSocket** integration for real-time game updates
 
-## Part 1: Main Dashboard Application
+### Backend Stack
+- **Node.js** with Express.js framework
+- **TypeScript** with ES modules
+- **PostgreSQL** with Drizzle ORM for type-safe database operations
+- **WebSocket Server** for multiplayer features
+- **Session Management** with PostgreSQL-backed sessions
 
-### Overview
-The main dashboard serves as the primary interface for strategic gameplay, featuring a cyberpunk-themed UI with holographic elements and professional military aesthetics.
+### Database Schema
+- **Users**: Player profiles with XP, wins, and reputation
+- **Alliances**: Multi-role alliance management system
+- **Territories**: Strategic map locations with ownership tracking
+- **Battles**: Combat system with XP rewards
+- **Messages**: On-chain messaging with cooldowns
+- **Items**: NFT items with attributes and ownership
+- **Marketplace Listings**: Fixed-price and auction listings
+- **Trade Offers**: Direct peer-to-peer trading
+- **Escrow Contracts**: Secure smart contract trading
+- **Trading Posts**: Territory-based trading hubs
+- **Courier Transactions**: Offline blockchain transaction handling
 
-### Core Features
-
-#### 1. Territory Control System
-- **Grid-based Map**: Interactive territory grid with visual ownership indicators
-- **24-Hour Claims**: Territories can be claimed for 24-hour periods
-- **Strategic Positioning**: Adjacent territory bonuses and defensive advantages
-- **Visual Indicators**: Color-coded ownership and status displays
-
-#### 2. Alliance Management
-- **Role-based Access**: Leaders, members, and invited user roles
-- **Alliance Creation**: Form strategic partnerships with other players
-- **Member Management**: Invite, promote, and manage alliance members
-- **Coordination Tools**: Internal messaging and strategy planning
-
-#### 3. Battle System
-- **Turn-based Combat**: Strategic battle mechanics with skill-based outcomes
-- **XP Rewards**: Experience points for victories and participation
-- **Reputation Tracking**: Player ranking system based on performance
-- **Battle History**: Complete record of past engagements
-
-#### 4. On-Chain Messaging
-- **Blockchain Messages**: Immutable communication system
-- **Anti-spam Protection**: Cooldown mechanisms and rate limiting
-- **Message Threading**: Organized conversation flows
-- **Public/Private Options**: Different message visibility levels
-
-#### 5. Advanced Social Interaction System
-- **Multi-Channel Communication**: Global, alliance, and trade-specific chat channels
-- **Real-time Player Status**: Online/away/offline status with last seen timestamps
-- **Player Interaction Requests**: Battle challenges, alliance invites, trade requests, territory challenges
-- **Live Social Events Feed**: Real-time notifications of battles, territory claims, achievements
-- **Alliance Coordination Tools**: Member status, battle planning, territory management
-- **Reputation & Achievement System**: Global rankings, alliance standings, social scoring
-- **Quick Action Interface**: One-click challenge, message, and invite systems
-
-### Technical Implementation
-
-#### Database Schema (PostgreSQL + Drizzle)
-```typescript
-// Users table
-users: {
-  id: serial primary key
-  username: varchar(50) unique not null
-  walletAddress: varchar(42)
-  xp: integer default 0
-  reputation: integer default 0
-  createdAt: timestamp default now()
-}
-
-// Alliances table
-alliances: {
-  id: serial primary key
-  name: varchar(100) not null
-  description: text
-  leaderId: integer references users(id)
-  createdAt: timestamp default now()
-}
-
-// Alliance Members table
-allianceMembers: {
-  id: serial primary key
-  allianceId: integer references alliances(id)
-  userId: integer references users(id)
-  role: enum('leader', 'member', 'invited')
-  joinedAt: timestamp default now()
-}
-
-// Territories table
-territories: {
-  id: serial primary key
-  x: integer not null
-  y: integer not null
-  ownerId: integer references users(id)
-  claimedAt: timestamp
-  expiresAt: timestamp
-}
-
-// Battles table
-battles: {
-  id: serial primary key
-  attackerId: integer references users(id)
-  defenderId: integer references users(id)
-  territoryId: integer references territories(id)
-  winner: integer references users(id)
-  xpReward: integer
-  createdAt: timestamp default now()
-}
-
-// Messages table
-messages: {
-  id: serial primary key
-  senderId: integer references users(id)
-  recipientId: integer references users(id)
-  content: text not null
-  isPublic: boolean default false
-  transactionHash: varchar(66)
-  createdAt: timestamp default now()
-}
-```
-
-#### Component Architecture
-- **Dashboard Layout**: Main game interface with navigation
-- **Territory Map**: Interactive grid-based territory visualization
-- **Alliance Panel**: Alliance management and member tools
-- **Battle Interface**: Combat mechanics and battle history
-- **Message Center**: On-chain messaging and communication
-- **Player Stats**: XP, reputation, and achievement tracking
-
-#### State Management
-- **TanStack Query**: Server state synchronization and caching
-- **React Hooks**: Local component state management
-- **WebSocket Integration**: Real-time game updates and notifications
-
----
-
-## Part 2: Handheld PWA Terminal
-
-### Overview
-The handheld PWA (Progressive Web App) serves as a companion terminal for offline blockchain transaction handling, designed with authentic military-grade aesthetics and hardware-level interaction capabilities.
-
-### Core Features
-
-#### 1. Terminal Interface
-- **Boot Sequence**: Realistic system initialization with technical diagnostics
-- **Command Line**: Unix-style terminal with custom command set
-- **System Monitoring**: Real-time hardware metrics and status displays
-- **Responsive Design**: Optimized for mobile and tablet devices
-
-#### 2. Transaction Encoder/Decoder
-- **Frame Encoding**: Convert blockchain transactions to transmittable data frames
-- **QR Code Generation**: Visual encoding for offline transmission
-- **Radio/Mesh Support**: Integration with alternative communication networks
-- **Batch Processing**: Handle multiple transactions efficiently
-
-#### 3. Device Sensor Integration
-- **Hardware Access**: Battery, GPS, accelerometer, gyroscope sensors
-- **Environmental Data**: Temperature, humidity, and ambient light monitoring
-- **Network Status**: Connection quality and availability tracking
-- **Permission Management**: Secure access control for device features
-
-#### 4. Offline Capabilities
-- **Service Worker**: Background processing and caching
-- **Local Storage**: Persistent data storage without network
-- **Queue Management**: Transaction queuing for network restoration
-- **Sync Protocols**: Automatic synchronization when online
-
-### Technical Implementation
-
-#### PWA Configuration
-```json
-{
-  "name": "BLOKBOY 1000",
-  "short_name": "BLOKBOY",
-  "description": "Handheld Transaction Terminal",
-  "start_url": "/handheld",
-  "display": "standalone",
-  "theme_color": "#0891b2",
-  "background_color": "#000000",
-  "orientation": "portrait"
-}
-```
-
-#### Device Sensor Hook (useDeviceSensors)
-```typescript
-interface DeviceInfo {
-  battery: { level: number; charging: boolean }
-  location: { latitude: number; longitude: number; accuracy: number }
-  motion: { acceleration: DeviceMotionEvent['acceleration'] }
-  orientation: { alpha: number; beta: number; gamma: number }
-  network: { effectiveType: string; downlink: number }
-  permissions: Record<string, PermissionState>
-}
-
-interface SystemMetrics {
-  temperature: number
-  humidity: number
-  pressure: number
-  lightLevel: number
-  cpuUsage: number
-  memoryUsage: number
-  storageUsage: number
-}
-```
-
-#### Weather Integration Hook (useWeather)
-```typescript
-interface WeatherData {
-  temperature: number
-  humidity: number
-  pressure: number
-  windSpeed: number
-  windDirection: number
-  visibility: number
-  uvIndex: number
-  conditions: string
-  location: string
-  timestamp: number
-}
-```
-
-#### Foundry Courier Integration
-- **Python CLI Tool**: External service for transaction processing
-- **Frame Protocol**: Custom encoding/decoding format
-- **Network Abstraction**: Support for multiple transmission methods
-- **Error Handling**: Robust retry and recovery mechanisms
-
-### UI/UX Design
-
-#### Visual Theme
-- **Cyberpunk Aesthetic**: Neon colors with dark backgrounds
-- **Military Typography**: Monospace fonts with technical styling
-- **Holographic Effects**: CSS animations and glow effects
-- **Grid Patterns**: Technical blueprint-style layouts
-
-#### Component Library
-- **RealisticWastelandCard**: Post-apocalyptic themed containers
-- **RealisticText**: Typography with multiple variants
-- **RealisticButton**: Military-style interactive elements
-- **HolographicProtocol**: Animated protocol diagrams
-- **ScreenGlow**: Immersive visual effects
-
-#### Professional AV Logo
-- **Military-Grade Design**: 64x40 SVG with stencil styling
-- **Technical Documentation**: Grid patterns, circuit traces, corner brackets
-- **Manufacturing Specs**: MIL-STD-810 reference and AUTONOMOUS VENTURES branding
-- **Holographic Effects**: Advanced glow filters and status indicators
-- **Consistent Placement**: Appears across all PWA tabs
-
----
-
-## Web3 Integration
-
-### Blockchain Architecture
-- **Smart Contracts**: Proxy pattern for upgradeability
-- **Multi-chain Support**: Base Network primary, Ethereum expansion
-- **Wallet Integration**: MetaMask and browser wallet compatibility
+### Web3 Integration
+- **Base Network** primary deployment with Ethereum expansion
+- **MetaMask** wallet integration
+- **Smart Contracts**: Marketplace, NFT, and Escrow contracts
 - **Transaction Management**: Comprehensive lifecycle handling
+- **Offline Capabilities**: Foundry Courier integration
 
-### On-Chain Data
-- **Territory Ownership**: Immutable territorial claims
-- **Alliance Records**: Decentralized alliance management
-- **Battle Results**: Transparent combat outcomes
-- **Message Storage**: Censorship-resistant communication
+## 🔗 API Endpoints
 
-### Offline Transaction Handling
-- **Foundry Courier**: Python-based transaction encoding/decoding
-- **Frame Transmission**: Radio, mesh, and SMS network support
-- **Queue Management**: Local storage for pending transactions
-- **Synchronization**: Automatic broadcast when connectivity returns
-
----
-
-## Security & Performance
-
-### Security Measures
-- **Input Validation**: Zod schemas for all data inputs
-- **Rate Limiting**: Built-in cooldowns and spam protection
-- **Session Management**: PostgreSQL-backed secure sessions
-- **Error Boundaries**: Comprehensive error handling and logging
-
-### Performance Optimizations
-- **Code Splitting**: Lazy loading of route components
-- **Image Optimization**: SVG-based icons and graphics
-- **Caching Strategy**: TanStack Query for server state
-- **Bundle Optimization**: Vite build optimizations
-
-### Offline-First Architecture
-- **Service Workers**: Background sync and caching
-- **Local Database**: IndexedDB for offline data storage
-- **Progressive Enhancement**: Graceful degradation without network
-- **Conflict Resolution**: Merge strategies for concurrent updates
-
----
-
-## Development Workflow
-
-### Build System
-```bash
-# Development server
-npm run dev              # Starts both frontend and backend
-
-# Database operations
-npm run db:push          # Push schema changes to database
-npm run db:studio        # Open Drizzle Studio for database management
-
-# Production build
-npm run build            # Build optimized production bundle
-npm run start            # Start production server
+### User Management
+```
+GET    /api/users/:address          - Get user by wallet address
+POST   /api/users                   - Create new user
+GET    /api/users/:id/alliance      - Get user's alliance
 ```
 
-### Environment Configuration
+### Alliance System
+```
+POST   /api/alliances               - Create alliance
+POST   /api/alliances/:id/join      - Join alliance
+```
+
+### Territory Control
+```
+GET    /api/territories             - List territories
+POST   /api/territories             - Claim territory
+GET    /api/territories/:x/:y       - Get specific territory
+```
+
+### Combat System
+```
+POST   /api/battles                 - Create battle
+GET    /api/battles/:id             - Get battle details
+POST   /api/battles/:id/complete    - Complete battle
+```
+
+### Messaging
+```
+POST   /api/messages                - Send message
+GET    /api/messages/:channel       - Get messages
+```
+
+### Trading System
+```
+# Items
+GET    /api/items                   - Get user items
+POST   /api/items                   - Create item
+GET    /api/items/:id               - Get item details
+PATCH  /api/items/:id               - Update item
+
+# Marketplace
+GET    /api/marketplace             - Browse listings
+POST   /api/marketplace             - Create listing
+GET    /api/marketplace/:id         - Get listing details
+PATCH  /api/marketplace/:id         - Update listing
+POST   /api/marketplace/:id/buy     - Purchase item
+
+# Trade Offers
+GET    /api/trades                  - Get trade offers
+POST   /api/trades                  - Create trade offer
+GET    /api/trades/:id              - Get offer details
+PATCH  /api/trades/:id              - Update offer
+POST   /api/trades/:id/respond      - Accept/decline offer
+
+# Escrow Contracts
+GET    /api/escrow                  - Get escrow contracts
+POST   /api/escrow                  - Create escrow
+GET    /api/escrow/:id              - Get contract details
+PATCH  /api/escrow/:id              - Update contract
+POST   /api/escrow/:id/complete     - Complete escrow
+POST   /api/escrow/:id/dispute      - Dispute escrow
+
+# Trading Posts
+GET    /api/trading-posts           - List trading posts
+POST   /api/trading-posts           - Create trading post
+GET    /api/trading-posts/:id       - Get post details
+PATCH  /api/trading-posts/:id       - Update post
+```
+
+### Courier System (Offline Blockchain)
+```
+POST   /api/courier/encode          - Encode transaction for offline transmission
+POST   /api/courier/decode          - Decode received frames
+POST   /api/courier/broadcast       - Broadcast transaction to network
+GET    /api/courier/transactions/:userId - Get user transactions
+```
+
+## 🎨 UI Components
+
+### Realistic Wasteland Theme
+- **RealisticText**: Military-inspired typography variants
+- **RealisticButton**: Post-apocalyptic button styles
+- **RealisticWastelandCard**: Industrial card components
+- **Consistent Theming**: Dark mode with amber/green accents
+
+### Trading Interface
+- **5-Tab System**: Marketplace, Inventory, Trades, Posts, Escrow
+- **Advanced Filtering**: Category, sorting, search functionality
+- **Real-time Updates**: WebSocket integration for live data
+- **Responsive Design**: Mobile-first approach
+
+## 🔐 Security Features
+
+### Smart Contract Security
+- **Escrow Protection**: Automated smart contract protection
+- **Dispute Resolution**: Community arbitrator system
+- **Item Verification**: Authenticity checks
+- **Emergency Controls**: Cancellation with full refunds
+
+### Application Security
+- **Input Validation**: Zod schemas for all API inputs
+- **Rate Limiting**: Built-in cooldowns and anti-spam
+- **Session Management**: Secure PostgreSQL sessions
+- **Error Handling**: Comprehensive error boundaries
+
+## 🚀 Deployment
+
+### Environment Setup
+```bash
+# Install dependencies
+npm install
+
+# Database setup
+npm run db:push
+
+# Start development server
+npm run dev
+```
+
+### Environment Variables
 ```env
-# Database
-DATABASE_URL=postgresql://[credentials]
+DATABASE_URL=postgresql://...
 PGHOST=localhost
 PGPORT=5432
 PGUSER=postgres
-PGPASSWORD=[password]
+PGPASSWORD=password
 PGDATABASE=ocsh_game
 
-# Application
-NODE_ENV=development
-PORT=5000
-SESSION_SECRET=[random_secret]
-
-# Web3 (Optional)
-WEB3_PROVIDER_URL=[blockchain_rpc]
-CONTRACT_ADDRESS=[deployed_contract]
+# Web3 Contract Addresses (Base Network)
+VITE_MARKETPLACE_CONTRACT_ADDRESS=0x...
+VITE_NFT_CONTRACT_ADDRESS=0x...
+VITE_ESCROW_CONTRACT_ADDRESS=0x...
 ```
-
-### Code Quality
-- **TypeScript**: Full type safety across the stack
-- **ESLint**: Code quality and consistency
-- **Prettier**: Automated code formatting
-- **Drizzle Kit**: Type-safe database operations
-
----
-
-## API Endpoint Mapping Chart
-
-### Core Game API Endpoints
-
-#### User Management
-```
-POST   /api/auth/register          # Create new user account
-POST   /api/auth/login             # User authentication
-POST   /api/auth/logout            # End user session
-GET    /api/users/profile          # Get current user profile
-PUT    /api/users/profile          # Update user profile
-GET    /api/users/:id              # Get user by ID
-GET    /api/users/leaderboard      # Get user rankings
-```
-
-#### Territory System
-```
-GET    /api/territories            # Get all territories and ownership
-GET    /api/territories/:id        # Get specific territory details
-POST   /api/territories/:id/claim  # Claim territory ownership
-DELETE /api/territories/:id/claim  # Abandon territory claim
-GET    /api/territories/user/:id   # Get territories owned by user
-POST   /api/territories/validate   # Validate territory claim
-```
-
-#### Alliance Management
-```
-GET    /api/alliances              # Get all alliances
-POST   /api/alliances              # Create new alliance
-GET    /api/alliances/:id          # Get alliance details
-PUT    /api/alliances/:id          # Update alliance information
-DELETE /api/alliances/:id          # Disband alliance
-POST   /api/alliances/:id/invite   # Invite user to alliance
-POST   /api/alliances/:id/join     # Accept alliance invitation
-POST   /api/alliances/:id/leave    # Leave alliance
-PUT    /api/alliances/:id/role     # Change member role
-GET    /api/alliances/:id/members  # Get alliance members
-```
-
-#### Battle System
-```
-GET    /api/battles                # Get battle history
-POST   /api/battles                # Initiate new battle
-GET    /api/battles/:id            # Get battle details
-POST   /api/battles/:id/action     # Submit battle action
-GET    /api/battles/user/:id       # Get user's battle history
-POST   /api/battles/resolve        # Resolve battle outcome
-```
-
-#### Messaging System
-```
-GET    /api/messages               # Get user messages
-POST   /api/messages               # Send new message
-GET    /api/messages/:id           # Get specific message
-DELETE /api/messages/:id           # Delete message
-GET    /api/messages/public        # Get public messages
-POST   /api/messages/broadcast     # Send broadcast message
-GET    /api/messages/channel/:type # Get channel-specific messages (global/alliance/trade)
-```
-
-#### Social Interaction System
-```
-GET    /api/social/players/online  # Get currently online players
-GET    /api/social/players/status  # Get player status and presence
-POST   /api/social/interactions    # Send player interaction request
-GET    /api/social/interactions    # Get pending interaction requests
-PUT    /api/social/interactions/:id # Accept/decline interaction request
-GET    /api/social/events          # Get live social events feed
-GET    /api/social/reputation/:id  # Get player reputation and rankings
-POST   /api/social/presence        # Update player presence status
-GET    /api/social/alliance/members # Get alliance member status
-POST   /api/social/alliance/coordinate # Send alliance coordination message
-```
-
-### PWA Terminal API Endpoints
-
-#### Device Integration
-```
-GET    /api/device/sensors         # Get current sensor readings
-POST   /api/device/permissions     # Request device permissions
-GET    /api/device/status          # Get device status summary
-POST   /api/device/calibrate       # Calibrate sensors
-```
-
-#### Transaction Processing
-```
-POST   /api/transactions/encode    # Encode transaction to frame
-POST   /api/transactions/decode    # Decode frame to transaction
-GET    /api/transactions/queue     # Get pending transactions
-POST   /api/transactions/queue     # Add transaction to queue
-DELETE /api/transactions/queue/:id # Remove from queue
-POST   /api/transactions/broadcast # Broadcast queued transactions
-```
-
-#### Weather & Environment
-```
-GET    /api/weather/current        # Get current weather data
-GET    /api/weather/forecast       # Get weather forecast
-POST   /api/weather/update         # Update weather data
-GET    /api/environment/sensors    # Get environmental readings
-```
-
-#### System Management
-```
-GET    /api/system/status          # Get system health status
-GET    /api/system/metrics         # Get performance metrics
-POST   /api/system/restart         # Restart system services
-GET    /api/system/logs            # Get system logs
-```
-
-### WebSocket Events
-
-#### Real-time Game Updates
-```
-territory_claimed         # Territory ownership change
-battle_started           # New battle initiated
-battle_resolved          # Battle outcome determined
-alliance_invite          # Alliance invitation received
-alliance_joined          # New alliance member
-message_received         # New message received
-player_online           # Player status change
-player_offline          # Player disconnect
-interaction_request     # Player interaction request
-interaction_response    # Interaction accepted/declined
-social_event           # Live social event notification
-alliance_coordination  # Alliance battle coordination
-reputation_change      # Player reputation update
-achievement_unlocked   # Achievement notification
-system_announcement    # System-wide notifications
-```
-
-#### Device Sensor Streams
-```
-sensor_data             # Real-time sensor readings
-battery_status          # Battery level changes
-location_update         # GPS position changes
-network_status          # Connection quality changes
-environment_data        # Environmental sensor updates
-```
-
-### Integration Points for Final Assembly
-
-#### 1. Authentication Bridge
-- **Shared Session**: Single sign-on between dashboard and PWA
-- **Wallet Integration**: MetaMask connection across both applications
-- **Permission Sync**: Device permissions shared between interfaces
-
-#### 2. Data Synchronization
-- **Real-time Updates**: WebSocket events for both applications
-- **Offline Queue**: Transaction queue management across platforms
-- **State Consistency**: Shared game state between dashboard and terminal
-
-#### 3. Transaction Flow
-- **Dashboard Actions**: Initiate transactions from main interface
-- **PWA Processing**: Handle encoding/decoding in terminal
-- **Blockchain Submission**: Automated submission when online
-- **Status Updates**: Real-time feedback across both interfaces
-
-#### 4. Cross-Platform Features
-- **Message Relay**: Send messages from either interface
-- **Battle Notifications**: Real-time alerts in both applications
-- **Territory Updates**: Live map updates across platforms
-- **Alliance Coordination**: Synchronized alliance management
-
----
-
-## Future Enhancements
-
-### Planned Features
-- **Smart Contract Deployment**: Full on-chain implementation
-- **NFT Integration**: Territory and asset tokenization
-- **Advanced AI**: Strategic battle assistance
-- **Social Features**: Enhanced community tools
-- **Mobile Native**: React Native mobile applications
-- **Hardware Integration**: Physical device connectivity
-
-### Scalability Considerations
-- **Microservices**: Service-oriented architecture
-- **CDN Integration**: Global content delivery
-- **Database Sharding**: Horizontal scaling strategies
-- **Load Balancing**: Multi-instance deployment
-- **Caching Layers**: Redis integration for performance
-
----
-
-## Deployment & Operations
 
 ### Production Deployment
-- **Replit Deployments**: Automated build and hosting
-- **Environment Variables**: Secure configuration management
-- **Database Migrations**: Drizzle-based schema updates
-- **Monitoring**: Application performance tracking
-- **Error Reporting**: Comprehensive logging and alerting
+- **Replit Deployments**: Automatic build and hosting
+- **TLS/Health Checks**: Built-in monitoring
+- **Custom Domains**: .replit.app or custom domain support
 
-### Maintenance Procedures
-- **Database Backups**: Regular automated snapshots
-- **Security Updates**: Dependency and framework updates
-- **Performance Monitoring**: Real-time metrics and alerting
-- **User Support**: Issue tracking and resolution workflows
+## 🎯 Key Features Implemented
 
-This comprehensive documentation provides the technical foundation for the complete OCSH NFT Gaming dApp, covering both the strategic dashboard and handheld PWA terminal with clear integration pathways for final assembly.
+### ✅ Complete Trading System
+- Full-stack marketplace with web3 integration
+- Direct peer-to-peer trading with escrow protection
+- Territory-based trading posts with specializations
+- Comprehensive API with transaction lifecycle management
+
+### ✅ Web3 Wallet Integration
+- MetaMask connection and network switching
+- Smart contract interaction hooks
+- Transaction encoding/decoding for offline transmission
+- Base Network deployment ready
+
+### ✅ Real-time Multiplayer
+- WebSocket server for live updates
+- Real-time messaging and battle notifications
+- Live marketplace and trading updates
+
+### ✅ Offline-First Architecture
+- Foundry Courier integration for offline transactions
+- Transaction queuing system
+- Frame encoding for radio/mesh/SMS transmission
+
+### ✅ Advanced UI/UX
+- Military-industrial aesthetic with consistent theming
+- Responsive design with mobile support
+- Loading states and error handling
+- Comprehensive testing hooks (data-testid attributes)
+
+## 🔮 Future Enhancements
+
+### Planned Features
+- **Advanced Auctions**: Dutch auctions and reserve pricing
+- **Cross-chain Trading**: Multi-blockchain support
+- **NFT Fractionalization**: Shared ownership mechanisms
+- **Advanced Analytics**: Trading volume and price tracking
+- **Mobile PWA**: Dedicated handheld companion app
+
+### Technical Improvements
+- **Performance Optimization**: Caching and pagination
+- **Advanced Search**: Elasticsearch integration
+- **Real-time Notifications**: Push notification system
+- **Analytics Dashboard**: Trading metrics and insights
+
+## 📱 Mobile Companion (Part 2)
+
+The project includes plans for a handheld PWA terminal for offline blockchain transaction handling:
+
+- **Offline Transaction Encoding**: Convert blockchain transactions to transmittable frames
+- **Radio/Mesh Network Support**: Transmission via alternative networks
+- **SMS Integration**: Transaction broadcasting via cellular networks
+- **Foundry Courier Backend**: Python-based CLI tool integration
+
+## 🤝 Contributing
+
+This is a comprehensive web3 gaming platform designed for post-apocalyptic survival gameplay with authentic military-industrial aesthetics. The trading system provides a complete solution for NFT marketplace functionality with secure escrow and peer-to-peer trading capabilities.
+
+## 📄 License
+
+This project is part of the OCSH NFT Game ecosystem developed by Artifact Virtual (AV).

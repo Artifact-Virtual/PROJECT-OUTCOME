@@ -12,6 +12,7 @@ import {
 } from "@/components/realistic-wasteland";
 import { ProtocolGrid } from "@/components/holographic-protocol";
 import { SocialInteractionHub } from "../components/social-interaction-hub";
+import { TradingInterface } from "../components/trading-interface";
 
 export default function RealisticDashboard() {
   return (
@@ -68,7 +69,7 @@ export default function RealisticDashboard() {
 
         {/* Main Interface */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-6 bg-neutral-900 border border-neutral-700 h-12">
+          <TabsList className="grid w-full grid-cols-7 bg-neutral-900 border border-neutral-700 h-12">
             <TabsTrigger 
               value="overview" 
               className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
@@ -92,6 +93,12 @@ export default function RealisticDashboard() {
               className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
             >
               Factions
+            </TabsTrigger>
+            <TabsTrigger 
+              value="trading" 
+              className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
+            >
+              Trading
             </TabsTrigger>
             <TabsTrigger 
               value="communications" 
@@ -186,6 +193,10 @@ export default function RealisticDashboard() {
                 </RealisticText>
               </div>
             </RealisticWastelandCard>
+          </TabsContent>
+
+          <TabsContent value="trading" className="space-y-6 mt-8">
+            <TradingInterface />
           </TabsContent>
 
           <TabsContent value="communications" className="space-y-6 mt-8">

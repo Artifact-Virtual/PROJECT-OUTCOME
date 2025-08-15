@@ -1,9 +1,13 @@
 import { 
   users, alliances, allianceMembers, territories, battles, messages, courierTransactions,
+  items, marketplaceListings, tradeOffers, escrowContracts, tradingPosts,
   type User, type InsertUser, type Alliance, type InsertAlliance, 
   type AllianceMember, type InsertAllianceMember, type Territory, type InsertTerritory,
   type Battle, type InsertBattle, type Message, type InsertMessage,
-  type CourierTransaction, type InsertCourierTransaction
+  type CourierTransaction, type InsertCourierTransaction,
+  type Item, type InsertItem, type MarketplaceListing, type InsertMarketplaceListing,
+  type TradeOffer, type InsertTradeOffer, type EscrowContract, type InsertEscrowContract,
+  type TradingPost, type InsertTradingPost
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, or, count, sql } from "drizzle-orm";
@@ -46,6 +50,36 @@ export interface IStorage {
   
   // Leaderboard
   getLeaderboard(limit?: number): Promise<User[]>;
+  
+  // Trading operations
+  createItem(item: InsertItem): Promise<Item>;
+  getItem(id: string): Promise<Item | undefined>;
+  getUserItems(userId: string): Promise<Item[]>;
+  updateItem(id: string, updates: Partial<Item>): Promise<Item>;
+  
+  // Marketplace operations
+  createListing(listing: InsertMarketplaceListing): Promise<MarketplaceListing>;
+  getListing(id: string): Promise<MarketplaceListing | undefined>;
+  getMarketplaceListings(category?: string, sortBy?: string, limit?: number): Promise<MarketplaceListing[]>;
+  updateListing(id: string, updates: Partial<MarketplaceListing>): Promise<MarketplaceListing>;
+  
+  // Trade offers
+  createTradeOffer(offer: InsertTradeOffer): Promise<TradeOffer>;
+  getTradeOffer(id: string): Promise<TradeOffer | undefined>;
+  getUserTradeOffers(userId: string, type?: 'sent' | 'received'): Promise<TradeOffer[]>;
+  updateTradeOffer(id: string, updates: Partial<TradeOffer>): Promise<TradeOffer>;
+  
+  // Escrow contracts
+  createEscrowContract(contract: InsertEscrowContract): Promise<EscrowContract>;
+  getEscrowContract(id: string): Promise<EscrowContract | undefined>;
+  getUserEscrowContracts(userId: string, type?: 'buyer' | 'seller'): Promise<EscrowContract[]>;
+  updateEscrowContract(id: string, updates: Partial<EscrowContract>): Promise<EscrowContract>;
+  
+  // Trading posts
+  createTradingPost(post: InsertTradingPost): Promise<TradingPost>;
+  getTradingPost(id: string): Promise<TradingPost | undefined>;
+  getTradingPosts(territoryId?: string): Promise<TradingPost[]>;
+  updateTradingPost(id: string, updates: Partial<TradingPost>): Promise<TradingPost>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -261,6 +295,172 @@ export class DatabaseStorage implements IStorage {
       .from(users)
       .orderBy(desc(users.xp))
       .limit(limit);
+  }
+
+  // Trading operations
+  async createItem(insertItem: InsertItem): Promise<Item> {
+    const [item] = await db.insert(items).values(insertItem).returning();
+    return item;
+  }
+
+  async getItem(id: string): Promise<Item | undefined> {
+    const [item] = await db.select().from(items).where(eq(items.id, id));
+    return item || undefined;
+  }
+
+  async getUserItems(userId: string): Promise<Item[]> {
+    const userItems = await db.select().from(items).where(eq(items.ownerId, userId));
+    return userItems;
+  }
+
+  async updateItem(id: string, updates: Partial<Item>): Promise<Item> {
+    const [item] = await db.update(items).set(updates).where(eq(items.id, id)).returning();
+    return item;
+  }
+
+  // Marketplace operations
+  async createListing(insertListing: InsertMarketplaceListing): Promise<MarketplaceListing> {
+    const [listing] = await db.insert(marketplaceListings).values(insertListing).returning();
+    return listing;
+  }
+
+  async getListing(id: string): Promise<MarketplaceListing | undefined> {
+    const [listing] = await db.select().from(marketplaceListings).where(eq(marketplaceListings.id, id));
+    return listing || undefined;
+  }
+
+  async getMarketplaceListings(category?: string, sortBy?: string, limit: number = 50): Promise<MarketplaceListing[]> {
+    let query = db.select().from(marketplaceListings)
+      .where(eq(marketplaceListings.status, 'active'));
+
+    if (category && category !== 'all') {
+      query = query.innerJoin(items, eq(marketplaceListings.itemId, items.id))
+        .where(and(
+          eq(marketplaceListings.status, 'active'),
+          eq(items.category, category)
+        ));
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'price_asc':
+        query = query.orderBy(marketplaceListings.price);
+        break;
+      case 'price_desc':
+        query = query.orderBy(desc(marketplaceListings.price));
+        break;
+      case 'newest':
+        query = query.orderBy(desc(marketplaceListings.createdAt));
+        break;
+      default:
+        query = query.orderBy(marketplaceListings.createdAt);
+    }
+
+    const listings = await query.limit(limit);
+    return listings;
+  }
+
+  async updateListing(id: string, updates: Partial<MarketplaceListing>): Promise<MarketplaceListing> {
+    const [listing] = await db.update(marketplaceListings).set(updates).where(eq(marketplaceListings.id, id)).returning();
+    return listing;
+  }
+
+  // Trade offers
+  async createTradeOffer(insertOffer: InsertTradeOffer): Promise<TradeOffer> {
+    const [offer] = await db.insert(tradeOffers).values(insertOffer).returning();
+    return offer;
+  }
+
+  async getTradeOffer(id: string): Promise<TradeOffer | undefined> {
+    const [offer] = await db.select().from(tradeOffers).where(eq(tradeOffers.id, id));
+    return offer || undefined;
+  }
+
+  async getUserTradeOffers(userId: string, type?: 'sent' | 'received'): Promise<TradeOffer[]> {
+    let query = db.select().from(tradeOffers);
+    
+    if (type === 'sent') {
+      query = query.where(eq(tradeOffers.fromUserId, userId));
+    } else if (type === 'received') {
+      query = query.where(eq(tradeOffers.toUserId, userId));
+    } else {
+      query = query.where(or(
+        eq(tradeOffers.fromUserId, userId),
+        eq(tradeOffers.toUserId, userId)
+      ));
+    }
+
+    const offers = await query.orderBy(desc(tradeOffers.createdAt));
+    return offers;
+  }
+
+  async updateTradeOffer(id: string, updates: Partial<TradeOffer>): Promise<TradeOffer> {
+    const [offer] = await db.update(tradeOffers).set(updates).where(eq(tradeOffers.id, id)).returning();
+    return offer;
+  }
+
+  // Escrow contracts
+  async createEscrowContract(insertContract: InsertEscrowContract): Promise<EscrowContract> {
+    const [contract] = await db.insert(escrowContracts).values(insertContract).returning();
+    return contract;
+  }
+
+  async getEscrowContract(id: string): Promise<EscrowContract | undefined> {
+    const [contract] = await db.select().from(escrowContracts).where(eq(escrowContracts.id, id));
+    return contract || undefined;
+  }
+
+  async getUserEscrowContracts(userId: string, type?: 'buyer' | 'seller'): Promise<EscrowContract[]> {
+    let query = db.select().from(escrowContracts);
+    
+    if (type === 'buyer') {
+      query = query.where(eq(escrowContracts.buyerId, userId));
+    } else if (type === 'seller') {
+      query = query.where(eq(escrowContracts.sellerId, userId));
+    } else {
+      query = query.where(or(
+        eq(escrowContracts.buyerId, userId),
+        eq(escrowContracts.sellerId, userId)
+      ));
+    }
+
+    const contracts = await query.orderBy(desc(escrowContracts.createdAt));
+    return contracts;
+  }
+
+  async updateEscrowContract(id: string, updates: Partial<EscrowContract>): Promise<EscrowContract> {
+    const [contract] = await db.update(escrowContracts).set(updates).where(eq(escrowContracts.id, id)).returning();
+    return contract;
+  }
+
+  // Trading posts
+  async createTradingPost(insertPost: InsertTradingPost): Promise<TradingPost> {
+    const [post] = await db.insert(tradingPosts).values(insertPost).returning();
+    return post;
+  }
+
+  async getTradingPost(id: string): Promise<TradingPost | undefined> {
+    const [post] = await db.select().from(tradingPosts).where(eq(tradingPosts.id, id));
+    return post || undefined;
+  }
+
+  async getTradingPosts(territoryId?: string): Promise<TradingPost[]> {
+    let query = db.select().from(tradingPosts).where(eq(tradingPosts.status, 'active'));
+    
+    if (territoryId) {
+      query = query.where(and(
+        eq(tradingPosts.status, 'active'),
+        eq(tradingPosts.territoryId, territoryId)
+      ));
+    }
+
+    const posts = await query.orderBy(desc(tradingPosts.volume24h));
+    return posts;
+  }
+
+  async updateTradingPost(id: string, updates: Partial<TradingPost>): Promise<TradingPost> {
+    const [post] = await db.update(tradingPosts).set(updates).where(eq(tradingPosts.id, id)).returning();
+    return post;
   }
 }
 
