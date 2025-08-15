@@ -92,6 +92,16 @@ POST   /api/messages                - Send message
 GET    /api/messages/:channel       - Get messages
 ```
 
+### NFT Minting System
+```
+GET    /api/nft/eligibility/:walletAddress  - Check wallet eligibility
+GET    /api/nft/available-territories       - Get available territories
+POST   /api/nft/mint                        - Create NFT mint record
+POST   /api/nft/confirm                     - Confirm blockchain mint
+GET    /api/nft/mint/:tokenId               - Get mint status
+GET    /api/nft/user/:walletAddress         - Get user NFT status
+```
+
 ### Trading System
 ```
 # Items
@@ -201,6 +211,14 @@ VITE_ESCROW_CONTRACT_ADDRESS=0x...
 
 ## 🎯 Key Features Implemented
 
+### ✅ NFT Minting System
+- **1 NFT per wallet limit**: Enforced at both database and smart contract level
+- **Territory selection during mint**: Choose starting territory with strategic value
+- **Automatic territory claiming**: Selected territory is claimed for 24 hours upon mint
+- **Web3 integration**: Full blockchain transaction support with MetaMask
+- **Eligibility checking**: Pre-mint validation ensures wallet compliance
+- **NFT Gate**: Dashboard access requires OCSH NFT ownership
+
 ### ✅ Complete Trading System
 - Full-stack marketplace with web3 integration
 - Direct peer-to-peer trading with escrow protection
@@ -209,9 +227,10 @@ VITE_ESCROW_CONTRACT_ADDRESS=0x...
 
 ### ✅ Web3 Wallet Integration
 - MetaMask connection and network switching
-- Smart contract interaction hooks
+- Smart contract interaction hooks (Marketplace, NFT, Escrow)
 - Transaction encoding/decoding for offline transmission
 - Base Network deployment ready
+- NFT minting with territory metadata
 
 ### ✅ Real-time Multiplayer
 - WebSocket server for live updates

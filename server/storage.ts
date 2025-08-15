@@ -1,13 +1,13 @@
 import { 
   users, alliances, allianceMembers, territories, battles, messages, courierTransactions,
-  items, marketplaceListings, tradeOffers, escrowContracts, tradingPosts,
+  items, marketplaceListings, tradeOffers, escrowContracts, tradingPosts, nftMints,
   type User, type InsertUser, type Alliance, type InsertAlliance, 
   type AllianceMember, type InsertAllianceMember, type Territory, type InsertTerritory,
   type Battle, type InsertBattle, type Message, type InsertMessage,
   type CourierTransaction, type InsertCourierTransaction,
   type Item, type InsertItem, type MarketplaceListing, type InsertMarketplaceListing,
   type TradeOffer, type InsertTradeOffer, type EscrowContract, type InsertEscrowContract,
-  type TradingPost, type InsertTradingPost
+  type TradingPost, type InsertTradingPost, type NftMint, type InsertNftMint
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, or, count, sql } from "drizzle-orm";
@@ -80,6 +80,14 @@ export interface IStorage {
   getTradingPost(id: string): Promise<TradingPost | undefined>;
   getTradingPosts(territoryId?: string): Promise<TradingPost[]>;
   updateTradingPost(id: string, updates: Partial<TradingPost>): Promise<TradingPost>;
+  
+  // NFT Minting operations
+  checkNftEligibility(walletAddress: string): Promise<{ eligible: boolean; reason?: string }>;
+  createNftMint(mint: InsertNftMint): Promise<NftMint>;
+  getNftMint(tokenId: string): Promise<NftMint | undefined>;
+  getNftMintByWallet(walletAddress: string): Promise<NftMint | undefined>;
+  updateNftMint(tokenId: string, updates: Partial<NftMint>): Promise<NftMint>;
+  confirmNftMint(tokenId: string, userId: string): Promise<User>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -461,6 +469,83 @@ export class DatabaseStorage implements IStorage {
   async updateTradingPost(id: string, updates: Partial<TradingPost>): Promise<TradingPost> {
     const [post] = await db.update(tradingPosts).set(updates).where(eq(tradingPosts.id, id)).returning();
     return post;
+  }
+
+  // NFT Minting operations
+  async checkNftEligibility(walletAddress: string): Promise<{ eligible: boolean; reason?: string }> {
+    // Check if wallet already has an NFT
+    const existingMint = await db.select().from(nftMints).where(eq(nftMints.walletAddress, walletAddress));
+    
+    if (existingMint.length > 0) {
+      return { eligible: false, reason: "Wallet already owns an OCSH NFT. Only 1 NFT per wallet is allowed." };
+    }
+    
+    // Check if user already has NFT through user table
+    const existingUser = await db.select().from(users).where(and(
+      eq(users.address, walletAddress),
+      eq(users.hasNft, true)
+    ));
+    
+    if (existingUser.length > 0) {
+      return { eligible: false, reason: "User already owns an OCSH NFT." };
+    }
+    
+    return { eligible: true };
+  }
+
+  async createNftMint(insertMint: InsertNftMint): Promise<NftMint> {
+    const [mint] = await db.insert(nftMints).values(insertMint).returning();
+    return mint;
+  }
+
+  async getNftMint(tokenId: string): Promise<NftMint | undefined> {
+    const [mint] = await db.select().from(nftMints).where(eq(nftMints.tokenId, tokenId));
+    return mint || undefined;
+  }
+
+  async getNftMintByWallet(walletAddress: string): Promise<NftMint | undefined> {
+    const [mint] = await db.select().from(nftMints).where(eq(nftMints.walletAddress, walletAddress));
+    return mint || undefined;
+  }
+
+  async updateNftMint(tokenId: string, updates: Partial<NftMint>): Promise<NftMint> {
+    const [mint] = await db.update(nftMints).set(updates).where(eq(nftMints.tokenId, tokenId)).returning();
+    return mint;
+  }
+
+  async confirmNftMint(tokenId: string, userId: string): Promise<User> {
+    // Get the mint record
+    const mint = await this.getNftMint(tokenId);
+    if (!mint) {
+      throw new Error("NFT mint not found");
+    }
+
+    // Update user with NFT information
+    const [user] = await db.update(users).set({
+      tokenId: tokenId,
+      hasNft: true,
+      selectedTerritoryX: mint.selectedTerritoryX,
+      selectedTerritoryY: mint.selectedTerritoryY,
+      nftMintedAt: new Date()
+    }).where(eq(users.id, userId)).returning();
+
+    // Update mint status to confirmed
+    await this.updateNftMint(tokenId, { status: 'confirmed' });
+
+    // Auto-claim the selected territory if available
+    const existingTerritory = await this.getTerritory(mint.selectedTerritoryX, mint.selectedTerritoryY);
+    if (!existingTerritory || existingTerritory.ownerId === null) {
+      await this.claimTerritory({
+        x: mint.selectedTerritoryX,
+        y: mint.selectedTerritoryY,
+        ownerId: userId,
+        claimedAt: new Date(),
+        controlEndsAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+        status: "claimed"
+      });
+    }
+
+    return user;
   }
 }
 

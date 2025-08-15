@@ -13,9 +13,11 @@ import {
 import { ProtocolGrid } from "@/components/holographic-protocol";
 import { SocialInteractionHub } from "../components/social-interaction-hub";
 import { TradingInterface } from "../components/trading-interface";
+import { NFTGate } from "@/pages/nft-gate";
 
 export default function RealisticDashboard() {
   return (
+    <NFTGate>
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* Top Bar */}
       <header className="border-b border-neutral-800 bg-neutral-900/95 backdrop-blur-sm">
@@ -208,5 +210,6 @@ export default function RealisticDashboard() {
         </Tabs>
       </main>
     </div>
+    </NFTGate>
   );
 }

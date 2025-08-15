@@ -7,11 +7,13 @@ import { ScreenGlow } from "@/components/screen-glow";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard-realistic";
 import Handheld from "@/pages/handheld-realistic";
+import { NftMintingInterface } from "@/components/nft-minting-interface";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
+      <Route path="/mint" component={NftMintingInterface} />
       <Route path="/handheld" component={Handheld} />
       <Route component={NotFound} />
     </Switch>

@@ -258,6 +258,57 @@ export function useContracts() {
   };
 }
 
+// NFT minting contract interactions
+export function useNftMinting() {
+  const { nftContract } = useContracts();
+
+  const mintNft = async (to: string, territoryX: number, territoryY: number, metadata: any) => {
+    try {
+      // Generate unique token ID
+      const tokenId = Date.now().toString();
+      
+      // Encode metadata for NFT
+      const nftMetadata = {
+        name: `OCSH #${tokenId}`,
+        description: "On-Chain Survival Handbook - Your gateway to the wasteland",
+        image: `https://ocsh-game.replit.app/api/nft/${tokenId}/image`,
+        attributes: [
+          { trait_type: "Territory X", value: territoryX },
+          { trait_type: "Territory Y", value: territoryY },
+          { trait_type: "Strategic Value", value: metadata.strategicValue },
+          { trait_type: "Resources", value: metadata.resources },
+          { trait_type: "Threat Level", value: metadata.threatLevel },
+        ]
+      };
+
+      console.log(`Minting NFT for ${to} with territory (${territoryX}, ${territoryY})`);
+      
+      // Mock blockchain transaction (replace with actual smart contract call)
+      const tx = await nftContract?.mint(to, tokenId, JSON.stringify(nftMetadata));
+      
+      return { tokenId, txHash: tx?.hash || `0x${Math.random().toString(16).substring(2, 66)}` };
+    } catch (error) {
+      console.error('Failed to mint NFT:', error);
+      throw error;
+    }
+  };
+
+  const transferNft = async (from: string, to: string, tokenId: string) => {
+    try {
+      const tx = await nftContract?.transfer(from, to, tokenId);
+      return tx;
+    } catch (error) {
+      console.error('Failed to transfer NFT:', error);
+      throw error;
+    }
+  };
+
+  return {
+    mintNft,
+    transferNft,
+  };
+}
+
 // Trading contract interactions
 export function useTradingContracts() {
   const { marketplaceContract, nftContract, escrowContract } = useContracts();

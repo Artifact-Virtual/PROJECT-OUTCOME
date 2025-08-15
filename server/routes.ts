@@ -4,7 +4,8 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { 
   insertUserSchema, insertAllianceSchema, insertBattleSchema, insertMessageSchema, insertCourierTransactionSchema,
-  insertItemSchema, insertMarketplaceListingSchema, insertTradeOfferSchema, insertEscrowContractSchema, insertTradingPostSchema
+  insertItemSchema, insertMarketplaceListingSchema, insertTradeOfferSchema, insertEscrowContractSchema, insertTradingPostSchema,
+  insertNftMintSchema
 } from "@shared/schema";
 import { setupWebSocket } from "./services/websocket";
 import { CourierService } from "./services/courier";
@@ -556,6 +557,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(post);
     } catch (error) {
       res.status(400).json({ message: "Failed to update trading post" });
+    }
+  });
+
+  // NFT Minting API Routes
+  
+  // Check if wallet is eligible to mint
+  app.get("/api/nft/eligibility/:walletAddress", async (req, res) => {
+    try {
+      const { walletAddress } = req.params;
+      const eligibility = await storage.checkNftEligibility(walletAddress);
+      res.json(eligibility);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to check NFT eligibility" });
+    }
+  });
+
+  // Get available territories for minting
+  app.get("/api/nft/available-territories", async (req, res) => {
+    try {
+      // Get all territories and filter for unclaimed ones
+      const allTerritories = await storage.getTerritories(1000); // Get many territories
+      const availableTerritories = allTerritories.filter(t => !t.ownerId || t.status === 'unclaimed');
+      
+      // Return territories in a grid format with strategic value
+      const territoryGrid = availableTerritories.map(territory => ({
+        x: territory.x,
+        y: territory.y,
+        strategicValue: Math.floor(Math.random() * 100) + 1, // Mock strategic value
+        resources: ['water', 'tech', 'fuel', 'weapons'][Math.floor(Math.random() * 4)],
+        threat_level: Math.floor(Math.random() * 5) + 1,
+        nearby_alliances: Math.floor(Math.random() * 3),
+      }));
+      
+      res.json(territoryGrid);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get available territories" });
+    }
+  });
+
+  // Create NFT mint record
+  app.post("/api/nft/mint", async (req, res) => {
+    try {
+      const mintData = insertNftMintSchema.parse(req.body);
+      
+      // Check eligibility first
+      const eligibility = await storage.checkNftEligibility(mintData.walletAddress);
+      if (!eligibility.eligible) {
+        return res.status(400).json({ message: eligibility.reason });
+      }
+      
+      // Create mint record
+      const mint = await storage.createNftMint(mintData);
+      res.status(201).json(mint);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid NFT mint data" });
+    }
+  });
+
+  // Confirm NFT mint (called after blockchain transaction)
+  app.post("/api/nft/confirm", async (req, res) => {
+    try {
+      const { tokenId, userId, txHash } = req.body;
+      
+      // Update mint with transaction hash
+      await storage.updateNftMint(tokenId, { 
+        mintTxHash: txHash,
+        status: 'confirmed' 
+      });
+      
+      // Update user and claim territory
+      const user = await storage.confirmNftMint(tokenId, userId);
+      
+      res.json({ user, message: "NFT minted successfully and territory claimed!" });
+    } catch (error) {
+      res.status(400).json({ message: "Failed to confirm NFT mint" });
+    }
+  });
+
+  // Get NFT mint status
+  app.get("/api/nft/mint/:tokenId", async (req, res) => {
+    try {
+      const mint = await storage.getNftMint(req.params.tokenId);
+      if (!mint) {
+        return res.status(404).json({ message: "NFT mint not found" });
+      }
+      res.json(mint);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get NFT mint" });
+    }
+  });
+
+  // Get user's NFT status
+  app.get("/api/nft/user/:walletAddress", async (req, res) => {
+    try {
+      const mint = await storage.getNftMintByWallet(req.params.walletAddress);
+      res.json(mint || { hasNft: false });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get user NFT status" });
     }
   });
 

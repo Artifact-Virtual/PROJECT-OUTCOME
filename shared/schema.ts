@@ -8,6 +8,11 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   address: text("address").notNull().unique(),
   callSign: text("call_sign").notNull().unique(),
+  tokenId: text("token_id").unique(), // NFT token ID (null if not minted)
+  hasNft: boolean("has_nft").notNull().default(false),
+  selectedTerritoryX: integer("selected_territory_x"), // Territory chosen during minting
+  selectedTerritoryY: integer("selected_territory_y"),
+  nftMintedAt: timestamp("nft_minted_at"), // When NFT was minted
   level: integer("level").notNull().default(1),
   xp: integer("xp").notNull().default(0),
   reputation: integer("reputation").notNull().default(0),
@@ -412,3 +417,26 @@ export type EscrowContract = typeof escrowContracts.$inferSelect;
 export type InsertEscrowContract = z.infer<typeof insertEscrowContractSchema>;
 export type TradingPost = typeof tradingPosts.$inferSelect;
 export type InsertTradingPost = z.infer<typeof insertTradingPostSchema>;
+
+// NFT Minting Table
+export const nftMints = pgTable("nft_mints", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  tokenId: text("token_id").notNull().unique(),
+  walletAddress: text("wallet_address").notNull().unique(), // Enforce 1 NFT per wallet
+  userId: varchar("user_id").notNull().references(() => users.id),
+  selectedTerritoryX: integer("selected_territory_x").notNull(),
+  selectedTerritoryY: integer("selected_territory_y").notNull(),
+  mintTxHash: text("mint_tx_hash").notNull(),
+  status: text("status").notNull().default("pending"), // pending, confirmed, failed
+  metadata: jsonb("metadata"), // NFT attributes and traits
+  mintedAt: timestamp("minted_at").notNull().default(sql`now()`),
+});
+
+export const insertNftMintSchema = createInsertSchema(nftMints).omit({
+  id: true,
+  mintedAt: true,
+});
+
+// NFT Minting Types
+export type NftMint = typeof nftMints.$inferSelect;
+export type InsertNftMint = z.infer<typeof insertNftMintSchema>;

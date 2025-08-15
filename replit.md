@@ -6,7 +6,7 @@ This is a decentralized gaming platform built around the OCSH (On-Chain Survival
 
 The project consists of two integrated applications: Part 1 (Main Dashboard) for strategic gameplay and Part 2 (Handheld PWA Terminal) for offline blockchain transaction handling. The project follows a full-stack architecture with React/TypeScript frontend, Express.js backend, PostgreSQL database with Drizzle ORM, and WebSocket support for real-time features.
 
-**Latest Major Update (January 2025)**: Comprehensive project documentation created in README.md with complete technical specifications, API endpoint mapping, and integration guidelines for final assembly.
+**Latest Major Update (August 2025)**: Complete NFT minting system implemented with 1 NFT per wallet limit, territory selection during minting, automatic territory claiming, and NFT gate for game access. Full Web3 integration with MetaMask wallet connection and comprehensive trading platform with 25+ API endpoints.
 
 ## User Preferences
 
