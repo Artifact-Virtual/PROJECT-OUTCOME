@@ -9,7 +9,7 @@ import {
   SimpleWastelandLeaderboard as WastelandLeaderboard 
 } from "@/components/simple-wasteland";
 import { DarknetContinuumRelic } from "@/components/darknet-continuum";
-import { SocialInteractionHub } from "@/components/social-interaction-hub";
+import { SocialInteractionHub } from "../components/social-interaction-hub";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Dashboard() {
