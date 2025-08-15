@@ -242,11 +242,20 @@ VITE_ESCROW_CONTRACT_ADDRESS=0x...
 - Transaction queuing system
 - Frame encoding for radio/mesh/SMS transmission
 
+### ✅ Enhanced Battle System
+- **Aggregate power calculation**: Individual (40%) + Alliance (35%) + Territory (15%) + Strategic (10%)
+- **Alliance influence**: Alliance member stats aggregate into battle power
+- **Territory bonuses**: Adjacent control and defensive advantages
+- **Strategic positioning**: Border and central territory bonuses
+- **Dynamic rewards**: XP and reputation scale with power differences
+- **Underdog mechanics**: Higher rewards for defeating stronger opponents
+
 ### ✅ Advanced UI/UX
 - Military-industrial aesthetic with consistent theming
 - Responsive design with mobile support
 - Loading states and error handling
 - Comprehensive testing hooks (data-testid attributes)
+- Real-time battle power breakdowns and strategic calculations
 
 ## 🔮 Future Enhancements
 

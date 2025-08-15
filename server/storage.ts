@@ -188,37 +188,52 @@ export class DatabaseStorage implements IStorage {
     return battle || undefined;
   }
 
-  async completeBattle(id: string, winnerId: string): Promise<Battle> {
+  async completeBattle(id: string, winnerId: string, battleData?: any): Promise<Battle> {
     const [battle] = await db
       .update(battles)
       .set({
         winnerId,
         status: "completed",
+        battleData: battleData || {},
         completedAt: sql`now()`,
       })
       .where(eq(battles.id, id))
       .returning();
 
-    // Update user stats
-    const battleData = await this.getBattle(id);
-    if (battleData) {
-      // Winner gets +100 XP
+    // Update user stats based on battle performance
+    const currentBattle = await this.getBattle(id);
+    if (currentBattle) {
+      const powerDifference = battleData?.powerDifference || 0;
+      
+      // Dynamic XP based on power difference (underdog bonus)
+      const baseXp = 100;
+      const underdogBonus = powerDifference > 100 ? Math.min(50, powerDifference / 10) : 0;
+      const winnerXp = baseXp + underdogBonus;
+      const loserXp = Math.max(25, Math.round(winnerXp * 0.3));
+
+      // Dynamic reputation based on battle quality
+      const baseReputation = 10;
+      const qualityBonus = powerDifference > 200 ? 5 : 0;
+      const winnerReputation = baseReputation + qualityBonus;
+
+      // Winner rewards
       await db
         .update(users)
         .set({
-          xp: sql`xp + 100`,
+          xp: sql`xp + ${winnerXp}`,
           wins: sql`wins + 1`,
-          reputation: sql`reputation + 10`,
+          reputation: sql`reputation + ${winnerReputation}`,
         })
         .where(eq(users.id, winnerId));
 
-      // Loser gets +25 XP
-      const loserId = winnerId === battleData.challengerId ? battleData.defenderId : battleData.challengerId;
+      // Loser compensation
+      const loserId = winnerId === currentBattle.challengerId ? currentBattle.defenderId : currentBattle.challengerId;
       await db
         .update(users)
         .set({
-          xp: sql`xp + 25`,
+          xp: sql`xp + ${loserXp}`,
           losses: sql`losses + 1`,
+          reputation: sql`reputation + 2`, // Small consolation reputation
         })
         .where(eq(users.id, loserId));
     }

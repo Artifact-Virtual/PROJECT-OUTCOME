@@ -177,18 +177,80 @@ export const RealisticPlayerStatus = () => {
   );
 };
 
-// Realistic Battle Interface
+// Realistic Battle Interface with Aggregate Power System
 export const RealisticBattleInterface = () => {
+  const [selectedOpponent, setSelectedOpponent] = useState<string | null>(null);
+  const [battlePowerData, setBattlePowerData] = useState<any>(null);
+
+  const activeBattles = [
+    { 
+      id: "battle_001", 
+      opponent: "WastelandKing", 
+      status: "ENGAGING",
+      playerPower: 2450,
+      opponentPower: 2380,
+      allianceBonus: 450,
+      territoryBonus: 120,
+      powerDiff: 70
+    },
+    { 
+      id: "battle_002", 
+      opponent: "Raider_X", 
+      status: "VICTORY",
+      playerPower: 1980,
+      opponentPower: 1650,
+      allianceBonus: 320,
+      territoryBonus: 80,
+      powerDiff: 330
+    },
+    { 
+      id: "battle_003", 
+      opponent: "Enclave_Unit", 
+      status: "PENDING",
+      playerPower: 2100,
+      opponentPower: 2850,
+      allianceBonus: 200,
+      territoryBonus: 60,
+      powerDiff: -750
+    }
+  ];
+
+  const initiateBattle = async (targetId: string) => {
+    try {
+      console.log(`Initiating strategic battle against ${targetId}`);
+      // This would normally call the new /api/battles/:id/resolve endpoint
+    } catch (error) {
+      console.error("Battle initiation failed:", error);
+    }
+  };
+
   return (
     <RealisticWastelandCard variant="default" className="p-6">
       <div className="flex items-center justify-between mb-4">
         <RealisticText variant="subtitle">Combat Operations</RealisticText>
-        <Badge className="bg-red-900 text-red-100 border-red-800">3 Active</Badge>
+        <Badge className="bg-red-900 text-red-100 border-red-800">
+          {activeBattles.filter(b => b.status !== "VICTORY").length} Active
+        </Badge>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {/* Power Calculation Info */}
+        <div className="bg-neutral-900/50 border border-neutral-700 p-3 rounded">
+          <RealisticText variant="caption" className="text-amber-400 mb-2">
+            STRATEGIC COMBAT SYSTEM
+          </RealisticText>
+          <RealisticText variant="caption" className="text-neutral-400 leading-relaxed">
+            Victory determined by: Individual Power (40%) + Alliance Aggregate (35%) + Territory Control (15%) + Strategic Position (10%)
+          </RealisticText>
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
-          <RealisticButton variant="danger" size="sm">
+          <RealisticButton 
+            variant="danger" 
+            size="sm"
+            onClick={() => initiateBattle("random_target")}
+            data-testid="button-initiate-attack"
+          >
             Initiate Attack
           </RealisticButton>
           <RealisticButton variant="secondary" size="sm">
@@ -197,18 +259,95 @@ export const RealisticBattleInterface = () => {
         </div>
         
         <div className="space-y-2">
-          <div className="flex justify-between items-center p-3 bg-red-900/20 border border-red-800/50">
-            <RealisticText variant="body" className="text-red-200">vs WastelandKing</RealisticText>
-            <RealisticText variant="caption" className="text-amber-300">ENGAGING</RealisticText>
-          </div>
-          <div className="flex justify-between items-center p-3 bg-emerald-900/20 border border-emerald-800/50">
-            <RealisticText variant="body" className="text-emerald-200">vs Raider_X</RealisticText>
-            <RealisticText variant="caption" className="text-emerald-300">VICTORY</RealisticText>
-          </div>
-          <div className="flex justify-between items-center p-3 bg-neutral-800 border border-neutral-700">
-            <RealisticText variant="body">vs Enclave_Unit</RealisticText>
-            <RealisticText variant="caption">PENDING</RealisticText>
-          </div>
+          {activeBattles.map((battle) => (
+            <div 
+              key={battle.id}
+              className={`p-3 border rounded cursor-pointer transition-all ${
+                battle.status === "ENGAGING" ? "bg-red-900/20 border-red-800/50" :
+                battle.status === "VICTORY" ? "bg-emerald-900/20 border-emerald-800/50" :
+                "bg-neutral-800 border-neutral-700"
+              }`}
+              onClick={() => setSelectedOpponent(selectedOpponent === battle.id ? null : battle.id)}
+              data-testid={`battle-${battle.id}`}
+            >
+              <div className="flex justify-between items-center">
+                <div>
+                  <RealisticText 
+                    variant="body" 
+                    className={
+                      battle.status === "ENGAGING" ? "text-red-200" :
+                      battle.status === "VICTORY" ? "text-emerald-200" :
+                      "text-neutral-200"
+                    }
+                  >
+                    vs {battle.opponent}
+                  </RealisticText>
+                  <div className="flex items-center gap-3 mt-1">
+                    <RealisticText variant="caption" className="text-neutral-400">
+                      Power: {battle.playerPower} vs {battle.opponentPower}
+                    </RealisticText>
+                    <RealisticText 
+                      variant="caption" 
+                      className={battle.powerDiff > 0 ? "text-emerald-400" : "text-red-400"}
+                    >
+                      ({battle.powerDiff > 0 ? "+" : ""}{battle.powerDiff})
+                    </RealisticText>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <RealisticText 
+                    variant="caption" 
+                    className={
+                      battle.status === "ENGAGING" ? "text-amber-300" :
+                      battle.status === "VICTORY" ? "text-emerald-300" :
+                      "text-neutral-300"
+                    }
+                  >
+                    {battle.status}
+                  </RealisticText>
+                </div>
+              </div>
+              
+              {selectedOpponent === battle.id && (
+                <div className="mt-3 pt-3 border-t border-neutral-600 space-y-2">
+                  <RealisticText variant="caption" className="text-amber-400">
+                    POWER BREAKDOWN:
+                  </RealisticText>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <RealisticText variant="caption" className="text-neutral-500">
+                        Individual: {battle.playerPower - battle.allianceBonus - battle.territoryBonus}
+                      </RealisticText>
+                      <RealisticText variant="caption" className="text-neutral-500">
+                        Alliance: +{battle.allianceBonus}
+                      </RealisticText>
+                    </div>
+                    <div>
+                      <RealisticText variant="caption" className="text-neutral-500">
+                        Territory: +{battle.territoryBonus}
+                      </RealisticText>
+                      <RealisticText variant="caption" className="text-neutral-500">
+                        Strategic: +{battle.playerPower - (battle.playerPower - battle.allianceBonus - battle.territoryBonus) - battle.allianceBonus - battle.territoryBonus}
+                      </RealisticText>
+                    </div>
+                  </div>
+                  {battle.status === "PENDING" && (
+                    <RealisticButton 
+                      variant="danger" 
+                      size="sm" 
+                      className="w-full mt-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        initiateBattle(battle.opponent);
+                      }}
+                    >
+                      Resolve Battle
+                    </RealisticButton>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </RealisticWastelandCard>

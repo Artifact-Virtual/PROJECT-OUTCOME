@@ -36,7 +36,10 @@ Preferred communication style: Simple, everyday language.
 - **Migrations**: Drizzle-kit for schema management and migrations
 
 ### Game Architecture
-- **Battle System**: Turn-based combat with XP rewards and reputation tracking
+- **Enhanced Battle System**: Aggregate power calculation using individual stats (40%), alliance power (35%), territory control (15%), and strategic positioning (10%)
+- **Alliance Aggregate Power**: Alliance member stats combine to influence battle outcomes with diminishing returns scaling
+- **Territory Strategic Value**: Adjacent territory control, defensive bonuses, border/central positioning advantages
+- **Dynamic Reward System**: XP and reputation scale based on power differences with underdog bonuses
 - **Alliance System**: Multi-role alliance management (leader, member, invited)
 - **Territory Control**: 24-hour territory claiming with strategic positioning
 - **Messaging**: On-chain messaging with anti-spam mechanisms and cooldowns

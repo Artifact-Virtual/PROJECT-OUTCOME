@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
+import { BattleEngine } from "./services/battle-engine";
 import { 
   insertUserSchema, insertAllianceSchema, insertBattleSchema, insertMessageSchema, insertCourierTransactionSchema,
   insertItemSchema, insertMarketplaceListingSchema, insertTradeOfferSchema, insertEscrowContractSchema, insertTradingPostSchema,
@@ -122,6 +123,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(battle);
     } catch (error) {
       res.status(400).json({ message: "Failed to complete battle" });
+    }
+  });
+
+  // Enhanced battle resolution using aggregate power calculations
+  app.post("/api/battles/:id/resolve", async (req, res) => {
+    try {
+      const battleEngine = new BattleEngine();
+      const battle = await storage.getBattle(req.params.id);
+      
+      if (!battle) {
+        return res.status(404).json({ message: "Battle not found" });
+      }
+
+      if (battle.status !== "pending") {
+        return res.status(400).json({ message: "Battle already resolved" });
+      }
+
+      if (!battle.territoryId) {
+        return res.status(400).json({ message: "Battle must have an associated territory" });
+      }
+
+      // Use battle engine to calculate outcome based on aggregate power
+      const result = await battleEngine.resolveBattle(
+        battle.challengerId,
+        battle.defenderId,
+        battle.territoryId
+      );
+
+      // Complete the battle with calculated results
+      const completedBattle = await storage.completeBattle(
+        req.params.id,
+        result.winnerId,
+        result.battleData
+      );
+
+      // Update territory ownership if battle was for territory control
+      if (battle.territoryId && result.winnerId === battle.challengerId) {
+        await storage.claimTerritory(
+          parseInt(String(battle.territoryId)), 
+          parseInt(String(battle.territoryId)), 
+          result.winnerId
+        );
+      }
+
+      res.json({
+        battle: completedBattle,
+        resolution: result.battleData,
+        powerDifference: result.powerDifference,
+      });
+
+    } catch (error) {
+      console.error("Battle resolution error:", error);
+      res.status(500).json({ message: "Failed to resolve battle" });
     }
   });
 
