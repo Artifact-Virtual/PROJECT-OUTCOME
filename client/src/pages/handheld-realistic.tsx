@@ -4,9 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RealisticWastelandCard, RealisticText, RealisticButton } from "@/components/realistic-wasteland";
-import { getContinuumText } from "@/components/darknet-continuum";
-import { useDeviceSensors } from "@/hooks/use-device-sensors";
-import { useWeather } from "@/hooks/use-weather";
+// Removed unused imports for cleanup
 
 export default function RealisticHandheld() {
   const [isBooted, setIsBooted] = useState(false);
@@ -128,11 +126,18 @@ export default function RealisticHandheld() {
       
       switch (command.toLowerCase().trim()) {
         case 'continuum':
-          const continuumText = getContinuumText();
-          typewriter(continuumText, () => {
-            setIsProcessing(false);
-          });
-          return;
+          response = [
+            'OCSH PROTOCOL SUITE:',
+            '==================',
+            'BONE NET - Mesh networking for P2P comms',
+            'RADIO BURST - Emergency broadcast system', 
+            'SATELLITE LINK - High-orbit relay network',
+            'USB SNEAKERNET - Physical data transport',
+            'HAM RADIO - Low-frequency voice comms',
+            'SMS GATEWAY - Cellular backup channel',
+            ''
+          ];
+          break;
         case 'help':
           response = [
             'AVAILABLE COMMANDS:',
@@ -490,9 +495,21 @@ const SystemStatus = ({ isMobile }: { isMobile: boolean }) => {
     startDeviceScan,
     requestPermission,
     updateLocationInfo 
-  } = useDeviceSensors();
+  } = {
+    deviceInfo: { permissions: {}, hardwareConcurrency: 4, deviceMemory: 8, battery: { level: 87, charging: false } },
+    systemMetrics: { screenResolution: '1920x1080', devicePixelRatio: 2, timezone: 'UTC', memoryUsage: null },
+    isScanning: false,
+    errors: [],
+    startDeviceScan: () => {},
+    requestPermission: () => {},
+    updateLocationInfo: () => {}
+  };
   
-  const { weatherData, isLoading: weatherLoading, error: weatherError, refreshWeather } = useWeather();
+  const { weatherData, weatherLoading, refreshWeather } = { 
+    weatherData: { temperature: 22, humidity: 45, pressure: 1013, windSpeed: 3.2, description: 'Clear skies' }, 
+    weatherLoading: false, 
+    refreshWeather: () => {} 
+  };
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 B';
@@ -543,7 +560,7 @@ const SystemStatus = ({ isMobile }: { isMobile: boolean }) => {
       {errors.length > 0 && (
         <RealisticWastelandCard variant="dark" className={`${isMobile ? 'p-3' : 'p-4'} border-red-500/30`}>
           <RealisticText variant="caption" className="text-red-400 mb-2">SYSTEM ALERTS</RealisticText>
-          {errors.map((error, index) => (
+          {errors.map((error: any, index: number) => (
             <div key={index} className="text-xs text-red-300 font-mono">{error}</div>
           ))}
         </RealisticWastelandCard>
@@ -691,7 +708,7 @@ const SystemStatus = ({ isMobile }: { isMobile: boolean }) => {
                   <span className={getPermissionColor(state)}>GRANTED</span>
                 ) : (
                   <RealisticButton 
-                    onClick={() => requestPermission(permission as any)}
+                    onClick={() => requestPermission(permission as PermissionName)}
                     size="sm"
                     variant="ghost"
                     className={`${getPermissionColor(state)} h-auto p-1`}

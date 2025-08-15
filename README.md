@@ -1,188 +1,88 @@
-# OCSH NFT Game - Comprehensive Web3 Trading Platform
+# BLOKBOY 1000 - Onchain Survival Handbook (OCSH) Gaming Platform
 
-## Overview
+A cutting-edge post-apocalyptic web3 social gaming platform featuring deterministic territorial control, alliance-based warfare, and offline blockchain transaction capabilities. Built with authentic military-industrial aesthetics for strategic multiplayer experiences.
 
-The OCSH (On-Chain Survival Handbook) NFT Game is a cutting-edge post-apocalyptic web3 social gaming platform that revolutionizes digital interaction through advanced technological integration and immersive user experiences. This document details the complete trading system implementation.
+## 🎯 Core Features
 
-## 🎮 Game Features
+### ✅ Web3 Authentication & NFT Gating
+- **MetaMask Integration**: Seamless wallet connection with Base Network support
+- **NFT Minting System**: 1 NFT per wallet limit with territory selection during mint
+- **Automatic Territory Claiming**: Territory ownership assigned upon successful NFT mint
+- **Access Control**: Core game requires OCSH NFT ownership for entry
 
-### Core Gameplay
-- **Strategic Territory Control**: Risk-inspired gameplay with alliance systems
-- **Real-time Combat**: Turn-based battles with XP rewards and reputation tracking  
-- **Alliance Management**: Multi-role alliance system (leader, member, invited)
-- **On-chain Messaging**: Decentralized communication with anti-spam mechanisms
-- **Territory Claiming**: 24-hour territory control with strategic positioning
+### ✅ Deterministic Battle System
+- **Pure Aggregate Calculation**: Higher total power always wins - zero randomness
+- **Alliance Supremacy**: Member stats sum directly into battle power with coordination bonuses
+- **Territory Mathematics**: Holdings create exponential power advantages through logistics
+- **Strategic Positioning**: Border and central territories provide calculated bonuses
+- **Predictable Outcomes**: Battle results can be calculated before engagement
+- **Power Rankings**: Real-time alliance and player power leaderboards
 
-### Trading System
-- **NFT Marketplace**: Complete marketplace with fixed-price and auction listings
-- **Direct Trading**: Peer-to-peer trade offers with multi-item exchanges
-- **Escrow Contracts**: Smart contract-based secure trading
-- **Trading Posts**: Territory-based trading hubs with specializations
-- **Web3 Integration**: Full blockchain integration with MetaMask support
+### ✅ Alliance & Territory Control
+- **Multi-role Alliance System**: Leader, member, and invited user management
+- **24-hour Territory Claims**: Strategic positioning with adjacent territory bonuses
+- **Real-time Territory Updates**: Live map showing ownership and control zones
+- **Supply Line Advantages**: Multiple territories create logistical power multipliers
+
+### ✅ Trading & Economy System
+- **25+ Trading API Endpoints**: Comprehensive marketplace with order management
+- **NFT Trading Interface**: Buy, sell, and transfer OCSH NFTs
+- **Real-time Price Feeds**: Live market data with price history charts
+- **Portfolio Management**: Complete asset tracking and transaction history
+
+### ✅ Real-time Communication
+- **WebSocket Integration**: Live updates for battles, messages, and territory changes
+- **Global Messaging System**: Anti-spam mechanisms with cooldowns
+- **Alliance Communications**: Private channels for strategic coordination
+- **Battle Notifications**: Real-time alerts for alliance conflicts
+
+### ✅ Offline-First Handheld Interface
+- **BLOKBOY 1000 Terminal**: Dedicated PWA companion app for offline operations
+- **Foundry Courier Integration**: Python-based CLI for offline transaction encoding/decoding
+- **Transaction Queuing System**: Batch processing when connectivity returns
+- **Frame Encoding Support**: Radio/mesh/SMS transmission capabilities
 
 ## 🏗️ Technical Architecture
 
 ### Frontend Stack
-- **React 18** with TypeScript and Vite for fast development
-- **Shadcn/ui** components built on Radix UI primitives
-- **Tailwind CSS** with custom cyberpunk theme and CSS variables
-- **TanStack Query** for server state management
-- **Wouter** for lightweight client-side routing
-- **WebSocket** integration for real-time game updates
+- **React 18 + TypeScript**: Type-safe component development with Vite
+- **Shadcn/UI + Radix**: Accessible, unstyled component primitives
+- **Tailwind CSS**: Utility-first styling with custom cyberpunk theme
+- **TanStack Query**: Powerful server state management
+- **Wouter**: Lightweight client-side routing
+- **Framer Motion**: Smooth animations and transitions
 
 ### Backend Stack
-- **Node.js** with Express.js framework
-- **TypeScript** with ES modules
-- **PostgreSQL** with Drizzle ORM for type-safe database operations
-- **WebSocket Server** for multiplayer features
-- **Session Management** with PostgreSQL-backed sessions
+- **Node.js + Express**: TypeScript server with ES modules
+- **PostgreSQL + Drizzle ORM**: Type-safe database operations
+- **WebSocket Server**: Real-time multiplayer functionality
+- **Session Management**: PostgreSQL-backed secure sessions
 
-### Database Schema
-- **Users**: Player profiles with XP, wins, and reputation
-- **Alliances**: Multi-role alliance management system
-- **Territories**: Strategic map locations with ownership tracking
-- **Battles**: Combat system with XP rewards
-- **Messages**: On-chain messaging with cooldowns
-- **Items**: NFT items with attributes and ownership
-- **Marketplace Listings**: Fixed-price and auction listings
-- **Trade Offers**: Direct peer-to-peer trading
-- **Escrow Contracts**: Secure smart contract trading
-- **Trading Posts**: Territory-based trading hubs
-- **Courier Transactions**: Offline blockchain transaction handling
+### Database Design
+- **Modular Schema**: Separate tables for users, alliances, territories, battles, messages
+- **Foreign Key Relationships**: Well-defined entity connections
+- **Type Safety**: Zod schemas for runtime validation
+- **Migration System**: Drizzle-kit for schema management
 
-### Web3 Integration
-- **Base Network** primary deployment with Ethereum expansion
-- **MetaMask** wallet integration
-- **Smart Contracts**: Marketplace, NFT, and Escrow contracts
-- **Transaction Management**: Comprehensive lifecycle handling
-- **Offline Capabilities**: Foundry Courier integration
+### Game Logic
+- **Mathematical Warfare**: Pure calculations determine all battle outcomes
+- **Alliance Aggregate Power**: Direct summation of member stats with coordination bonuses
+- **Exponential Territory Scaling**: More holdings = exponentially greater strategic advantage
+- **Zero Randomness**: Battles are 100% predictable based on alliance and territory mathematics
 
-## 🔗 API Endpoints
+## 🚀 Quick Start
 
-### User Management
-```
-GET    /api/users/:address          - Get user by wallet address
-POST   /api/users                   - Create new user
-GET    /api/users/:id/alliance      - Get user's alliance
-```
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL database
+- MetaMask or Web3 wallet
 
-### Alliance System
-```
-POST   /api/alliances               - Create alliance
-POST   /api/alliances/:id/join      - Join alliance
-```
-
-### Territory Control
-```
-GET    /api/territories             - List territories
-POST   /api/territories             - Claim territory
-GET    /api/territories/:x/:y       - Get specific territory
-```
-
-### Combat System
-```
-POST   /api/battles                 - Create battle
-GET    /api/battles/:id             - Get battle details
-POST   /api/battles/:id/complete    - Complete battle
-```
-
-### Messaging
-```
-POST   /api/messages                - Send message
-GET    /api/messages/:channel       - Get messages
-```
-
-### NFT Minting System
-```
-GET    /api/nft/eligibility/:walletAddress  - Check wallet eligibility
-GET    /api/nft/available-territories       - Get available territories
-POST   /api/nft/mint                        - Create NFT mint record
-POST   /api/nft/confirm                     - Confirm blockchain mint
-GET    /api/nft/mint/:tokenId               - Get mint status
-GET    /api/nft/user/:walletAddress         - Get user NFT status
-```
-
-### Trading System
-```
-# Items
-GET    /api/items                   - Get user items
-POST   /api/items                   - Create item
-GET    /api/items/:id               - Get item details
-PATCH  /api/items/:id               - Update item
-
-# Marketplace
-GET    /api/marketplace             - Browse listings
-POST   /api/marketplace             - Create listing
-GET    /api/marketplace/:id         - Get listing details
-PATCH  /api/marketplace/:id         - Update listing
-POST   /api/marketplace/:id/buy     - Purchase item
-
-# Trade Offers
-GET    /api/trades                  - Get trade offers
-POST   /api/trades                  - Create trade offer
-GET    /api/trades/:id              - Get offer details
-PATCH  /api/trades/:id              - Update offer
-POST   /api/trades/:id/respond      - Accept/decline offer
-
-# Escrow Contracts
-GET    /api/escrow                  - Get escrow contracts
-POST   /api/escrow                  - Create escrow
-GET    /api/escrow/:id              - Get contract details
-PATCH  /api/escrow/:id              - Update contract
-POST   /api/escrow/:id/complete     - Complete escrow
-POST   /api/escrow/:id/dispute      - Dispute escrow
-
-# Trading Posts
-GET    /api/trading-posts           - List trading posts
-POST   /api/trading-posts           - Create trading post
-GET    /api/trading-posts/:id       - Get post details
-PATCH  /api/trading-posts/:id       - Update post
-```
-
-### Courier System (Offline Blockchain)
-```
-POST   /api/courier/encode          - Encode transaction for offline transmission
-POST   /api/courier/decode          - Decode received frames
-POST   /api/courier/broadcast       - Broadcast transaction to network
-GET    /api/courier/transactions/:userId - Get user transactions
-```
-
-## 🎨 UI Components
-
-### Realistic Wasteland Theme
-- **RealisticText**: Military-inspired typography variants
-- **RealisticButton**: Post-apocalyptic button styles
-- **RealisticWastelandCard**: Industrial card components
-- **Consistent Theming**: Dark mode with amber/green accents
-
-### Trading Interface
-- **5-Tab System**: Marketplace, Inventory, Trades, Posts, Escrow
-- **Advanced Filtering**: Category, sorting, search functionality
-- **Real-time Updates**: WebSocket integration for live data
-- **Responsive Design**: Mobile-first approach
-
-## 🔐 Security Features
-
-### Smart Contract Security
-- **Escrow Protection**: Automated smart contract protection
-- **Dispute Resolution**: Community arbitrator system
-- **Item Verification**: Authenticity checks
-- **Emergency Controls**: Cancellation with full refunds
-
-### Application Security
-- **Input Validation**: Zod schemas for all API inputs
-- **Rate Limiting**: Built-in cooldowns and anti-spam
-- **Session Management**: Secure PostgreSQL sessions
-- **Error Handling**: Comprehensive error boundaries
-
-## 🚀 Deployment
-
-### Environment Setup
+### Installation
 ```bash
-# Install dependencies
+# Clone and install dependencies
 npm install
 
-# Database setup
+# Set up database
 npm run db:push
 
 # Start development server
@@ -190,102 +90,204 @@ npm run dev
 ```
 
 ### Environment Variables
-```env
-DATABASE_URL=postgresql://...
+```bash
+DATABASE_URL=postgresql://user:pass@host:port/db
 PGHOST=localhost
 PGPORT=5432
-PGUSER=postgres
+PGUSER=username
 PGPASSWORD=password
-PGDATABASE=ocsh_game
-
-# Web3 Contract Addresses (Base Network)
-VITE_MARKETPLACE_CONTRACT_ADDRESS=0x...
-VITE_NFT_CONTRACT_ADDRESS=0x...
-VITE_ESCROW_CONTRACT_ADDRESS=0x...
+PGDATABASE=database_name
 ```
 
-### Production Deployment
-- **Replit Deployments**: Automatic build and hosting
-- **TLS/Health Checks**: Built-in monitoring
-- **Custom Domains**: .replit.app or custom domain support
+## 📡 API Documentation
 
-## 🎯 Key Features Implemented
+### Authentication System
+```
+POST   /api/auth/login           - User login
+POST   /api/auth/logout          - User logout  
+GET    /api/auth/session         - Get current session
+```
 
-### ✅ NFT Minting System
-- **1 NFT per wallet limit**: Enforced at both database and smart contract level
-- **Territory selection during mint**: Choose starting territory with strategic value
-- **Automatic territory claiming**: Selected territory is claimed for 24 hours upon mint
-- **Web3 integration**: Full blockchain transaction support with MetaMask
-- **Eligibility checking**: Pre-mint validation ensures wallet compliance
-- **NFT Gate**: Dashboard access requires OCSH NFT ownership
+### User Management
+```
+GET    /api/users                - Get all users
+POST   /api/users                - Create user
+GET    /api/users/:id            - Get user by ID
+PATCH  /api/users/:id            - Update user
+GET    /api/users/:id/alliance   - Get user's alliance
+```
 
-### ✅ Complete Trading System
-- Full-stack marketplace with web3 integration
-- Direct peer-to-peer trading with escrow protection
-- Territory-based trading posts with specializations
-- Comprehensive API with transaction lifecycle management
+### Alliance System
+```
+GET    /api/alliances                    - Get all alliances
+POST   /api/alliances                    - Create alliance
+GET    /api/alliances/:id                - Get alliance details
+PATCH  /api/alliances/:id                - Update alliance
+POST   /api/alliances/:id/join           - Join alliance
+DELETE /api/alliances/:id/leave          - Leave alliance
+GET    /api/alliances/power-rankings     - Alliance power leaderboard
+GET    /api/alliances/:id/power          - Detailed alliance power breakdown
+POST   /api/alliances/battle-prediction  - Predict battle outcome between alliances
+```
 
-### ✅ Web3 Wallet Integration
-- MetaMask connection and network switching
-- Smart contract interaction hooks (Marketplace, NFT, Escrow)
-- Transaction encoding/decoding for offline transmission
-- Base Network deployment ready
-- NFT minting with territory metadata
+### Territory Control
+```
+GET    /api/territories             - Get all territories
+POST   /api/territories/claim       - Claim territory
+GET    /api/territories/user/:id    - Get user territories
+```
 
-### ✅ Real-time Multiplayer
-- WebSocket server for live updates
-- Real-time messaging and battle notifications
-- Live marketplace and trading updates
+### Battle System
+```
+GET    /api/battles                 - Get user battles
+POST   /api/battles                 - Create battle
+GET    /api/battles/:id             - Get battle details
+POST   /api/battles/:id/resolve     - Resolve battle using aggregate calculations
+GET    /api/users/:id/battles       - Get user battle history
+```
 
-### ✅ Offline-First Architecture
-- Foundry Courier integration for offline transactions
-- Transaction queuing system
-- Frame encoding for radio/mesh/SMS transmission
+### Trading Platform
+```
+GET    /api/nft/marketplace         - Get marketplace listings
+POST   /api/nft/list                - List NFT for sale
+GET    /api/nft/user/:address       - Get user's NFTs
+POST   /api/nft/buy                 - Purchase NFT
+POST   /api/nft/transfer            - Transfer NFT
+GET    /api/nft/history/:tokenId    - Get NFT transaction history
+```
 
-### ✅ Deterministic Battle System
-- **Pure aggregate calculation**: Higher total power always wins - zero randomness
-- **Alliance supremacy**: Member stats sum directly into battle power with coordination bonuses
-- **Territory mathematics**: Holdings create exponential power advantages through logistics
-- **Strategic positioning**: Border and central territories provide calculated bonuses
-- **Predictable outcomes**: Battle results can be calculated before engagement
-- **Power rankings**: Real-time alliance and player power leaderboards
-- **Mathematical warfare**: Larger, stronger alliances with more territories will always defeat smaller ones
+### Communication
+```
+GET    /api/messages/global         - Get global messages
+POST   /api/messages                - Send message
+GET    /api/messages/alliance/:id   - Get alliance messages
+```
 
-### ✅ Advanced UI/UX
-- Military-industrial aesthetic with consistent theming
-- Responsive design with mobile support
-- Loading states and error handling
-- Comprehensive testing hooks (data-testid attributes)
-- Real-time battle power breakdowns and strategic calculations
+### Leaderboards
+```
+GET    /api/leaderboard             - Get player rankings
+GET    /api/leaderboard/alliances   - Get alliance rankings
+```
 
-## 🔮 Future Enhancements
+## 🎮 Game Mechanics
 
-### Planned Features
-- **Advanced Auctions**: Dutch auctions and reserve pricing
-- **Cross-chain Trading**: Multi-blockchain support
-- **NFT Fractionalization**: Shared ownership mechanisms
-- **Advanced Analytics**: Trading volume and price tracking
-- **Mobile PWA**: Dedicated handheld companion app
+### Battle Resolution
+Battles are resolved using pure mathematical calculations:
 
-### Technical Improvements
-- **Performance Optimization**: Caching and pagination
-- **Advanced Search**: Elasticsearch integration
-- **Real-time Notifications**: Push notification system
-- **Analytics Dashboard**: Trading metrics and insights
+1. **Individual Power (40%)**:
+   - Base Level × 50
+   - √(XP) × 2  
+   - Reputation × 5
+   - Win Ratio × 200
 
-## 📱 Mobile Companion (Part 2)
+2. **Alliance Power (35%)**:
+   - Sum of all member levels × 40
+   - √(Total XP) + Total Reputation × 3
+   - Member count multiplier (1 + count × 0.1)
+   - Coordination bonus from collective wins × 2
 
-The project includes plans for a handheld PWA terminal for offline blockchain transaction handling:
+3. **Territory Power (15%)**:
+   - Personal territories × 40
+   - Adjacent allied territories × 25
+   - Logistical advantage for 3+ territories × 10
+   - Defensive bonus (+80 for defenders)
 
-- **Offline Transaction Encoding**: Convert blockchain transactions to transmittable frames
-- **Radio/Mesh Network Support**: Transmission via alternative networks
-- **SMS Integration**: Transaction broadcasting via cellular networks
-- **Foundry Courier Backend**: Python-based CLI tool integration
+4. **Strategic Position (10%)**:
+   - Border territory bonus (+30)
+   - Central territory bonus (+20)
 
-## 🤝 Contributing
+**Winner**: The participant with higher total aggregate power always wins.
 
-This is a comprehensive web3 gaming platform designed for post-apocalyptic survival gameplay with authentic military-industrial aesthetics. The trading system provides a complete solution for NFT marketplace functionality with secure escrow and peer-to-peer trading capabilities.
+### Alliance Advantages
+- **Size Scaling**: More members = exponentially more power
+- **Quality Matters**: Elite members contribute more than numerous weak ones
+- **Territory Synergy**: Alliance territories create supply line bonuses
+- **Coordination Effects**: Collective victories multiply alliance strength
 
-## 📄 License
+### Economic Model
+- **1 NFT Per Wallet**: Prevents farming and ensures fair distribution
+- **Territory Selection**: Strategic choice during minting affects starting position
+- **Market Dynamics**: Player-driven economy with real trading mechanics
+- **Scarcity Value**: Limited NFTs create genuine ownership stakes
 
-This project is part of the OCSH NFT Game ecosystem developed by Artifact Virtual (AV).
+## 🛠️ Development
+
+### Project Structure
+```
+├── client/src/
+│   ├── components/     # UI components and game interfaces
+│   ├── hooks/          # Custom React hooks
+│   ├── lib/            # Utility libraries and API clients
+│   ├── pages/          # Main application pages
+│   └── App.tsx         # Root application component
+├── server/
+│   ├── services/       # Business logic and game engines
+│   ├── routes.ts       # API endpoint definitions
+│   ├── storage.ts      # Database interface layer
+│   └── index.ts        # Server entry point
+├── shared/
+│   └── schema.ts       # Database schema and type definitions
+└── README.md
+```
+
+### Key Components
+- **dashboard-realistic.tsx**: Main strategic command interface
+- **handheld-realistic.tsx**: Offline-capable PWA terminal
+- **nft-gate.tsx**: Access control and wallet connection
+- **realistic-wasteland.tsx**: Core UI component library
+- **battle-engine.ts**: Deterministic combat calculations
+- **alliance-power-calculator.ts**: Alliance strength mathematics
+
+### Database Schema
+- **users**: Player accounts with stats and wallet addresses  
+- **alliances**: Alliance organizations with leadership hierarchy
+- **territories**: Geographic control zones with ownership tracking
+- **battles**: Combat records with mathematical power calculations
+- **messages**: Communication system with anti-spam controls
+- **courier_transactions**: Offline transaction queue management
+
+## 🌐 Deployment
+
+### Replit Deployment
+1. Ensure all tests pass and application builds successfully
+2. Configure production environment variables
+3. Click the "Deploy" button in Replit interface
+4. Application will be available at `<project-name>.replit.app`
+
+### Manual Deployment
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## 🔧 Configuration
+
+### Database Setup
+```bash
+# Push schema to database
+npm run db:push
+
+# Generate migrations
+npm run db:generate
+
+# Apply migrations
+npm run db:migrate
+```
+
+### Environment Configuration
+- **Development**: Uses local PostgreSQL with development settings
+- **Production**: Requires production DATABASE_URL and secrets
+- **WebSocket**: Automatically configures wss:// for HTTPS, ws:// for HTTP
+
+## 📜 License & Credits
+
+**BLOKBOY 1000** - Built by **ARTIFACT VIRTUAL** (AV)
+
+A next-generation web3 gaming platform combining strategic gameplay with cutting-edge blockchain technology. Experience authentic military-industrial aesthetics in a deterministic combat environment where skill and coordination determine victory.
+
+---
+
+*"In the wasteland, only the strongest alliances survive. Mathematics, not luck, determines who controls the territories."*

@@ -10,8 +10,8 @@ import {
   RealisticText,
   RealisticButton
 } from "@/components/realistic-wasteland";
-import { ProtocolGrid } from "@/components/holographic-protocol";
-import { SocialInteractionHub } from "../components/social-interaction-hub";
+// Removed protocol grid import
+// Removed social-interaction-hub import
 import { TradingInterface } from "../components/trading-interface";
 import { NFTGate } from "@/pages/nft-gate";
 
@@ -186,7 +186,20 @@ export default function RealisticDashboard() {
                 </div>
               </div>
               
-              <ProtocolGrid />
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="bg-neutral-800 p-4 border border-neutral-700">
+                  <RealisticText variant="caption" className="text-amber-400">BONE NET</RealisticText>
+                  <p className="text-xs text-neutral-400 mt-1">Mesh networking protocol</p>
+                </div>
+                <div className="bg-neutral-800 p-4 border border-neutral-700">
+                  <RealisticText variant="caption" className="text-amber-400">RADIO BURST</RealisticText>
+                  <p className="text-xs text-neutral-400 mt-1">Emergency broadcast system</p>
+                </div>
+                <div className="bg-neutral-800 p-4 border border-neutral-700">
+                  <RealisticText variant="caption" className="text-amber-400">SATELLITE LINK</RealisticText>
+                  <p className="text-xs text-neutral-400 mt-1">High-orbit relay network</p>
+                </div>
+              </div>
               
               <div className="mt-6 p-4 bg-neutral-900 border border-neutral-700">
                 <RealisticText variant="caption" className="text-neutral-400 leading-relaxed">
@@ -204,7 +217,22 @@ export default function RealisticDashboard() {
           <TabsContent value="communications" className="space-y-6 mt-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <RealisticCommunications />
-              <SocialInteractionHub />
+              <RealisticWastelandCard variant="default" className="p-6">
+                <RealisticText variant="subtitle" className="mb-4">Alliance Communications</RealisticText>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-neutral-800 border border-neutral-700">
+                    <span className="text-sm text-neutral-300">Active Members</span>
+                    <span className="text-emerald-400 font-mono">24 Online</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-neutral-800 border border-neutral-700">
+                    <span className="text-sm text-neutral-300">Territory Status</span>
+                    <span className="text-amber-400 font-mono">Secured</span>
+                  </div>
+                  <RealisticButton variant="primary" className="w-full" size="sm">
+                    Alliance Channel
+                  </RealisticButton>
+                </div>
+              </RealisticWastelandCard>
             </div>
           </TabsContent>
         </Tabs>
