@@ -14,6 +14,7 @@ import {
 // Removed social-interaction-hub import
 import { StrategicTradingInterface } from "../components/strategic-trading-interface";
 import { NFTGate } from "@/pages/nft-gate";
+import { ContinuumTerminal } from "@/components/continuum-terminal";
 
 export default function RealisticDashboard() {
   // Development mode indicator
@@ -183,43 +184,7 @@ export default function RealisticDashboard() {
           </TabsContent>
 
           <TabsContent value="continuum" className="space-y-6 mt-8">
-            <RealisticWastelandCard variant="dark" className="p-6">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-neutral-800 border border-neutral-600 flex items-center justify-center">
-                  <span className="text-lg text-neutral-400">📡</span>
-                </div>
-                <div>
-                  <RealisticText variant="title" className="text-neutral-100">
-                    OCSH Protocol Archives
-                  </RealisticText>
-                  <RealisticText variant="caption" className="text-neutral-500">
-                    Classified: Offline Blockchain Protocols
-                  </RealisticText>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="bg-neutral-800 p-4 border border-neutral-700">
-                  <RealisticText variant="caption" className="text-amber-400">BONE NET</RealisticText>
-                  <p className="text-xs text-neutral-400 mt-1">Mesh networking protocol</p>
-                </div>
-                <div className="bg-neutral-800 p-4 border border-neutral-700">
-                  <RealisticText variant="caption" className="text-amber-400">RADIO BURST</RealisticText>
-                  <p className="text-xs text-neutral-400 mt-1">Emergency broadcast system</p>
-                </div>
-                <div className="bg-neutral-800 p-4 border border-neutral-700">
-                  <RealisticText variant="caption" className="text-amber-400">SATELLITE LINK</RealisticText>
-                  <p className="text-xs text-neutral-400 mt-1">High-orbit relay network</p>
-                </div>
-              </div>
-              
-              <div className="mt-6 p-4 bg-neutral-900 border border-neutral-700">
-                <RealisticText variant="caption" className="text-neutral-400 leading-relaxed">
-                  The true essence of blockchain is independent of the internet. If one route fails, 
-                  a resilient network seeks another path. As long as data can be transferred, value can be transferred.
-                </RealisticText>
-              </div>
-            </RealisticWastelandCard>
+            <ContinuumTerminal />
           </TabsContent>
 
           <TabsContent value="trading" className="space-y-6 mt-8">

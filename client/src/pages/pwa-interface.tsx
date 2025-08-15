@@ -7,6 +7,7 @@ import {
   RealisticButton,
   RealisticCommunications
 } from "@/components/realistic-wasteland";
+import { ContinuumTerminal } from "@/components/continuum-terminal";
 
 
 export default function PWAInterface() {
@@ -342,43 +343,9 @@ export default function PWAInterface() {
           </TabsContent>
 
           <TabsContent value="continuum" className="mt-4">
-            <RealisticWastelandCard variant="dark" className="p-4">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-neutral-800 border border-neutral-600 flex items-center justify-center">
-                  <span className="text-lg">📡</span>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold">OCSH Protocol Archives</h3>
-                  <p className="text-xs text-neutral-500">Offline Blockchain Protocols</p>
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                {protocols.map((protocol, index) => (
-                  <div key={index} className="bg-neutral-900 border border-neutral-700 p-3">
-                    <div className="flex justify-between items-start mb-1">
-                      <div>
-                        <div className="text-xs font-mono text-amber-400">{protocol.name}</div>
-                        <div className="text-xs text-neutral-500">{protocol.description}</div>
-                      </div>
-                      <div className={`text-xs font-mono ${
-                        protocol.status === 'OPERATIONAL' ? 'text-emerald-400' :
-                        protocol.status === 'DEGRADED' ? 'text-yellow-400' : 'text-red-400'
-                      }`}>
-                        {protocol.status}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-4 p-3 bg-neutral-900 border border-neutral-700">
-                <p className="text-xs text-neutral-400 leading-relaxed">
-                  The true essence of blockchain is independent of the internet. If one route fails, 
-                  a resilient network seeks another path. As long as data can be transferred, value can be transferred.
-                </p>
-              </div>
-            </RealisticWastelandCard>
+            <div className="px-0">
+              <ContinuumTerminal />
+            </div>
           </TabsContent>
 
           <TabsContent value="comms" className="mt-4">
