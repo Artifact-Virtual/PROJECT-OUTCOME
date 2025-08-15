@@ -7,6 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ALL_GAME_ITEMS, STRATEGIC_ITEMS, CONSUMABLE_ITEMS, COLLECTIBLE_ITEMS, getItemsByCategory, getItemsByTier, type GameItem, type ItemCategory, type ItemTier, type MintCost } from "@shared/game-items";
+import { CrossChainBridge } from './cross-chain-bridge';
+import { MeshNetworkManager } from './mesh-network-protocols';
+import { AIFactionManager } from './ai-npc-factions';
 
 // Strategic Item Listing for marketplace
 interface StrategicListing {
@@ -193,7 +196,7 @@ export function StrategicTradingInterface() {
       </div>
 
       <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-neutral-900 border border-neutral-700">
+        <TabsList className="grid w-full grid-cols-7 bg-neutral-900 border border-neutral-700">
           <TabsTrigger 
             value="marketplace" 
             className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700"
@@ -217,6 +220,24 @@ export function StrategicTradingInterface() {
             className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700"
           >
             Crafting
+          </TabsTrigger>
+          <TabsTrigger 
+            value="bridge" 
+            className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-amber-600"
+          >
+            Bridge
+          </TabsTrigger>
+          <TabsTrigger 
+            value="networks" 
+            className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-neutral-700"
+          >
+            Networks
+          </TabsTrigger>
+          <TabsTrigger 
+            value="ai-factions" 
+            className="text-xs font-mono uppercase tracking-wider data-[state=active]:bg-red-600"
+          >
+            AI Factions
           </TabsTrigger>
         </TabsList>
 
@@ -511,6 +532,18 @@ export function StrategicTradingInterface() {
               Crafting system integration coming soon
             </RealisticText>
           </RealisticWastelandCard>
+        </TabsContent>
+
+        <TabsContent value="bridge" className="space-y-6 mt-6">
+          <CrossChainBridge />
+        </TabsContent>
+
+        <TabsContent value="networks" className="space-y-6 mt-6">
+          <MeshNetworkManager />
+        </TabsContent>
+
+        <TabsContent value="ai-factions" className="space-y-6 mt-6">
+          <AIFactionManager />
         </TabsContent>
       </Tabs>
     </RealisticWastelandCard>

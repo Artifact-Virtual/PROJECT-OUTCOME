@@ -8,6 +8,7 @@ import {
   RealisticCommunications
 } from "@/components/realistic-wasteland";
 import { ContinuumTerminal } from "@/components/continuum-terminal";
+import { PWAInventory } from "@/components/pwa-inventory";
 
 
 export default function PWAInterface() {
@@ -151,7 +152,7 @@ export default function PWAInterface() {
       {/* Main Content Tabs */}
       <div className="px-4 pb-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 bg-neutral-900 border border-neutral-700 h-10">
+          <TabsList className="grid w-full grid-cols-7 bg-neutral-900 border border-neutral-700 h-10">
             <TabsTrigger 
               value="overview" 
               className="text-xs font-mono uppercase data-[state=active]:bg-neutral-700"
@@ -175,6 +176,12 @@ export default function PWAInterface() {
               className="text-xs font-mono uppercase data-[state=active]:bg-neutral-700"
             >
               Factions
+            </TabsTrigger>
+            <TabsTrigger 
+              value="inventory" 
+              className="text-xs font-mono uppercase data-[state=active]:bg-blue-600"
+            >
+              Inventory
             </TabsTrigger>
             <TabsTrigger 
               value="continuum" 
@@ -340,6 +347,10 @@ export default function PWAInterface() {
                 </div>
               </div>
             </RealisticWastelandCard>
+          </TabsContent>
+
+          <TabsContent value="inventory" className="mt-4">
+            <PWAInventory />
           </TabsContent>
 
           <TabsContent value="continuum" className="mt-4">
