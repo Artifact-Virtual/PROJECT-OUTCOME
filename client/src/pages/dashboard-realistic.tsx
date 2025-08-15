@@ -11,6 +11,7 @@ import {
   RealisticButton
 } from "@/components/realistic-wasteland";
 import { ProtocolGrid } from "@/components/holographic-protocol";
+import { SocialInteractionHub } from "../components/social-interaction-hub";
 
 export default function RealisticDashboard() {
   return (
@@ -190,25 +191,7 @@ export default function RealisticDashboard() {
           <TabsContent value="communications" className="space-y-6 mt-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <RealisticCommunications />
-              <RealisticWastelandCard variant="default" className="p-6">
-                <RealisticText variant="subtitle" className="mb-4">Handheld Terminal</RealisticText>
-                <div className="space-y-4">
-                  <div className="p-4 bg-neutral-800 border border-neutral-700 text-center">
-                    <div className="text-4xl mb-3 text-neutral-500">📱</div>
-                    <RealisticText variant="body" className="mb-2">
-                      AV Blokboy 1000
-                    </RealisticText>
-                    <RealisticText variant="caption" className="text-neutral-500">
-                      Offline transaction processing via radio/mesh networks
-                    </RealisticText>
-                  </div>
-                  <Link href="/handheld">
-                    <RealisticButton variant="primary" className="w-full">
-                      Launch Terminal Interface
-                    </RealisticButton>
-                  </Link>
-                </div>
-              </RealisticWastelandCard>
+              <SocialInteractionHub />
             </div>
           </TabsContent>
         </Tabs>
