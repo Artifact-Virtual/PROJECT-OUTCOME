@@ -12,7 +12,7 @@ import {
 } from "@/components/realistic-wasteland";
 // Removed protocol grid import
 // Removed social-interaction-hub import
-import { TradingInterface } from "../components/trading-interface";
+import { StrategicTradingInterface } from "../components/strategic-trading-interface";
 import { NFTGate } from "@/pages/nft-gate";
 
 export default function RealisticDashboard() {
@@ -211,7 +211,7 @@ export default function RealisticDashboard() {
           </TabsContent>
 
           <TabsContent value="trading" className="space-y-6 mt-8">
-            <TradingInterface />
+            <StrategicTradingInterface />
           </TabsContent>
 
           <TabsContent value="communications" className="space-y-6 mt-8">

@@ -6,7 +6,7 @@ This is a decentralized gaming platform built around the OCSH (On-Chain Survival
 
 The project consists of two integrated applications: Part 1 (Main Dashboard) for strategic gameplay and Part 2 (Handheld PWA Terminal) for offline blockchain transaction handling. The project follows a full-stack architecture with React/TypeScript frontend, Express.js backend, PostgreSQL database with Drizzle ORM, and WebSocket support for real-time features.
 
-**Latest Major Update (August 2025)**: Complete system cleanup and optimization with deterministic battle engine implementation. Removed all randomness from combat - battles are now won purely through alliance aggregate power calculations and territory control mathematics. Enhanced README with comprehensive documentation. All redundant files cleaned up while preserving active functionality.
+**Latest Major Update (August 2025)**: Complete strategic inventory system redesign with game-relevant items that provide actual gameplay benefits. Replaced cosmetic props with essential strategic equipment including communication enhancers, territory control systems, battle amplifiers, and resource generators. Items now use Base ETH and ARCx token pricing with tier-based requirements. All items add meaningful complexity and strategic depth to gameplay rather than being decorative collectibles.
 
 ## User Preferences
 
@@ -44,6 +44,16 @@ Preferred communication style: Simple, everyday language.
 - **Territory Control**: 24-hour territory claiming with strategic positioning
 - **Messaging**: On-chain messaging with anti-spam mechanisms and cooldowns
 - **Leaderboard**: Real-time ranking system based on XP and wins
+
+### Strategic Equipment System
+- **Combat Enhancement Items**: Tactical processors, war machine cores providing permanent battle power boosts
+- **Communication Equipment**: Signal amplifiers, quantum relays reducing message costs and adding encryption
+- **Territory Control Gear**: Beacons, fortress protocols enhancing defense and claim speed
+- **Resource Generation**: Extractors, nano-fabricators increasing passive resource generation rates
+- **Intelligence Tools**: Recon drones, stealth systems extending intel gathering capabilities
+- **Alliance Management**: Command hubs providing coordination bonuses and supply line efficiency
+- **Base ETH & ARCx Pricing**: Affordable strategic items using Base network tokens instead of expensive mainnet
+- **Tier-Based Progression**: Basic to experimental items with level requirements and escalating power
 
 ### Offline-First Features
 - **Courier Service**: Python-based Foundry Courier integration for offline transaction encoding/decoding

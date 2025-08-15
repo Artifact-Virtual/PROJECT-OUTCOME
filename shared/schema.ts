@@ -118,6 +118,47 @@ export const marketplaceListings = pgTable("marketplace_listings", {
   soldAt: timestamp("sold_at"),
 });
 
+// Player Inventory System for Strategic Items
+export const playerItems = pgTable("player_items", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  itemId: text("item_id").notNull(), // References game-items.ts strategic items
+  quantity: integer("quantity").notNull().default(1),
+  isActive: boolean("is_active").notNull().default(false), // Whether item effects are currently applied
+  expiresAt: timestamp("expires_at"), // For temporary items
+  acquiredAt: timestamp("acquired_at").notNull().default(sql`now()`),
+});
+
+// Strategic Item Marketplace (Base ETH + ARCx tokens)
+export const strategicItemListings = pgTable("strategic_item_listings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sellerId: varchar("seller_id").notNull().references(() => users.id),
+  itemId: text("item_id").notNull(), // References strategic items from game-items.ts
+  quantity: integer("quantity").notNull().default(1),
+  priceETH: text("price_eth"), // Price in Base ETH (wei)
+  priceARCX: text("price_arcx"), // Alternative price in ARCx tokens
+  currency: text("currency").notNull().default("ETH"), // ETH or ARCX
+  status: text("status").notNull().default("active"), // active, sold, cancelled
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+  expiresAt: timestamp("expires_at"),
+});
+
+// Strategic Item Purchase Transactions
+export const strategicItemTransactions = pgTable("strategic_item_transactions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  buyerId: varchar("buyer_id").notNull().references(() => users.id),
+  sellerId: varchar("seller_id").notNull().references(() => users.id),
+  listingId: varchar("listing_id").notNull().references(() => strategicItemListings.id),
+  itemId: text("item_id").notNull(),
+  quantity: integer("quantity").notNull(),
+  price: text("price").notNull(), // Amount paid (in wei for ETH or tokens for ARCx)
+  currency: text("currency").notNull(),
+  txHash: text("tx_hash"), // Blockchain transaction hash
+  status: text("status").notNull().default("pending"), // pending, completed, failed
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
 export const tradeOffers = pgTable("trade_offers", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   fromUserId: varchar("from_user_id").notNull().references(() => users.id),

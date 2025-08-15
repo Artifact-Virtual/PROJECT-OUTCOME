@@ -1,31 +1,27 @@
 import { useState, useEffect } from "react";
 import { RealisticText, RealisticButton, RealisticWastelandCard } from "@/components/realistic-wasteland";
-import { useMarketplaceListings, useUserItems, useTradeOffers, useTradingPosts, useEscrowContracts, useTradingState } from "@/hooks/use-trading";
-import { useWeb3, useTradingContracts } from "@/hooks/use-web3";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { STRATEGIC_ITEMS, getItemsByCategory, getItemsByTier, type GameItem, type ItemCategory, type ItemTier } from "@shared/game-items";
 
-// Trading System Types
-interface Item {
+// Strategic Item Listing for marketplace
+interface StrategicListing {
   id: string;
-  tokenId: string;
-  contractAddress: string;
-  name: string;
-  description: string;
-  category: 'weapon' | 'armor' | 'tool' | 'consumable' | 'blueprint' | 'territory_deed';
-  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'artifact';
-  attributes: Record<string, any>;
-  imageUrl?: string;
-  ownerId: string;
-  ownerName: string;
-  isListed: boolean;
-  estimatedValue: string; // in ETH
+  item: GameItem;
+  sellerId: string;
+  sellerName: string;
+  quantity: number;
+  priceETH?: string; // Base ETH price in wei
+  priceARCX?: string; // ARCx token price
+  currency: 'ETH' | 'ARCX';
+  status: 'active' | 'sold' | 'cancelled';
+  createdAt: string;
+  expiresAt?: string;
 }
 
 interface MarketplaceListing {
