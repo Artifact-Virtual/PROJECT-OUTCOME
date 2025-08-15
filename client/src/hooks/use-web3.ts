@@ -23,15 +23,24 @@ declare global {
 }
 
 export function useWeb3() {
+  // DEVELOPMENT MODE: Return mock values when Web3 is disabled
+  const DEVELOPMENT_MODE = true; // Set to false when ready for Web3 testing
+  
   const [web3State, setWeb3State] = useState<Web3State>({
-    account: null,
-    chainId: null,
-    isConnected: false,
+    account: DEVELOPMENT_MODE ? '0xDEV_MODE' : null,
+    chainId: DEVELOPMENT_MODE ? 1 : null,
+    isConnected: DEVELOPMENT_MODE ? true : false,
     isLoading: false,
     error: null,
   });
 
   const connectWallet = async () => {
+    // Skip wallet connection in development mode
+    if (DEVELOPMENT_MODE) {
+      console.log('Development mode: Wallet connection disabled');
+      return;
+    }
+    
     if (!window.ethereum) {
       setWeb3State(prev => ({
         ...prev,

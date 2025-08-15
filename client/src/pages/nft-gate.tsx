@@ -18,6 +18,9 @@ interface NFTGateProps {
 }
 
 export function NFTGate({ children }: NFTGateProps) {
+  // DEVELOPMENT MODE: Bypass wallet connection requirement
+  const DEVELOPMENT_MODE = true; // Set to false when ready for Web3 testing
+  
   const { account, isConnected, connectWallet } = useWeb3();
 
   // Check user's NFT status
@@ -29,8 +32,13 @@ export function NFTGate({ children }: NFTGateProps) {
       if (!response.ok) throw new Error('Failed to fetch NFT status');
       return await response.json() as NftStatus;
     },
-    enabled: !!account && isConnected,
+    enabled: !!account && isConnected && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
+
+  // DEVELOPMENT MODE: Skip all checks and show app directly
+  if (DEVELOPMENT_MODE) {
+    return <>{children}</>;
+  }
 
   // Show loading state
   if (isLoading) {

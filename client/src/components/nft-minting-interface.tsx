@@ -36,6 +36,9 @@ interface NftMint {
 }
 
 export function NftMintingInterface() {
+  // DEVELOPMENT MODE: Bypass wallet requirements
+  const DEVELOPMENT_MODE = true; // Set to false when ready for Web3 testing
+  
   const { account, isConnected, connectWallet } = useWeb3();
   const { mintNft } = useNftMinting();
   const queryClient = useQueryClient();
@@ -47,21 +50,21 @@ export function NftMintingInterface() {
   const { data: eligibility, isLoading: checkingEligibility } = useQuery({
     queryKey: ['/api/nft/eligibility', account],
     queryFn: () => apiRequest(`/api/nft/eligibility/${account}`) as Promise<NftEligibility>,
-    enabled: !!account && isConnected,
+    enabled: !!account && isConnected && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
 
   // Get available territories
   const { data: territories = [], isLoading: loadingTerritories } = useQuery({
     queryKey: ['/api/nft/available-territories'],
     queryFn: () => apiRequest('/api/nft/available-territories') as Promise<Territory[]>,
-    enabled: eligibility?.eligible === true,
+    enabled: (eligibility?.eligible === true) && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
 
   // Get user's existing NFT
   const { data: existingNft } = useQuery({
     queryKey: ['/api/nft/user', account],
     queryFn: () => apiRequest(`/api/nft/user/${account}`) as Promise<NftMint | { hasNft: false }>,
-    enabled: !!account && isConnected,
+    enabled: !!account && isConnected && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
 
   // Create NFT mint mutation
@@ -87,6 +90,31 @@ export function NftMintingInterface() {
       setMintingStep('confirm');
     },
   });
+
+  // DEVELOPMENT MODE: Show development notice
+  if (DEVELOPMENT_MODE) {
+    return (
+      <RealisticWastelandCard variant="default" className="p-8 text-center max-w-md mx-auto">
+        <RealisticText variant="subtitle" className="mb-4 text-amber-400">
+          Development Mode Active
+        </RealisticText>
+        <RealisticText variant="body" className="mb-6 text-neutral-300">
+          NFT minting is disabled in development mode. Web3 features will be enabled in the final testing phase.
+        </RealisticText>
+        <RealisticText variant="caption" className="text-neutral-400">
+          You can access the game directly without minting an NFT during development.
+        </RealisticText>
+        <div className="mt-6">
+          <RealisticButton 
+            onClick={() => window.location.href = '/'}
+            data-testid="button-return-dashboard"
+          >
+            Return to Dashboard
+          </RealisticButton>
+        </div>
+      </RealisticWastelandCard>
+    );
+  }
 
   // Show wallet connection if not connected
   if (!isConnected) {

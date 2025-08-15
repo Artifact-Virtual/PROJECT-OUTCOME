@@ -16,9 +16,21 @@ import { StrategicTradingInterface } from "../components/strategic-trading-inter
 import { NFTGate } from "@/pages/nft-gate";
 
 export default function RealisticDashboard() {
+  // Development mode indicator
+  const DEVELOPMENT_MODE = true; // Set to false when ready for Web3 testing
+  
   return (
     <NFTGate>
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
+      {/* Development Mode Banner */}
+      {DEVELOPMENT_MODE && (
+        <div className="bg-amber-900/20 border-b border-amber-700/50 px-6 py-2">
+          <p className="text-xs text-amber-400 text-center font-mono uppercase">
+            Development Mode - Wallet Connection Disabled
+          </p>
+        </div>
+      )}
+      
       {/* Top Bar */}
       <header className="border-b border-neutral-800 bg-neutral-900/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-4">
