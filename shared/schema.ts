@@ -20,6 +20,8 @@ export const users = pgTable("users", {
   losses: integer("losses").notNull().default(0),
   messageCount: integer("message_count").notNull().default(0),
   lastMessageTime: timestamp("last_message_time"),
+  lastOnline: timestamp("last_online").notNull().default(sql`now()`),
+  isOnline: boolean("is_online").notNull().default(false),
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 

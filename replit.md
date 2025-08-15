@@ -6,7 +6,7 @@ This is a decentralized gaming platform built around the OCSH (On-Chain Survival
 
 The project consists of two integrated applications: Part 1 (Main Dashboard) for strategic gameplay and Part 2 (Handheld PWA Terminal) for offline blockchain transaction handling. The project follows a full-stack architecture with React/TypeScript frontend, Express.js backend, PostgreSQL database with Drizzle ORM, and WebSocket support for real-time features.
 
-**Latest Major Update (August 2025)**: Complete strategic inventory system redesign with game-relevant items that provide actual gameplay benefits. Replaced cosmetic props with essential strategic equipment including communication enhancers, territory control systems, battle amplifiers, and resource generators. Items now use Base ETH and ARCx token pricing with tier-based requirements. All items add meaningful complexity and strategic depth to gameplay rather than being decorative collectibles.
+**Latest Major Update (August 2025)**: Revolutionary online-based alliance power system ensuring fair and dynamic battles. Alliance power is calculated ONLY from currently online members, creating strategic gameplay where coordination, timing, and active participation determine victory. No more static power calculations - battles require real-time alliance coordination and strategic timing for success.
 
 ## User Preferences
 
@@ -35,15 +35,17 @@ Preferred communication style: Simple, everyday language.
 - **Relationships**: Well-defined foreign key relationships between entities
 - **Migrations**: Drizzle-kit for schema management and migrations
 
-### Game Architecture
-- **Deterministic Battle System**: Pure mathematical calculations where higher aggregate power always wins with zero randomness
-- **Alliance Supremacy**: Member stats sum directly into battle power with coordination bonuses and exponential scaling
+### Game Architecture  
+- **Online-Based Power System**: Alliance power calculated ONLY from currently online members for dynamic strategic gameplay
+- **Real-Time Battle Coordination**: Victory requires coordinating online members and strategic timing rather than static power
+- **Fair Competition**: No alliance can dominate through offline member accumulation - only active participation counts
+- **Dynamic Rankings**: Alliance power rankings change in real-time as members come online/offline throughout the day
+- **Strategic Timing**: Alliances must coordinate when to attack based on their online member availability
 - **Territory Mathematics**: Holdings create exponential power advantages through supply lines and logistics
-- **Predictable Warfare**: Battle outcomes can be calculated before engagement using alliance and territory aggregates
-- **Alliance System**: Multi-role alliance management (leader, member, invited)
+- **Alliance System**: Multi-role alliance management with ability to join/leave alliances at any time for strategic flexibility
 - **Territory Control**: 24-hour territory claiming with strategic positioning
 - **Messaging**: On-chain messaging with anti-spam mechanisms and cooldowns
-- **Leaderboard**: Real-time ranking system based on XP and wins
+- **Activity Rewards**: Higher online participation percentages provide coordination bonuses and power multipliers
 
 ### Strategic Equipment System
 - **Combat Enhancement Items**: Tactical processors, war machine cores providing permanent battle power boosts
