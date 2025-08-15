@@ -49,30 +49,47 @@ export function NftMintingInterface() {
   // Check NFT eligibility
   const { data: eligibility, isLoading: checkingEligibility } = useQuery({
     queryKey: ['/api/nft/eligibility', account],
-    queryFn: () => apiRequest(`/api/nft/eligibility/${account}`) as Promise<NftEligibility>,
+    queryFn: async () => {
+      const response = await fetch(`/api/nft/eligibility/${account}`);
+      if (!response.ok) throw new Error('Failed to check eligibility');
+      return await response.json() as NftEligibility;
+    },
     enabled: !!account && isConnected && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
 
   // Get available territories
   const { data: territories = [], isLoading: loadingTerritories } = useQuery({
     queryKey: ['/api/nft/available-territories'],
-    queryFn: () => apiRequest('/api/nft/available-territories') as Promise<Territory[]>,
+    queryFn: async () => {
+      const response = await fetch('/api/nft/available-territories');
+      if (!response.ok) throw new Error('Failed to fetch territories');
+      return await response.json() as Territory[];
+    },
     enabled: (eligibility?.eligible === true) && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
 
   // Get user's existing NFT
   const { data: existingNft } = useQuery({
     queryKey: ['/api/nft/user', account],
-    queryFn: () => apiRequest(`/api/nft/user/${account}`) as Promise<NftMint | { hasNft: false }>,
+    queryFn: async () => {
+      const response = await fetch(`/api/nft/user/${account}`);
+      if (!response.ok) throw new Error('Failed to fetch NFT status');
+      return await response.json() as NftMint | { hasNft: false };
+    },
     enabled: !!account && isConnected && !DEVELOPMENT_MODE, // Disabled in dev mode
   });
 
   // Create NFT mint mutation
   const createMintMutation = useMutation({
-    mutationFn: (mintData: any) => apiRequest('/api/nft/mint', {
-      method: 'POST',
-      body: JSON.stringify(mintData),
-    }),
+    mutationFn: async (mintData: any) => {
+      const response = await fetch('/api/nft/mint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mintData),
+      });
+      if (!response.ok) throw new Error('Failed to mint NFT');
+      return response.json();
+    },
     onSuccess: () => {
       setMintingStep('mint');
     },
@@ -80,10 +97,15 @@ export function NftMintingInterface() {
 
   // Confirm NFT mint mutation
   const confirmMintMutation = useMutation({
-    mutationFn: (confirmData: any) => apiRequest('/api/nft/confirm', {
-      method: 'POST',
-      body: JSON.stringify(confirmData),
-    }),
+    mutationFn: async (confirmData: any) => {
+      const response = await fetch('/api/nft/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(confirmData),
+      });
+      if (!response.ok) throw new Error('Failed to confirm NFT');
+      return response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/nft/user'] });
       queryClient.invalidateQueries({ queryKey: ['/api/users'] });
