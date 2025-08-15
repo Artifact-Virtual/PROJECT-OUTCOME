@@ -40,8 +40,8 @@ export default function RealisticDashboard() {
                 <span className="text-neutral-300 text-sm">◉</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-100 tracking-tight">Onchain Survival Kit</h1>
-                <p className="text-xs text-neutral-400 uppercase tracking-wider">Wasteland Operations Terminal</p>
+                <h1 className="text-xl font-bold text-neutral-100 tracking-tight">BLOKBOY 1000</h1>
+                <p className="text-xs text-neutral-400 uppercase tracking-wider">OCSH Wasteland Operations Terminal</p>
               </div>
             </div>
             <div className="flex items-center gap-4">

@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard-realistic";
 import Handheld from "@/pages/handheld-realistic";
+import PWAInterface from "@/pages/pwa-interface";
 import { NftMintingInterface } from "@/components/nft-minting-interface";
 
 function Router() {
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/" component={Dashboard} />
       <Route path="/mint" component={NftMintingInterface} />
       <Route path="/handheld" component={Handheld} />
+      <Route path="/pwa" component={PWAInterface} />
       <Route component={NotFound} />
     </Switch>
   );
