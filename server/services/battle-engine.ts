@@ -65,12 +65,12 @@ export class BattleEngine {
   }
 
   /**
-   * Alliance aggregate power calculation
+   * Alliance aggregate power calculation - pure mathematical approach
    */
   private async calculateAlliancePower(participant: BattleParticipant, context: BattleContext): Promise<number> {
     if (!participant.allianceId) return 0;
     
-    // Get alliance aggregate stats
+    // Get alliance aggregate stats - sum of all member capabilities
     const allianceStats = await db
       .select({
         totalLevel: sql<number>`SUM(${users.level})`,
@@ -87,35 +87,39 @@ export class BattleEngine {
     if (!allianceStats[0]) return 0;
 
     const stats = allianceStats[0];
-    const avgLevel = stats.totalLevel / stats.memberCount;
-    const avgXp = stats.totalXp / stats.memberCount;
-    const avgReputation = stats.totalReputation / stats.memberCount;
     
-    // Alliance power scales with size but has diminishing returns
-    const sizeFactor = Math.sqrt(stats.memberCount) * 50;
-    const qualityFactor = (avgLevel * 30) + (Math.sqrt(avgXp) * 2) + (avgReputation * 3);
-    const cohesionBonus = stats.totalWins * 0.5;
+    // Direct aggregate power - larger, stronger alliances should always win
+    const rawPower = stats.totalLevel * 40 + Math.sqrt(stats.totalXp) + stats.totalReputation * 3;
     
-    return sizeFactor + qualityFactor + cohesionBonus;
+    // Member count multiplier (more members = more power)
+    const memberMultiplier = 1 + (stats.memberCount * 0.1);
+    
+    // Alliance coordination bonus based on collective wins
+    const coordinationBonus = stats.totalWins * 2;
+    
+    return (rawPower * memberMultiplier) + coordinationBonus;
   }
 
   /**
-   * Territory control power calculation
+   * Territory control power calculation - pure territorial mathematics
    */
   private calculateTerritoryPower(participant: BattleParticipant, context: BattleContext): number {
-    // Personal territory count
-    const personalTerritoryBonus = participant.territoryCount * 25;
+    // Base territorial power scales linearly with holdings
+    const personalTerritoryPower = participant.territoryCount * 40;
     
-    // Adjacent territory control bonus
-    const adjacentBonus = context.adjacentAlliedTerritories * 15;
+    // Adjacent territory control creates exponential advantage
+    const adjacentPower = context.adjacentAlliedTerritories * 25;
     
-    // Resource control multiplier
-    const resourceMultiplier = 1 + (context.resourceControl * 0.1);
+    // Supply line bonus - more territories = better logistics
+    const logisticalAdvantage = participant.territoryCount > 3 ? participant.territoryCount * 10 : 0;
     
-    // Defensive advantage
-    const defensiveBonus = context.isDefending ? 50 : 0;
+    // Defensive positioning grants mathematical advantage
+    const defensiveAdvantage = context.isDefending ? 80 : 0;
     
-    return (personalTerritoryBonus + adjacentBonus + defensiveBonus) * resourceMultiplier;
+    // Resource control scales territorial effectiveness
+    const resourceEfficiency = (1 + context.resourceControl * 0.2);
+    
+    return (personalTerritoryPower + adjacentPower + logisticalAdvantage + defensiveAdvantage) * resourceEfficiency;
   }
 
   /**
@@ -174,23 +178,26 @@ export class BattleEngine {
     const powerDifference = Math.abs(challengerPower - defenderPower);
     const totalPower = challengerPower + defenderPower;
     
-    // Calculate win probability based on power ratio
-    const challengerWinChance = challengerPower / totalPower;
+    // Determine winner purely based on aggregate power calculations
+    // Higher power always wins - no random elements
+    const winnerId = challengerPower > defenderPower ? challengerId : defenderId;
     
-    // Add small random element (10% variance) to prevent complete determinism
-    const randomFactor = 0.9 + (Math.random() * 0.2); // 0.9 to 1.1
-    const finalChallengerChance = Math.min(0.95, Math.max(0.05, challengerWinChance * randomFactor));
-    
-    // Determine winner
-    const winnerId = Math.random() < finalChallengerChance ? challengerId : defenderId;
+    // Calculate victory margin for battle data
+    const victoryMargin = powerDifference / Math.min(challengerPower, defenderPower);
+    const isDecisiveVictory = victoryMargin > 0.5; // 50%+ power advantage
     
     const battleData = {
       challengerPower,
       defenderPower,
       powerDifference,
-      challengerWinChance: finalChallengerChance,
-      randomFactor,
-      resolutionMethod: "aggregate_power_calculation",
+      victoryMargin,
+      isDecisiveVictory,
+      resolutionMethod: "pure_aggregate_calculation",
+      powerBreakdown: {
+        winner: winnerId === challengerId ? "challenger" : "defender",
+        winnerPower: winnerId === challengerId ? challengerPower : defenderPower,
+        loserPower: winnerId === challengerId ? defenderPower : challengerPower,
+      },
       timestamp: new Date().toISOString(),
     };
 

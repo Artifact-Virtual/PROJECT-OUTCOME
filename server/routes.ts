@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { BattleEngine } from "./services/battle-engine";
+import { AlliancePowerCalculator } from "./services/alliance-power-calculator";
 import { 
   insertUserSchema, insertAllianceSchema, insertBattleSchema, insertMessageSchema, insertCourierTransactionSchema,
   insertItemSchema, insertMarketplaceListingSchema, insertTradeOfferSchema, insertEscrowContractSchema, insertTradingPostSchema,
@@ -176,6 +177,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Battle resolution error:", error);
       res.status(500).json({ message: "Failed to resolve battle" });
+    }
+  });
+
+  // Get alliance power rankings
+  app.get("/api/alliances/power-rankings", async (req, res) => {
+    try {
+      const calculator = new AlliancePowerCalculator();
+      const rankings = await calculator.getAlliancePowerRankings();
+      res.json(rankings);
+    } catch (error) {
+      console.error("Alliance power calculation error:", error);
+      res.status(500).json({ message: "Failed to calculate alliance power" });
+    }
+  });
+
+  // Get specific alliance power breakdown
+  app.get("/api/alliances/:id/power", async (req, res) => {
+    try {
+      const calculator = new AlliancePowerCalculator();
+      const powerData = await calculator.calculateAllianceTotalPower(req.params.id);
+      res.json(powerData);
+    } catch (error) {
+      console.error("Alliance power calculation error:", error);
+      res.status(500).json({ message: "Failed to calculate alliance power" });
+    }
+  });
+
+  // Predict battle outcome between alliances
+  app.post("/api/alliances/battle-prediction", async (req, res) => {
+    try {
+      const { alliance1Id, alliance2Id } = req.body;
+      const calculator = new AlliancePowerCalculator();
+      const prediction = await calculator.predictAllianceBattle(alliance1Id, alliance2Id);
+      res.json(prediction);
+    } catch (error) {
+      console.error("Battle prediction error:", error);
+      res.status(500).json({ message: "Failed to predict battle outcome" });
     }
   });
 

@@ -36,10 +36,10 @@ Preferred communication style: Simple, everyday language.
 - **Migrations**: Drizzle-kit for schema management and migrations
 
 ### Game Architecture
-- **Enhanced Battle System**: Aggregate power calculation using individual stats (40%), alliance power (35%), territory control (15%), and strategic positioning (10%)
-- **Alliance Aggregate Power**: Alliance member stats combine to influence battle outcomes with diminishing returns scaling
-- **Territory Strategic Value**: Adjacent territory control, defensive bonuses, border/central positioning advantages
-- **Dynamic Reward System**: XP and reputation scale based on power differences with underdog bonuses
+- **Deterministic Battle System**: Pure mathematical calculations where higher aggregate power always wins with zero randomness
+- **Alliance Supremacy**: Member stats sum directly into battle power with coordination bonuses and exponential scaling
+- **Territory Mathematics**: Holdings create exponential power advantages through supply lines and logistics
+- **Predictable Warfare**: Battle outcomes can be calculated before engagement using alliance and territory aggregates
 - **Alliance System**: Multi-role alliance management (leader, member, invited)
 - **Territory Control**: 24-hour territory claiming with strategic positioning
 - **Messaging**: On-chain messaging with anti-spam mechanisms and cooldowns

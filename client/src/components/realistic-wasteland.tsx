@@ -237,10 +237,10 @@ export const RealisticBattleInterface = () => {
         {/* Power Calculation Info */}
         <div className="bg-neutral-900/50 border border-neutral-700 p-3 rounded">
           <RealisticText variant="caption" className="text-amber-400 mb-2">
-            STRATEGIC COMBAT SYSTEM
+            DETERMINISTIC COMBAT SYSTEM
           </RealisticText>
           <RealisticText variant="caption" className="text-neutral-400 leading-relaxed">
-            Victory determined by: Individual Power (40%) + Alliance Aggregate (35%) + Territory Control (15%) + Strategic Position (10%)
+            Higher aggregate power always wins. No randomness. Victory = Individual (40%) + Alliance Sum (35%) + Territory Holdings (15%) + Strategic Position (10%)
           </RealisticText>
         </div>
 
