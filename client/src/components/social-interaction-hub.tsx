@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { WastelandText, WastelandButton } from "@/components/wasteland-ui";
+import { RealisticText, RealisticButton, RealisticWastelandCard } from "@/components/realistic-wasteland";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -53,48 +53,48 @@ export function SocialInteractionHub() {
   const [activeChannel, setActiveChannel] = useState<string>('global');
   const [messageInput, setMessageInput] = useState('');
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
-  const [interactionType, setInteractionType] = useState<string>('battle_invite');
-  
-  // Mock data that would be replaced with actual API calls
-  const [onlinePlayers] = useState<Player[]>([
-    { id: 1, username: 'WastelandWolf', xp: 2450, reputation: 89, allianceName: 'Iron Fists', lastSeen: 'now', status: 'online' },
-    { id: 2, username: 'RadiationQueen', xp: 3120, reputation: 95, allianceName: 'Neon Runners', lastSeen: '2m ago', status: 'online' },
-    { id: 3, username: 'ScrapLord', xp: 1890, reputation: 76, lastSeen: '5m ago', status: 'away' },
-    { id: 4, username: 'VaultHunter92', xp: 2780, reputation: 88, allianceName: 'Steel Brotherhood', lastSeen: '1h ago', status: 'offline' },
-  ]);
+  const [interactionType, setInteractionType] = useState<string>('');
 
-  const [recentMessages] = useState<SocialMessage[]>([
-    { id: 1, senderId: 1, senderName: 'WastelandWolf', content: 'Anyone up for a territory battle in Sector 7?', type: 'public', timestamp: '2m ago', isOnChain: false },
-    { id: 2, senderId: 2, senderName: 'RadiationQueen', content: 'Iron Fists alliance is recruiting! Join us for coordinated raids.', type: 'alliance', timestamp: '5m ago', isOnChain: true, transactionHash: '0x1a2b3c...' },
-    { id: 3, senderId: 3, senderName: 'ScrapLord', content: 'Trading rare materials for energy cells. PM me!', type: 'public', timestamp: '8m ago', isOnChain: false },
-  ]);
+  // Mock data - replace with real API calls
+  const onlinePlayers: Player[] = [
+    { id: 1, username: "VaultHunter47", xp: 2847, reputation: 156, allianceId: 1, allianceName: "Brotherhood", lastSeen: "2m ago", status: 'online' },
+    { id: 2, username: "WastelandRaider", xp: 1923, reputation: 89, lastSeen: "5m ago", status: 'online' },
+    { id: 3, username: "SurvivalExpert", xp: 3421, reputation: 203, allianceId: 2, allianceName: "Outcasts", lastSeen: "1h ago", status: 'away' },
+    { id: 4, username: "TechScavenger", xp: 1456, reputation: 67, lastSeen: "3h ago", status: 'offline' }
+  ];
 
-  const [pendingInteractions] = useState<PlayerInteraction[]>([
-    { playerId: 1, playerName: 'WastelandWolf', type: 'battle_invite', message: 'Challenge you to a territory battle in Grid 15-C', timestamp: '3m ago', status: 'pending' },
-    { playerId: 2, playerName: 'RadiationQueen', type: 'alliance_invite', message: 'Inviting you to join Neon Runners alliance', timestamp: '15m ago', status: 'pending' },
-  ]);
+  const socialMessages: SocialMessage[] = [
+    { id: 1, senderId: 1, senderName: "VaultHunter47", content: "Territory raid at sector 7 in 30 minutes", type: 'public', timestamp: "2m ago", isOnChain: true, transactionHash: "0x123..." },
+    { id: 2, senderId: 3, senderName: "SurvivalExpert", content: "Alliance meeting tonight", type: 'alliance', timestamp: "15m ago", isOnChain: false },
+    { id: 3, senderId: 2, senderName: "WastelandRaider", content: "Trading rare materials at outpost", type: 'public', timestamp: "45m ago", isOnChain: true }
+  ];
 
-  const [socialEvents] = useState<SocialEvent[]>([
-    { id: 1, type: 'battle_result', playerName: 'VaultHunter92', description: 'Won epic battle against RadZone Marauders (+150 XP)', timestamp: '10m ago', impact: 'high' },
-    { id: 2, type: 'territory_claimed', playerName: 'ScrapLord', description: 'Claimed Wasteland Depot in Grid 12-A', timestamp: '25m ago', impact: 'medium' },
-    { id: 3, type: 'achievement', playerName: 'WastelandWolf', description: 'Achieved "Territory Master" (10 territories held)', timestamp: '1h ago', impact: 'high' },
-  ]);
+  const pendingInteractions: PlayerInteraction[] = [
+    { playerId: 2, playerName: "WastelandRaider", type: 'battle_invite', message: "1v1 combat challenge", timestamp: "10m ago", status: 'pending' },
+    { playerId: 3, playerName: "SurvivalExpert", type: 'alliance_invite', message: "Join our faction", timestamp: "1h ago", status: 'pending' }
+  ];
+
+  const recentEvents: SocialEvent[] = [
+    { id: 1, type: 'territory_claimed', playerName: "VaultHunter47", description: "claimed sector 15", timestamp: "5m ago", impact: 'high' },
+    { id: 2, type: 'battle_result', playerName: "WastelandRaider", description: "won against TechScavenger", timestamp: "12m ago", impact: 'medium' },
+    { id: 3, type: 'alliance_formed', playerName: "SurvivalExpert", description: "formed new alliance 'Outcasts'", timestamp: "2h ago", impact: 'high' }
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'bg-radiation-green';
-      case 'away': return 'bg-toxic-yellow';
-      case 'offline': return 'bg-ash-gray';
-      default: return 'bg-ash-gray';
+      case 'online': return 'text-emerald-400';
+      case 'away': return 'text-amber-400';
+      case 'offline': return 'text-neutral-500';
+      default: return 'text-neutral-400';
     }
   };
 
-  const getEventImpactColor = (impact: string) => {
-    switch (impact) {
-      case 'high': return 'text-wasteland-orange';
-      case 'medium': return 'text-steel-blue';
-      case 'low': return 'text-ash-gray';
-      default: return 'text-ash-gray';
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'online': return '●';
+      case 'away': return '◐';
+      case 'offline': return '○';
+      default: return '○';
     }
   };
 
@@ -110,310 +110,289 @@ export function SocialInteractionHub() {
 
   const handleSendMessage = () => {
     if (!messageInput.trim()) return;
-    // Implementation would send message via API
     console.log(`Sending ${activeChannel} message:`, messageInput);
     setMessageInput('');
   };
 
   const handlePlayerInteraction = () => {
     if (!selectedPlayer || !interactionType) return;
-    // Implementation would send interaction request via API
     console.log(`Sending ${interactionType} to player ${selectedPlayer}`);
   };
 
   return (
-    <div className="space-y-6">
-      {/* Social Hub Header */}
-      <div className="pip-boy-screen p-6">
-        <div className="flex items-center justify-between mb-4">
-          <WastelandText variant="subtitle" className="text-wasteland-orange">
-            🌐 SOCIAL INTERACTION HUB
-          </WastelandText>
-          <div className="flex gap-2">
-            <Badge variant="outline" className="text-radiation-green border-radiation-green">
-              {onlinePlayers.filter(p => p.status === 'online').length} Online
-            </Badge>
-            <Badge variant="outline" className="text-steel-blue border-steel-blue">
-              {pendingInteractions.length} Pending
-            </Badge>
-          </div>
-        </div>
-        
-        <Tabs defaultValue="players" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-black border border-wasteland-orange">
-            <TabsTrigger value="players" className="text-xs font-mono data-[state=active]:bg-wasteland-orange data-[state=active]:text-black">
-              PLAYERS
-            </TabsTrigger>
-            <TabsTrigger value="messages" className="text-xs font-mono data-[state=active]:bg-wasteland-orange data-[state=active]:text-black">
-              MESSAGES
-            </TabsTrigger>
-            <TabsTrigger value="interactions" className="text-xs font-mono data-[state=active]:bg-wasteland-orange data-[state=active]:text-black">
-              REQUESTS
-            </TabsTrigger>
-            <TabsTrigger value="events" className="text-xs font-mono data-[state=active]:bg-wasteland-orange data-[state=active]:text-black">
-              EVENTS
-            </TabsTrigger>
-          </TabsList>
+    <RealisticWastelandCard variant="default" className="p-6">
+      <RealisticText variant="subtitle" className="mb-6">
+        Social Interaction Hub
+      </RealisticText>
 
-          {/* Online Players & Status */}
-          <TabsContent value="players" className="mt-4">
-            <ScrollArea className="h-80">
-              <div className="space-y-3">
+      <Tabs defaultValue="players" className="w-full">
+        <TabsList className="grid w-full grid-cols-5 bg-neutral-900 border border-neutral-700">
+          <TabsTrigger 
+            value="players" 
+            className="text-xs font-mono data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
+          >
+            Players
+          </TabsTrigger>
+          <TabsTrigger 
+            value="messages" 
+            className="text-xs font-mono data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
+          >
+            Messages
+          </TabsTrigger>
+          <TabsTrigger 
+            value="events" 
+            className="text-xs font-mono data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
+          >
+            Events
+          </TabsTrigger>
+          <TabsTrigger 
+            value="alliance" 
+            className="text-xs font-mono data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
+          >
+            Alliance
+          </TabsTrigger>
+          <TabsTrigger 
+            value="profile" 
+            className="text-xs font-mono data-[state=active]:bg-neutral-700 data-[state=active]:text-neutral-100"
+          >
+            Profile
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Online Players & Status */}
+        <TabsContent value="players" className="mt-4">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <RealisticText variant="caption" className="text-neutral-400">
+                {onlinePlayers.filter(p => p.status === 'online').length} online • {onlinePlayers.length} total
+              </RealisticText>
+              <Badge variant="outline" className="text-emerald-400 border-emerald-400/30">
+                {pendingInteractions.length} pending
+              </Badge>
+            </div>
+            
+            <ScrollArea className="h-64">
+              <div className="space-y-2">
                 {onlinePlayers.map((player) => (
-                  <div key={player.id} className="flex items-center justify-between p-3 bg-black border border-steel-blue rounded">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${getStatusColor(player.status)}`} />
-                      <div>
-                        <div className="font-mono text-sm text-radiation-green">{player.username}</div>
-                        <div className="text-xs text-ash-gray">
-                          {player.allianceName ? `[${player.allianceName}]` : 'No Alliance'} • {player.xp} XP • Rep: {player.reputation}
+                  <div key={player.id} className="p-3 bg-neutral-800 border border-neutral-700 rounded">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className={`text-sm ${getStatusColor(player.status)}`}>
+                          {getStatusIcon(player.status)}
+                        </span>
+                        <div>
+                          <RealisticText variant="body" className="font-medium">
+                            {player.username}
+                          </RealisticText>
+                          <div className="flex gap-4 text-xs text-neutral-500">
+                            <span>XP: {player.xp.toLocaleString()}</span>
+                            <span>Rep: {player.reputation}</span>
+                            {player.allianceName && <span>[{player.allianceName}]</span>}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <WastelandButton size="sm" variant="secondary" data-testid={`button-challenge-${player.id}`}>
-                        ⚔️
-                      </WastelandButton>
-                      <WastelandButton size="sm" variant="secondary" data-testid={`button-message-${player.id}`}>
-                        💬
-                      </WastelandButton>
-                      <WastelandButton size="sm" variant="secondary" data-testid={`button-invite-${player.id}`}>
-                        🤝
-                      </WastelandButton>
+                      <div className="flex gap-2">
+                        <RealisticButton size="sm" variant="secondary" data-testid={`button-challenge-${player.id}`}>
+                          ⚔️
+                        </RealisticButton>
+                        <RealisticButton size="sm" variant="secondary" data-testid={`button-message-${player.id}`}>
+                          💬
+                        </RealisticButton>
+                        <RealisticButton size="sm" variant="secondary" data-testid={`button-invite-${player.id}`}>
+                          🤝
+                        </RealisticButton>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </ScrollArea>
-          </TabsContent>
+          </div>
+        </TabsContent>
 
-          {/* Communication Channels */}
-          <TabsContent value="messages" className="mt-4">
-            <div className="space-y-4">
-              {/* Channel Selection */}
-              <div className="flex gap-2">
-                <WastelandButton 
-                  size="sm" 
-                  variant={activeChannel === 'global' ? 'primary' : 'secondary'}
-                  onClick={() => setActiveChannel('global')}
-                  data-testid="button-channel-global"
-                >
-                  🌍 Global
-                </WastelandButton>
-                <WastelandButton 
-                  size="sm" 
-                  variant={activeChannel === 'alliance' ? 'primary' : 'secondary'}
-                  onClick={() => setActiveChannel('alliance')}
-                  data-testid="button-channel-alliance"
-                >
-                  🏴 Alliance
-                </WastelandButton>
-                <WastelandButton 
-                  size="sm" 
-                  variant={activeChannel === 'trade' ? 'primary' : 'secondary'}
-                  onClick={() => setActiveChannel('trade')}
-                  data-testid="button-channel-trade"
-                >
-                  💱 Trade
-                </WastelandButton>
-              </div>
+        {/* Multi-Channel Communication */}
+        <TabsContent value="messages" className="mt-4">
+          <div className="space-y-4">
+            {/* Channel Selection */}
+            <div className="flex gap-2">
+              <RealisticButton 
+                size="sm" 
+                variant={activeChannel === 'global' ? 'primary' : 'secondary'}
+                onClick={() => setActiveChannel('global')}
+                data-testid="button-channel-global"
+              >
+                🌍 Global
+              </RealisticButton>
+              <RealisticButton 
+                size="sm" 
+                variant={activeChannel === 'alliance' ? 'primary' : 'secondary'}
+                onClick={() => setActiveChannel('alliance')}
+                data-testid="button-channel-alliance"
+              >
+                🏴 Alliance
+              </RealisticButton>
+              <RealisticButton 
+                size="sm" 
+                variant={activeChannel === 'trade' ? 'primary' : 'secondary'}
+                onClick={() => setActiveChannel('trade')}
+                data-testid="button-channel-trade"
+              >
+                💱 Trade
+              </RealisticButton>
+            </div>
 
-              {/* Message Feed */}
-              <ScrollArea className="h-48 border border-steel-blue bg-black p-3">
-                <div className="space-y-2">
-                  {recentMessages
-                    .filter(msg => activeChannel === 'global' || msg.type === activeChannel)
-                    .map((message) => (
-                    <div key={message.id} className="text-sm">
+            {/* Message Feed */}
+            <ScrollArea className="h-48 bg-neutral-900 border border-neutral-700 p-3">
+              <div className="space-y-2">
+                {socialMessages.filter(msg => 
+                  activeChannel === 'global' ? msg.type === 'public' :
+                  activeChannel === 'alliance' ? msg.type === 'alliance' :
+                  msg.type === 'public'
+                ).map((message) => (
+                  <div key={message.id} className="p-2 bg-neutral-800 border border-neutral-700 rounded text-sm">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-neutral-300 font-medium">{message.senderName}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-radiation-green font-mono">{message.senderName}:</span>
+                        <span className="text-xs text-neutral-500">{message.timestamp}</span>
                         {message.isOnChain && (
-                          <Badge variant="outline" className="text-xs text-toxic-yellow border-toxic-yellow">
-                            ON-CHAIN
+                          <Badge variant="outline" className="text-xs text-emerald-400 border-emerald-400/30">
+                            On-Chain
                           </Badge>
                         )}
                       </div>
-                      <div className="text-neutral-300 ml-2">{message.content}</div>
-                      <div className="text-xs text-ash-gray ml-2">{message.timestamp}</div>
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
-
-              {/* Message Input */}
-              <div className="flex gap-2">
-                <Input
-                  value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  placeholder={`Send message to ${activeChannel} channel...`}
-                  className="flex-1 bg-black border-steel-blue text-neutral-100 font-mono text-sm"
-                  data-testid="input-message"
-                />
-                <WastelandButton 
-                  onClick={handleSendMessage}
-                  size="sm"
-                  variant="primary"
-                  data-testid="button-send-message"
-                >
-                  SEND
-                </WastelandButton>
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Player Interactions & Requests */}
-          <TabsContent value="interactions" className="mt-4">
-            <div className="space-y-4">
-              {/* Quick Interaction Panel */}
-              <div className="border border-steel-blue bg-black p-4 rounded">
-                <WastelandText variant="body" className="mb-3 text-steel-blue">Quick Player Interaction</WastelandText>
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <Select value={selectedPlayer} onValueChange={setSelectedPlayer}>
-                    <SelectTrigger className="bg-black border-steel-blue text-neutral-100" data-testid="select-player">
-                      <SelectValue placeholder="Select Player" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {onlinePlayers.filter(p => p.status === 'online').map((player) => (
-                        <SelectItem key={player.id} value={player.username}>
-                          {player.username} [{player.allianceName || 'No Alliance'}]
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={interactionType} onValueChange={setInteractionType}>
-                    <SelectTrigger className="bg-black border-steel-blue text-neutral-100" data-testid="select-interaction-type">
-                      <SelectValue placeholder="Interaction Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="battle_invite">⚔️ Battle Challenge</SelectItem>
-                      <SelectItem value="alliance_invite">🤝 Alliance Invite</SelectItem>
-                      <SelectItem value="trade_request">💱 Trade Request</SelectItem>
-                      <SelectItem value="territory_challenge">🏴 Territory Challenge</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <WastelandButton 
-                  onClick={handlePlayerInteraction}
-                  className="w-full"
-                  variant="radiation"
-                  data-testid="button-send-interaction"
-                >
-                  SEND INTERACTION REQUEST
-                </WastelandButton>
-              </div>
-
-              {/* Pending Interactions */}
-              <div>
-                <WastelandText variant="body" className="mb-3 text-wasteland-orange">Pending Requests</WastelandText>
-                <ScrollArea className="h-48">
-                  <div className="space-y-2">
-                    {pendingInteractions.map((interaction, index) => (
-                      <div key={index} className="border border-steel-blue bg-black p-3 rounded">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{getInteractionIcon(interaction.type)}</span>
-                            <span className="font-mono text-radiation-green">{interaction.playerName}</span>
-                            <Badge variant="outline" className="text-xs text-toxic-yellow border-toxic-yellow">
-                              {interaction.type.replace('_', ' ').toUpperCase()}
-                            </Badge>
-                          </div>
-                          <span className="text-xs text-ash-gray">{interaction.timestamp}</span>
-                        </div>
-                        <div className="text-sm text-neutral-300 mb-3">{interaction.message}</div>
-                        <div className="flex gap-2">
-                          <WastelandButton size="sm" variant="primary" data-testid={`button-accept-${index}`}>
-                            ACCEPT
-                          </WastelandButton>
-                          <WastelandButton size="sm" variant="danger" data-testid={`button-decline-${index}`}>
-                            DECLINE
-                          </WastelandButton>
-                        </div>
-                      </div>
-                    ))}
+                    <RealisticText variant="caption" className="text-neutral-400">
+                      {message.content}
+                    </RealisticText>
                   </div>
-                </ScrollArea>
+                ))}
               </div>
-            </div>
-          </TabsContent>
+            </ScrollArea>
 
-          {/* Live Social Events Feed */}
-          <TabsContent value="events" className="mt-4">
-            <div>
-              <WastelandText variant="body" className="mb-3 text-steel-blue">Live Wasteland Events</WastelandText>
-              <ScrollArea className="h-80">
-                <div className="space-y-3">
-                  {socialEvents.map((event) => (
-                    <div key={event.id} className="border border-steel-blue bg-black p-3 rounded">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className={`font-mono ${getEventImpactColor(event.impact)}`}>
-                            {event.playerName}
-                          </span>
-                          <Badge variant="outline" className="text-xs text-steel-blue border-steel-blue">
-                            {event.type.replace('_', ' ').toUpperCase()}
+            {/* Message Input */}
+            <div className="flex gap-2">
+              <Input
+                placeholder={`Send ${activeChannel} message...`}
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                className="bg-neutral-800 border-neutral-700 text-neutral-100"
+                data-testid="input-message"
+              />
+              <RealisticButton 
+                onClick={handleSendMessage}
+                disabled={!messageInput.trim()}
+                data-testid="button-send-message"
+              >
+                Send
+              </RealisticButton>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Live Social Events */}
+        <TabsContent value="events" className="mt-4">
+          <div className="space-y-4">
+            <RealisticText variant="body" className="text-neutral-300">
+              Live Activity Feed
+            </RealisticText>
+            
+            <ScrollArea className="h-64">
+              <div className="space-y-2">
+                {recentEvents.map((event) => (
+                  <div key={event.id} className="p-3 bg-neutral-800 border border-neutral-700 rounded">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              event.impact === 'high' ? 'text-red-400 border-red-400/30' :
+                              event.impact === 'medium' ? 'text-amber-400 border-amber-400/30' :
+                              'text-neutral-400 border-neutral-400/30'
+                            }`}
+                          >
+                            {event.type}
                           </Badge>
+                          <span className="text-xs text-neutral-500">{event.timestamp}</span>
                         </div>
-                        <span className="text-xs text-ash-gray">{event.timestamp}</span>
+                        <RealisticText variant="caption" className="text-neutral-300">
+                          <span className="text-neutral-100">{event.playerName}</span> {event.description}
+                        </RealisticText>
                       </div>
-                      <div className="text-sm text-neutral-300">{event.description}</div>
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </TabsContent>
 
-      {/* Advanced Social Features */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Alliance Coordination */}
-        <div className="pip-boy-screen p-4">
-          <WastelandText variant="body" className="mb-3 text-wasteland-orange">🏴 Alliance Coordination</WastelandText>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-ash-gray">Active Members:</span>
-              <span className="text-radiation-green">8/12</span>
+        <TabsContent value="alliance" className="mt-4">
+          <div className="space-y-4">
+            <div className="p-4 bg-neutral-800 border border-neutral-700 rounded">
+              <RealisticText variant="subtitle" className="mb-3">
+                Alliance Status
+              </RealisticText>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Current Alliance:</span>
+                  <span className="text-neutral-100">Brotherhood</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Rank:</span>
+                  <span className="text-amber-400">Lieutenant</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Members Online:</span>
+                  <span className="text-emerald-400">7/23</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Territory Holdings:</span>
+                  <span className="text-amber-400">15 zones</span>
+                </div>
+              </div>
+              <Separator className="bg-neutral-700 my-2" />
+              <RealisticButton size="sm" className="w-full" variant="secondary" data-testid="button-alliance-battle-plan">
+                📋 View Battle Plans
+              </RealisticButton>
             </div>
-            <div className="flex justify-between">
-              <span className="text-ash-gray">Coordinated Battles:</span>
-              <span className="text-steel-blue">3 scheduled</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-ash-gray">Territory Holdings:</span>
-              <span className="text-toxic-yellow">15 zones</span>
-            </div>
-            <Separator className="bg-steel-blue my-2" />
-            <WastelandButton size="sm" className="w-full" variant="secondary" data-testid="button-alliance-battle-plan">
-              📋 VIEW BATTLE PLANS
-            </WastelandButton>
           </div>
-        </div>
+        </TabsContent>
 
-        {/* Reputation & Achievements */}
-        <div className="pip-boy-screen p-4">
-          <WastelandText variant="body" className="mb-3 text-steel-blue">🏆 Social Standing</WastelandText>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-ash-gray">Global Rank:</span>
-              <span className="text-wasteland-orange">#247</span>
+        {/* Player Profile & Achievements */}
+        <TabsContent value="profile" className="mt-4">
+          <div className="space-y-4">
+            <div className="p-4 bg-neutral-800 border border-neutral-700 rounded">
+              <RealisticText variant="subtitle" className="mb-3">
+                Player Statistics
+              </RealisticText>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Total XP:</span>
+                  <span className="text-neutral-100">2,847</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Battles Won:</span>
+                  <span className="text-emerald-400">156</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Territories Claimed:</span>
+                  <span className="text-amber-400">23</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Social Score:</span>
+                  <span className="text-neutral-300">1,247</span>
+                </div>
+              </div>
+              <Separator className="bg-neutral-700 my-2" />
+              <RealisticButton size="sm" className="w-full" variant="secondary" data-testid="button-view-achievements">
+                🎖️ View Achievements
+              </RealisticButton>
             </div>
-            <div className="flex justify-between">
-              <span className="text-ash-gray">Alliance Rank:</span>
-              <span className="text-radiation-green">#3</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-ash-gray">Social Score:</span>
-              <span className="text-steel-blue">1,247</span>
-            </div>
-            <Separator className="bg-steel-blue my-2" />
-            <WastelandButton size="sm" className="w-full" variant="secondary" data-testid="button-view-achievements">
-              🎖️ VIEW ACHIEVEMENTS
-            </WastelandButton>
           </div>
-        </div>
-      </div>
-    </div>
+        </TabsContent>
+      </Tabs>
+    </RealisticWastelandCard>
   );
 }
