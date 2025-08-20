@@ -1,125 +1,126 @@
-# Project Overview
 
-This platform is a multi-layered, enterprise-ready monorepo featuring a modern React frontend, robust smart contract infrastructure, and advanced simulation backend. The workspace is organized for clarity, scalability, and rapid development.
+# OCSH Project Overview
+
+OCSH (Onchain Survival Handbook) is a post-apocalyptic, web3 social gaming platform featuring deterministic territorial control, alliance-based warfare, and offline blockchain transaction capabilities. The project combines a modern React frontend, robust smart contract infrastructure, and a real-time backend for a seamless, strategic multiplayer experience.
 
 ---
 
 ## Architecture Overview
 
-- **Monorepo Structure:**  
-    Organized into backend (`/server`), smart contracts (`/contracts`), frontend (`/www`), configuration (`/config`), documentation (`/docs`), and data (`/data`).
-- **Documentation:**  
-    Extensive technical and architectural documentation in `ROADMAP.md`, `project_overview.md`, and `information-sheet.md`, including Mermaid diagrams and technology stack tables.
+- **Monorepo Structure:**
+    - `client/` — React 18 + TypeScript frontend (Vite, Tailwind, shadcn/ui, PWA, real-time features)
+    - `contracts/` — Solidity smart contracts (Hardhat, OpenZeppelin, tests, deployment scripts)
+    - `server/` — Node.js + Express backend (TypeScript, WebSocket, Drizzle ORM, PostgreSQL)
+    - `shared/` — Shared game logic, schema, and types
+    - `test/` — Contract and integration tests
+    - `docs/` — Documentation, security, and technical guides
+- **Documentation:**
+    - `README.md`, `ROADMAP.md`, `SECURITY.md`, and in-code comments
+    - Architecture diagrams, technical breakdowns, and deployment checklists
 
 ---
+
 
 ## Directory Structure
 
 ```
-/contracts      # Smart contracts (Solidity, Hardhat)
-/server         # Node.js backend (API, integration)
-/www            # React frontend (UI, dashboards)
-/config         # Configuration files (Nginx, scripts)
-/docs           # Documentation (Markdown, diagrams)
-/data           # Supporting datasets, research DB
+client/         # React 18 + TypeScript frontend (PWA, Vite, Tailwind, shadcn/ui)
+contracts/      # Solidity smart contracts, deployment scripts, artifacts
+server/         # Node.js + Express backend, WebSocket, Drizzle ORM
+shared/         # Shared game logic, schema, and types
+test/           # Contract and integration tests
+docs/           # Documentation, security, and technical guides
 ```
 
 ---
 
-## Backend / Server (`/server`)
 
-[![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express-4.x-black)](https://expressjs.com/)
+## Backend / Server (`server/`)
 
-- **Tech Stack:** Node.js, Express, CORS, rate limiting, logging (Morgan).
+- **Tech Stack:** Node.js, Express, TypeScript, Drizzle ORM, PostgreSQL, WebSocket
 - **API Endpoints:**
-    - `/api/aggregator/quote` and `/api/aggregator/prepare-swap` for aggregator/DEX operations.
-    - `/health` for health checks.
-- **Handlers:** Core logic in `lib/aggregator.js`.
-- **Environment:** Loads `.env.local`, supports OKX credentials for exchange integration.
-- **Aggregator logic** and test client included.
-- **Integrates** with frontend and simulation backend.
-
----
-
-## Smart Contracts (`/contracts`)
-
-[![Solidity](https://img.shields.io/badge/Solidity-0.8.x-black)](https://docs.soliditylang.org/)
-[![Hardhat](https://img.shields.io/badge/Hardhat-2.x-yellow)](https://hardhat.org/)
-[![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-4.x-blue)](https://openzeppelin.com/)
-
-- **Solidity Contracts:**  
-    `ProfileRegistry.sol` and `SimpleSwap.sol` in `src/`.
-- **Hardhat:** Compilation, deployment, and testing (`hardhat.config.js`).
-- **Scripts:**  
-    - `deploy.js`, `deploy-swap.js` for contract deployment.
-    - `e2e-setprofile.js` for end-to-end profile setting.
-- **Testing:**  
-    Tests in `test/` and e2e scripts.
-- **Roadmap:** Migration to OpenZeppelin, multi-chain support, advanced admin/role management.
-
----
-
-## Frontend (`/www`)
-
-[![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-4.x-blue)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-4.x-yellow)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.x-blue)](https://tailwindcss.com/)
-[![Three.js](https://img.shields.io/badge/Three.js-0.1x-green)](https://threejs.org/)
-[![Socket.IO](https://img.shields.io/badge/Socket.IO-4.x-black)](https://socket.io/)
-
-- **Tech Stack:** React 18, TypeScript, Vite, Tailwind CSS.
-- **State Management:** React Query, Context.
-- **Routing:** React Router.
-- **Structure:**
-    - Main entry: `src/main.tsx`, `App.tsx`.
-    - Modular components with feature-specific folders (e.g., `horizontal`, `ai`, `wallet`).
-    - Pages: Lazy-loaded for performance.
-- **UI:** Custom and third-party components (Lucide icons, Toaster, Sonner).
+    - Game actions, NFT minting, trading, alliance management, territory control
+    - Real-time updates via WebSocket
 - **Features:**
-    - Dashboard, research, articles, profile, swap, and system map pages.
-    - Technical specs and system architecture visualizations.
-    - Real-time features and plugin ecosystem (`SystemArchitecture.tsx`).
-- **Assets:** Logos and images in `public/`.
+    - Secure session management, rate limiting, CORS, logging
+    - Integrates with smart contracts and frontend
+    - Environment config via `.env`
 
 ---
 
-## Configuration (`/config`)
 
-[![Nginx](https://img.shields.io/badge/Nginx-1.2x-green)](https://nginx.org/)
-[![Cloudflare Tunnel](https://img.shields.io/badge/Cloudflare%20Tunnel-active-orange)](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
+## Smart Contracts (`contracts/`)
 
-- **Nginx:** Reverse proxy and static file serving (`nginx.conf`, `mime.types`).
-- **Cloudflare Tunnel:** Secure remote access.
-- **Python & Node.js** package management.
-- **Automated setup, backup, and maintenance scripts.**
-
----
-
-## Documentation (`/docs`)
-
-- **Comprehensive guides:** `README.md`, `ROADMAP.md`, `information-sheet.md`
-- **API Docs:** Aggregator market/trade API, DEX implementation/integration, secure auction implementation.
-- **Technical Roadmap:** Detailed in `ROADMAP.md` with tasks, features, and status.
-- **Quick start instructions** and **architecture diagrams** (Mermaid).
-- **Detailed feature and technology breakdowns.**
+- **Solidity Contracts:**
+    - `OCSH.sol` — Main game logic (NFT minting, alliances, territory, trading, messaging)
+    - `OSCHLib.sol` — Library and shared logic
+- **Hardhat:** Compilation, deployment, and testing (`hardhat.config.ts`)
+- **Scripts:**
+    - `deploy-testnet.ts`, `send-op-tx.ts`, `test-basic.ts` for deployment and testing
+- **Testing:**
+    - Unit and integration tests in `test/`
+- **Artifacts:**
+    - Compiled contract ABIs and build info in `artifacts/`
 
 ---
 
-## Data (`/data`)
 
-- **Information Sheet:** Deep technical and business documentation, including system architecture, integration endpoints, and technology stack.
-- **Research Database:** Used for AI/ML and research features in the frontend.
+## Frontend (`client/`)
+
+- **Tech Stack:** React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, PWA
+- **State Management:** TanStack Query, React Context, custom hooks
+- **Routing:** Wouter (or React Router)
+- **Structure:**
+    - Main entry: `src/main.tsx`, `App.tsx`
+    - Modular components in `components/` (e.g., trading, alliances, ai-npc-factions, mesh-network, pwa-inventory)
+    - Pages in `pages/` (dashboard, handheld, nft-gate, not-found, pwa-interface)
+- **UI:** Custom and third-party components, cyberpunk/military-industrial theme
+- **Features:**
+    - NFT minting, territory claiming, alliance management, trading, real-time comms
+    - Offline-first PWA, Blokboy 1000 terminal, Foundry Courier integration
+    - Real-time map, power rankings, and notifications
 
 ---
+
+
+## Configuration & Scripts
+
+- **Deployment & Automation:**
+    - Scripts for testnet/mainnet deployment, contract verification, and testing (`scripts/`)
+    - Hardhat and Vite config files
+- **Environment:**
+    - `.env` files for secrets and RPC endpoints (see below)
+
+---
+
+
+## Documentation (`docs/`)
+
+- **Guides:** `README.md`, `ROADMAP.md`, `SECURITY.md`, deployment checklists
+- **Technical Docs:** Architecture diagrams, feature breakdowns, and security notes
+- **Game Design:** In-depth game mechanics, economic models, and user guides
+
+---
+
+
+## Shared & Data
+
+- **Shared Logic:** `shared/` for game items, schema, and types
+- **Artifacts:** `artifacts/` for contract ABIs and build info
+- **Test Data:** `test/` for contract and integration tests
+
+---
+
 
 ## Notable Patterns & Features
 
-- **AI/ML Integration:** Multi-provider AI, research pipeline, vector search, quantum research support.
-- **Enterprise Features:** Distributed multi-agent orchestration, REST/WebSocket APIs, business intelligence, automation.
-- **Security:** AES-256 encryption, compliance frameworks, audit logging.
-- **Deployment:** Multiple environments (dev, alpha, quantum, enterprise) with Kubernetes, PostgreSQL, Redis, and monitoring.
+- **Deterministic Game Logic:** Pure aggregate calculations, zero randomness, predictable outcomes
+- **Alliance & Territory Control:** Multi-role alliances, territory bonuses, real-time map
+- **Trading & Economy:** NFT trading, real-time price feeds, portfolio management
+- **Offline-First:** PWA, Blokboy 1000 terminal, Foundry Courier CLI for offline tx
+- **Real-Time Communication:** WebSocket, global and alliance messaging, notifications
+- **Security:** Role-based access, reentrancy protection, audit logging, compliance
+- **DevOps:** Automated deployment scripts, environment configs, monitoring
 
 ---
 
@@ -127,101 +128,110 @@ This platform is a multi-layered, enterprise-ready monorepo featuring a modern R
 
 ---
 
+
 # Full Workspace Context (Authoritative)
 
 ## 1. Directory & File Structure
 
-- **contracts/**: Solidity smart contracts, Hardhat config, deployment/test scripts, contract artifacts, and tests. Key files: `ProfileRegistry.sol`, `SimpleSwap.sol`, `hardhat.config.js`, `deploy.js`, `deploy-swap.js`, `e2e-setprofile.js`, `test/e2e-setprofile.test.js`.
-- **server/**: Node.js backend (Express), API endpoints for aggregator/DEX, health checks, rate limiting, logging, and integration logic. Key files: `index.js`, `lib/aggregator.js`, `test-client.js`.
-- **www/**: React 18 + TypeScript frontend, Vite, Tailwind CSS, modular components, lazy-loaded pages, state management (React Query, Context), routing (React Router), and real-time features. Key files: `src/App.tsx`, `src/main.tsx`, `components/`, `pages/`, `public/` assets, `SystemArchitecture.tsx`.
-- **config/**: Nginx reverse proxy config (`nginx.conf`, `mime.types`), automation scripts, and Cloudflare tunnel support.
-- **docs/**: Markdown documentation for APIs, DEX, secure auction, and technical roadmap.
-- **data/**: Deep technical/business documentation (`information-sheet.md`), research database for AI/ML features.
-- **Root**: Project-level docs (`README.md`, `ROADMAP.md`, `project_overview.md`), service scripts, and systemd integration.
+
+- **contracts/**: OCSH.sol, OSCHLib.sol, Hardhat config, deployment/test scripts, contract artifacts, and tests
+- **server/**: Node.js backend (Express), API endpoints for game actions, trading, alliances, territory, and real-time comms
+- **client/**: React 18 + TypeScript frontend, Vite, Tailwind CSS, modular components, PWA, real-time features
+- **shared/**: Game items, schema, and types
+- **test/**: Contract and integration tests
+- **docs/**: Markdown documentation for APIs, security, roadmap, and technical guides
+- **Root**: Project-level docs (`README.md`, `ROADMAP.md`, `SECURITY.md`), deployment scripts, and configs
+
 
 ## 2. Backend (server/)
 
-- **Express API**: `/api/aggregator/quote` (GET) and `/api/aggregator/prepare-swap` (POST) aggregate quotes and prepare swaps across multiple liquidity sources. Implements in-memory caching, rate limiting, and error handling. Health endpoint at `/health`.
-- **Environment**: Loads `.env.local` for secrets (OKX, etc).
-- **Aggregator Logic**: Core logic in `lib/aggregator.js` (not shown here, but referenced in API handlers).
-- **Test Client**: `test-client.js` for simulating API requests.
+- **Express API**: Endpoints for NFT minting, trading, alliances, territory, and messaging
+- **WebSocket**: Real-time updates for battles, messages, and territory changes
+- **Database**: PostgreSQL via Drizzle ORM
+- **Security**: Rate limiting, CORS, session management, error handling
+
 
 ## 3. Smart Contracts (contracts/)
 
-- **ProfileRegistry.sol**: Maps addresses to profile CIDs (IPFS), with `setProfile` and `getProfile` functions, emitting `ProfileSet` events. Simple, gas-efficient, and extensible.
-- **SimpleSwap.sol**: (Not shown, but likely implements token swap logic.)
-- **Hardhat**: Used for compilation, deployment, and testing. Scripts automate deployment and e2e profile setting.
-- **Testing**: E2E and unit tests for contract correctness and integration.
+- **OCSH.sol**: Main contract for NFT minting, alliances, territory, trading, and messaging
+- **OSCHLib.sol**: Shared library for contract logic
+- **Hardhat**: Compilation, deployment, and testing
+- **Testing**: Unit and integration tests for all game logic
 
-## 4. Frontend (www/)
 
-- **React 18 + TypeScript**: Modern SPA with modular, feature-specific components (e.g., `horizontal`, `ai`, `wallet`).
-- **Routing**: React Router, lazy-loaded pages for performance.
-- **State Management**: React Query, Context, custom hooks.
-- **UI/UX**: Tailwind CSS, Lucide icons, Toaster/Sonner notifications, custom and third-party components.
-- **Features**: Dashboard, research, articles, profile, swap, system map, technical specs, system architecture visualization, plugin ecosystem, and real-time sync.
-- **Integration**: Connects to backend APIs and smart contracts (via ethers/viem), supports wallet connection, and on-chain profile publishing.
+## 4. Frontend (client/)
 
-## 5. Configuration (config/)
+- **React 18 + TypeScript**: SPA with modular, feature-specific components (e.g., ai-npc-factions, mesh-network, trading-interface, pwa-inventory)
+- **Routing**: Wouter or React Router, lazy-loaded pages
+- **State Management**: TanStack Query, Context, custom hooks
+- **UI/UX**: Tailwind CSS, shadcn/ui, cyberpunk/military-industrial theme
+- **Features**: NFT minting, territory claiming, alliances, trading, real-time comms, offline-first PWA
+- **Integration**: Connects to backend APIs and smart contracts (ethers/viem), wallet connection, on-chain actions
 
-- **Nginx**: Reverse proxy, static file serving, and security headers.
-- **Cloudflare Tunnel**: Secure remote access for global reach.
-- **Automation**: Shell scripts for setup, backup, and service management.
 
-## 6. Documentation (docs/, data/)
+## 5. Scripts & Configuration
 
-- **API Docs**: Aggregator market/trade API, DEX implementation/integration, secure auction implementation.
-- **Technical Roadmap**: `ROADMAP.md` with detailed tasks, features, and status.
-- **Deep Technical Docs**: `information-sheet.md` with system architecture, integration endpoints, technology stack, and mermaid diagrams.
+- **Deployment Scripts**: For testnet/mainnet, contract verification, and testing
+- **Config Files**: Hardhat, Vite, Tailwind, tsconfig, postcss
+- **Environment**: `.env` files for secrets and RPC endpoints
+
+
+## 6. Documentation (docs/)
+
+- **API Docs**: Game API, contract integration, security, and deployment
+- **Technical Roadmap**: `ROADMAP.md` with tasks, features, and status
+- **Security**: `SECURITY.md` and in-code comments
+
 
 ## 7. Security & Compliance
 
-- **Smart Contracts**: Audited, role-based access, capped supply, emergency controls, and migration readiness.
-- **Backend**: Rate limiting, CORS, environment isolation, and error handling.
-- **Frontend**: Secure wallet integration, user data privacy, and compliance with best practices.
+- **Smart Contracts**: Role-based access, capped supply, emergency controls, reentrancy protection
+- **Backend**: Rate limiting, CORS, session management, error handling
+- **Frontend**: Secure wallet integration, user data privacy, best practices
+
 
 ## 8. DevOps & Deployment
 
-- **Environments**: Dev, alpha, quantum, and enterprise, with Kubernetes, PostgreSQL, Redis, and monitoring.
-- **Service Management**: Systemd integration, service scripts, and automated startup/shutdown.
+- **Environments**: Dev, testnet, mainnet, with scripts for deployment and verification
+- **Service Management**: Automated scripts, monitoring, and alerting
+
 
 ## 9. Patterns & Technologies
 
-- **AI/ML**: Multi-provider AI, research pipeline, vector search, quantum research.
-- **Enterprise**: Distributed multi-agent orchestration, REST/WebSocket APIs, business intelligence, automation.
-- **Security**: AES-256 encryption, compliance frameworks, audit logging.
+- **Deterministic Game Logic**: Pure aggregate calculations, territory mathematics, alliance bonuses
+- **Offline-First**: PWA, Blokboy 1000 terminal, Foundry Courier CLI
+- **Real-Time**: WebSocket, live map, notifications
+- **Security**: Role-based access, audit logging, compliance
 
 ---
+
 
 # Deep Insights Extracted
 
-1. **Seamless Full-Stack Integration**: The workspace achieves tight coupling between smart contracts, backend APIs, and frontend UI, enabling rapid iteration and end-to-end feature delivery.
-2. **Modular, Scalable Architecture**: Each layer (contracts, backend, frontend) is independently testable, deployable, and extensible, supporting future growth and multi-chain expansion.
-3. **Security-First Design**: Smart contracts are capped, audited, and role-based; backend enforces rate limiting and CORS; frontend ensures wallet/user data privacy.
-4. **AI/ML & Research-Driven**: The system is built to support advanced AI/ML workflows, including research pipelines, semantic search, and quantum experimentation, making it future-proof for emerging tech.
-5. **Enterprise-Grade Orchestration**: Distributed agent orchestration, business intelligence, and automation are core, not afterthoughts, enabling real-world, production-grade deployments.
-6. **Comprehensive Documentation**: The workspace is unusually well-documented, with deep technical, architectural, and operational guides, making onboarding and maintenance efficient.
-7. **DevOps Maturity**: Automated scripts, systemd integration, and multi-environment support ensure robust, reproducible deployments and easy service management.
-8. **Real-Time & Plugin Ecosystem**: The frontend and backend are designed for real-time sync, live collaboration, and extensibility via plugins and templates.
-9. **Compliance & Auditability**: Audit logging, compliance frameworks, and clear separation of concerns support regulatory and enterprise requirements.
-10. **Actionable Roadmap**: The technical roadmap is granular, actionable, and aligned with best practices for iterative delivery.
+
+1. **Seamless Full-Stack Integration**: Tight coupling between smart contracts, backend APIs, and frontend UI enables rapid iteration and end-to-end feature delivery.
+2. **Deterministic, Predictable Game Logic**: All outcomes are calculable, supporting strategic gameplay and transparency.
+3. **Security-First Design**: Role-based access, reentrancy protection, and audit logging across all layers.
+4. **Offline-First & Real-Time**: PWA, Blokboy 1000 terminal, and WebSocket for live and offline play.
+5. **Comprehensive Documentation**: Deep technical, architectural, and operational guides for onboarding and maintenance.
+6. **DevOps Maturity**: Automated scripts, multi-environment support, and monitoring for robust deployments.
+7. **Community & Ecosystem Ready**: Plugin/template support, guides, and open architecture for future growth.
 
 ---
+
 
 # Actionable Insights & Recommendations
 
-1. **Maintain Documentation Rigor**: Continue updating all docs as features evolve; this is a major asset for onboarding and scaling.
-2. **Expand Automated Testing**: Increase coverage for backend, contracts, and frontend (unit, integration, e2e) to ensure reliability as complexity grows.
-3. **Formalize Security Audits**: Schedule regular smart contract and backend audits, especially before major releases or network migrations.
-4. **Advance Multi-Chain Support**: Prioritize multi-chain registry and ENS integration to future-proof the platform and expand user base.
-5. **Enhance DevOps Automation**: Integrate CI/CD pipelines for all layers (contracts, backend, frontend) and automate deployment to all environments.
-6. **Leverage AI/ML Capabilities**: Invest in advanced research pipelines, semantic search, and quantum features to differentiate the platform.
-7. **Strengthen Compliance**: Regularly review compliance frameworks (SOC 2, GDPR, etc.) and audit logging to meet enterprise and regulatory needs.
-8. **Optimize Real-Time Features**: Continue improving real-time sync, plugin ecosystem, and live collaboration for a best-in-class user experience.
-9. **Monitor Performance & Costs**: Track resource usage, optimize for cost and speed, and plan for scaling as adoption increases.
-10. **Foster Community & Ecosystem**: Encourage contributions, publish guides, and support plugin/template development to grow the ecosystem.
+
+1. **Maintain Documentation Rigor**: Keep all docs and checklists up to date as features evolve.
+2. **Expand Automated Testing**: Increase test coverage for contracts, backend, and frontend.
+3. **Formalize Security Audits**: Schedule regular audits for contracts and backend.
+4. **Advance Multi-Chain Support**: Plan for future cross-chain and ENS integration.
+5. **Enhance DevOps Automation**: Integrate CI/CD and automate deployments.
+6. **Foster Community & Ecosystem**: Publish guides, support plugins, and encourage contributions.
 
 ---
 
-> This file is the single source of truth for Artifact Virtual. All contributors (AI or human) must reference and update this document for any architectural, technical, or operational changes. For the most current and comprehensive understanding, always start here.
+
+> This file is the single source of truth for OCSH. All contributors (AI or human) must reference and update this document for any architectural, technical, or operational changes. For the most current and comprehensive understanding, always start here.
 
