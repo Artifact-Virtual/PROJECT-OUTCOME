@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./build-tests",
+    "module": "CommonJS",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["node", "mocha"]
+  },
+  "include": ["test/**/*.ts", "test/**/*.test.ts"]
+}

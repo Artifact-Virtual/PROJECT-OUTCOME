@@ -12,9 +12,9 @@ describe("OCSH Contract - Basic Tests", function () {
     // Get signers
     [owner, player1, player2] = await ethers.getSigners();
 
-    // Deploy OCSH contract
-    const OCShFactory = await ethers.getContractFactory("OCSH");
-    ocsh = await OCShFactory.deploy();
+  const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
+  const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
+  ocsh = await OCShFactory.deploy();
     await ocsh.waitForDeployment();
   });
 

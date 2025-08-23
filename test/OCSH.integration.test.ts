@@ -14,8 +14,9 @@ describe("OCSH Edge Cases & Integration Tests", function () {
     owner = signers[0];
     players = signers.slice(1, 11); // Get 10 players for testing
 
-    const OCShFactory = await ethers.getContractFactory("OCSH");
-    ocsh = await OCShFactory.deploy();
+  const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
+  const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
+  ocsh = await OCShFactory.deploy();
     await ocsh.waitForDeployment();
 
     // Mint tokens for all players

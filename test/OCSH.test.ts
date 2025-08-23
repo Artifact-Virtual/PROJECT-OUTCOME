@@ -15,12 +15,13 @@ describe("OCSH NFT Game Contract", function () {
     [owner, player1, player2, player3] = await ethers.getSigners();
 
     // Deploy OSCHLib first (if needed as a library)
-    const OSCHLibFactory = await ethers.getContractFactory("OCSHLib");
     // Note: OCSHLib is used as a library, not deployed separately
 
     // Deploy OCSH contract
-    const OCShFactory = await ethers.getContractFactory("OCSH");
-    ocsh = await OCShFactory.deploy();
+  // Load compiled artifacts directly to avoid HH700 artifact lookup issues
+  const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
+  const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
+  ocsh = await OCShFactory.deploy();
     await ocsh.waitForDeployment();
   });
 
