@@ -387,12 +387,4 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
 
         return (basePower * (sbtMultiplier + repBonus)) / 1e18;
     }
-
-    /**
-     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
-     */
-    function tokenURI(uint256 tokenId) public pure override returns (string memory) {
-        // Return embedded image data for all tokens
-        return IMAGE_DATA;
-    }
 }
