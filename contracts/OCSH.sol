@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./OSCHLib.sol";
+import "./IdentitySBT.sol";
 
 /**
  * @title OCSH NFT - Onchain Chain NFT with Game Mechanics, RBAC, Anti-Spam, Territory, Leveling
@@ -16,6 +17,31 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
     // --- Roles ---
     bytes32 public constant GAME_ADMIN_ROLE = OCSHLib.GAME_ADMIN_ROLE;
     bytes32 public constant ALLIANCE_LEADER_ROLE = OCSHLib.ALLIANCE_LEADER_ROLE;
+
+    // --- SBT Integration ---
+    ARC_IdentitySBT public identitySBT;
+
+    // SBT Role requirements for game actions
+    bytes32 public constant SBT_ROLE_VETERAN = keccak256("VETERAN");
+    bytes32 public constant SBT_ROLE_COMMANDER = keccak256("COMMANDER");
+    bytes32 public constant SBT_ROLE_TRADER = keccak256("TRADER");
+
+    // Achievement SBTs
+    bytes32 public constant ACHIEVEMENT_FIRST_WIN = keccak256("FIRST_WIN");
+    bytes32 public constant ACHIEVEMENT_TERRITORY_MASTER = keccak256("TERRITORY_MASTER");
+    bytes32 public constant ACHIEVEMENT_ALLIANCE_BUILDER = keccak256("ALLIANCE_BUILDER");
+
+    // Modifiers
+    modifier requiresSBTRole(bytes32 role) {
+        require(identitySBT.hasRole(msg.sender, role), "SBT role required");
+        _;
+    }
+
+    modifier hasMinReputation(uint256 minRep) {
+        uint256 reputation = identitySBT.weightOf(msg.sender);
+        require(reputation >= minRep, "Insufficient reputation");
+        _;
+    }
 
     struct ChainLink {
         uint40 prevTokenId;
@@ -87,9 +113,10 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
     event TerritoryClaimed(uint40 indexed territoryId, uint40 indexed tokenId, uint40 indexed allianceId);
     event LeveledUp(uint40 indexed tokenId, uint8 newLevel);
 
-    constructor() ERC721("Onchain Survival Chain", "OCSH") Ownable(msg.sender) {
+    constructor(address _identitySBT) ERC721("Onchain Survival Chain", "OCSH") Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(GAME_ADMIN_ROLE, msg.sender);
+        identitySBT = ARC_IdentitySBT(_identitySBT);
     }
 
     // Override supportsInterface to resolve conflict between ERC721Enumerable and AccessControl
@@ -127,7 +154,7 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
     }
 
     // --- Alliances (RBAC) ---
-    function createAlliance(uint40[] calldata memberTokenIds) external returns (uint40) {
+    function createAlliance(uint40[] calldata memberTokenIds) external requiresSBTRole(SBT_ROLE_COMMANDER) returns (uint40) {
         for (uint i = 0; i < memberTokenIds.length; i++) {
             require(ownerOf(memberTokenIds[i]) == msg.sender, "Not owner of all NFTs");
         }
@@ -180,6 +207,19 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
         levels[winnerToken].xp += 100;
         uint8 newLevel = OCSHLib.xpToLevel(levels[winnerToken].xp);
         levels[winnerToken].level = newLevel;
+
+        // Issue achievement SBT for first win
+        address winnerAddress = ownerOf(winnerToken);
+        if (!identitySBT.hasRole(winnerAddress, ACHIEVEMENT_FIRST_WIN)) {
+            // Issue FIRST_WIN achievement SBT
+            // Note: This would require the contract to have ISSUER_ROLE on IdentitySBT
+            try identitySBT.issue(winnerAddress, ACHIEVEMENT_FIRST_WIN, keccak256(abi.encodePacked("FIRST_WIN", winnerAddress, block.timestamp))) {
+                // Achievement issued successfully
+            } catch {
+                // Handle failure silently or emit event
+            }
+        }
+
         emit ChallengeResolved(challengeId, winner);
         emit LeveledUp(winnerToken, newLevel);
     }
@@ -206,13 +246,53 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
     function claimTerritory(uint40 territoryId, uint40 tokenId) external {
         require(territoryId < NUM_TERRITORIES, "Invalid territory");
         require(ownerOf(tokenId) == msg.sender, "Not NFT owner");
+
+        // Check if territory is already claimed and apply reputation bonus
+        Territory memory existingTerritory = territories[territoryId];
+        if (existingTerritory.ownerTokenId != 0) {
+            // Territory is claimed, check cooldown and reputation
+            require(block.timestamp >= existingTerritory.lastClaimed + 24 hours, "Territory claim cooldown");
+
+            // Higher reputation allows claiming from others
+            uint256 claimerRep = identitySBT.weightOf(msg.sender);
+            address currentOwner = ownerOf(existingTerritory.ownerTokenId);
+            uint256 currentRep = identitySBT.weightOf(currentOwner);
+
+            require(claimerRep > currentRep * 1.1e18, "Insufficient reputation to claim occupied territory");
+        }
+
         territories[territoryId] = Territory({ownerTokenId: tokenId, allianceId: allianceOf[tokenId], lastClaimed: uint40(block.timestamp)});
-        // Level up for territory claim
-        levels[tokenId].xp += 50;
+
+        // Level up for territory claim (with reputation bonus)
+        uint256 repBonus = identitySBT.weightOf(msg.sender) / 1e16; // Small XP bonus based on reputation
+        levels[tokenId].xp += 50 + uint32(repBonus);
         uint8 newLevel = OCSHLib.xpToLevel(levels[tokenId].xp);
         levels[tokenId].level = newLevel;
+
+        // Issue achievement for territory master
+        address owner = msg.sender;
+        uint256 ownedTerritories = _countOwnedTerritories(owner);
+        if (ownedTerritories >= 5 && !identitySBT.hasRole(owner, ACHIEVEMENT_TERRITORY_MASTER)) {
+            try identitySBT.issue(owner, ACHIEVEMENT_TERRITORY_MASTER, keccak256(abi.encodePacked("TERRITORY_MASTER", owner, block.timestamp))) {
+                // Achievement issued
+            } catch {
+                // Handle failure
+            }
+        }
+
         emit TerritoryClaimed(territoryId, tokenId, allianceOf[tokenId]);
         emit LeveledUp(tokenId, newLevel);
+    }
+
+    // Helper function to count owned territories
+    function _countOwnedTerritories(address owner) internal view returns (uint256) {
+        uint256 count = 0;
+        for (uint40 i = 0; i < NUM_TERRITORIES; i++) {
+            if (territories[i].ownerTokenId != 0 && ownerOf(territories[i].ownerTokenId) == owner) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // --- Chain Traversal ---
@@ -236,8 +316,77 @@ contract OCSH is ERC721Enumerable, Ownable, AccessControl {
         return (DARKNET_GUIDE_1, DARKNET_GUIDE_2, DARKNET_GUIDE_3);
     }
 
-    // --- Embedded NFT Image ---
-    string private constant IMAGE_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4SU...";
+    // --- SBT Integration Functions ---
+
+    /**
+     * @dev Issue SBT role for game achievements
+     */
+    function issueGameRole(address player, bytes32 role, bytes32 uid) external onlyRole(GAME_ADMIN_ROLE) {
+        identitySBT.issue(player, role, uid);
+    }
+
+    /**
+     * @dev Get enhanced player stats including SBT bonuses
+     */
+    function getPlayerStats(address player) external view returns (
+        uint256 reputation,
+        uint256 ownedTerritories,
+        bool isVeteran,
+        bool isCommander,
+        bool isTrader,
+        uint256[] memory achievements
+    ) {
+        reputation = identitySBT.weightOf(player);
+        ownedTerritories = _countOwnedTerritories(player);
+        isVeteran = identitySBT.hasRole(player, SBT_ROLE_VETERAN);
+        isCommander = identitySBT.hasRole(player, SBT_ROLE_COMMANDER);
+        isTrader = identitySBT.hasRole(player, SBT_ROLE_TRADER);
+
+        // Count achievements
+        uint256 achievementCount = 0;
+        bytes32[] memory allRoles = new bytes32[](3);
+        allRoles[0] = ACHIEVEMENT_FIRST_WIN;
+        allRoles[1] = ACHIEVEMENT_TERRITORY_MASTER;
+        allRoles[2] = ACHIEVEMENT_ALLIANCE_BUILDER;
+
+        for (uint256 i = 0; i < allRoles.length; i++) {
+            if (identitySBT.hasRole(player, allRoles[i])) {
+                achievementCount++;
+            }
+        }
+
+        achievements = new uint256[](achievementCount);
+        uint256 index = 0;
+        for (uint256 i = 0; i < allRoles.length; i++) {
+            if (identitySBT.hasRole(player, allRoles[i])) {
+                achievements[index++] = i;
+            }
+        }
+    }
+
+    /**
+     * @dev Calculate battle power with SBT bonuses
+     */
+    function calculateBattlePower(uint40 tokenId) external view returns (uint256) {
+        address owner = ownerOf(tokenId);
+        uint256 basePower = levels[tokenId].level * 100;
+        uint256 reputation = identitySBT.weightOf(owner);
+
+        // SBT bonuses
+        uint256 sbtMultiplier = 1e18; // 1x base
+
+        if (identitySBT.hasRole(owner, SBT_ROLE_VETERAN)) {
+            sbtMultiplier += 0.2e18; // +20% for veteran
+        }
+        if (identitySBT.hasRole(owner, SBT_ROLE_COMMANDER)) {
+            sbtMultiplier += 0.3e18; // +30% for commander
+        }
+
+        // Reputation bonus (up to +50%)
+        uint256 repBonus = reputation > 5e18 ? 0.5e18 : reputation / 10;
+
+        return (basePower * (sbtMultiplier + repBonus)) / 1e18;
+    }
 
     /**
      * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.

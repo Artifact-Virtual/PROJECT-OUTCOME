@@ -10,6 +10,38 @@ On-Chain Resilience Field Manual
 
 In the evolving digital economy, reliance on the traditional internet infrastructure poses risks. In cases of power outages, cable damage, or grid failures, blockchain networks can endure by finding alternative data transmission routes. This guide provides protocols to maintain transaction flow, even when conventional networks fail.
 
+## 🏷️ Soulbound Identity System
+
+The OCSH ecosystem implements a comprehensive Soulbound Token (SBT) system for identity, reputation, and governance:
+
+### Core Components
+
+- **IdentitySBT Contract**: ERC-5192 compliant non-transferable tokens
+- **Eligibility Contract**: Topic-based governance eligibility checker
+- **Reputation System**: Decay-weighted scoring based on on-chain activity
+- **Role-Based Access**: Hierarchical permissions for game mechanics
+
+### SBT Roles & Benefits
+
+| Role | Requirements | Benefits | Expiry |
+|------|-------------|----------|--------|
+| **VETERAN** | 10+ battles won | +20% battle power | 1 year |
+| **COMMANDER** | Alliance leadership | +30% battle power, alliance creation | 1 year |
+| **TRADER** | 50+ successful trades | Enhanced trading privileges | 1 year |
+
+### Reputation Mechanics
+
+- **Decay Function**: `reputation = initial_weight * e^(-t/τ)` where τ = 90 days
+- **Activity Boost**: Recent on-chain activity increases reputation weight
+- **Governance Power**: Reputation directly influences voting power in governance
+
+### Integration Points
+
+- **Battle System**: SBT roles provide power multipliers
+- **Territory Claims**: Higher reputation enables claiming occupied territories
+- **Alliance Creation**: Commander role required for alliance leadership
+- **Achievement System**: Automatic SBT minting for game milestones
+
 ***
 
 {% hint style="info" %}

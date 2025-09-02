@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
 
 interface Web3State {
   account: string | null;
@@ -6,6 +7,8 @@ interface Web3State {
   isConnected: boolean;
   isLoading: boolean;
   error: string | null;
+  provider: ethers.BrowserProvider | null;
+  signer: ethers.JsonRpcSigner | null;
 }
 
 interface ContractState {
@@ -25,13 +28,15 @@ declare global {
 export function useWeb3() {
   // DEVELOPMENT MODE: Return mock values when Web3 is disabled
   const DEVELOPMENT_MODE = true; // Set to false when ready for Web3 testing
-  
+
   const [web3State, setWeb3State] = useState<Web3State>({
     account: DEVELOPMENT_MODE ? '0xDEV_MODE' : null,
     chainId: DEVELOPMENT_MODE ? 1 : null,
     isConnected: DEVELOPMENT_MODE ? true : false,
     isLoading: false,
     error: null,
+    provider: null,
+    signer: null,
   });
 
   const connectWallet = async () => {
@@ -40,7 +45,7 @@ export function useWeb3() {
       console.log('Development mode: Wallet connection disabled');
       return;
     }
-    
+
     if (!window.ethereum) {
       setWeb3State(prev => ({
         ...prev,
@@ -51,11 +56,14 @@ export function useWeb3() {
 
     try {
       setWeb3State(prev => ({ ...prev, isLoading: true, error: null }));
-      
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
-      
+
       const chainId = await window.ethereum.request({
         method: 'eth_chainId',
       });
@@ -66,12 +74,16 @@ export function useWeb3() {
         isConnected: true,
         isLoading: false,
         error: null,
+        provider,
+        signer,
       });
     } catch (error: any) {
       setWeb3State(prev => ({
         ...prev,
         isLoading: false,
-        error: error.message || 'Failed to connect wallet'
+        error: error.message || 'Failed to connect wallet',
+        provider: null,
+        signer: null,
       }));
     }
   };
@@ -83,6 +95,8 @@ export function useWeb3() {
       isConnected: false,
       isLoading: false,
       error: null,
+      provider: null,
+      signer: null,
     });
   };
 

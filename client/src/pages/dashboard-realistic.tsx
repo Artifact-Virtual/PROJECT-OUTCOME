@@ -14,6 +14,7 @@ import {
 // Removed social-interaction-hub import
 import { StrategicTradingInterface } from "../components/strategic-trading-interface";
 import { NFTGate } from "@/pages/nft-gate";
+import { SBTDisplay } from "@/components/sbt-display";
 import { DigitalArchives } from "@/components/digital-archives";
 
 export default function RealisticDashboard() {
@@ -134,7 +135,8 @@ export default function RealisticDashboard() {
               <div className="lg:col-span-2">
                 <RealisticPlayerStatus />
               </div>
-              <div>
+              <div className="space-y-6">
+                <SBTDisplay />
                 <RealisticLeaderboard />
               </div>
             </div>

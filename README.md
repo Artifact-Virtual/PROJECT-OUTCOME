@@ -28,6 +28,17 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 </details>
 
 <details>
+   <summary><strong>Soulbound Identity System (SBT)</strong></summary>
+
+- 🏷️ **Non-Transferable Identity Tokens**: ERC-5192 compliant SBTs proving roles and achievements
+- 🎖️ **Role-Based Access Control**: Veteran, Commander, Trader roles with game mechanics integration
+- 📊 **Reputation System**: Decay-weighted reputation scores influencing gameplay
+- 🏆 **Achievement System**: Automatic SBT minting for milestones (First Win, Territory Master, Alliance Builder)
+- ⚖️ **Governance Eligibility**: Topic-based voting power based on SBT roles and reputation
+- 🔐 **EAS Integration**: Ethereum Attestation Service for verifiable credentials
+</details>
+
+<details>
    <summary><strong>Deterministic Battle System</strong></summary>
 
 - 🧮 **Pure Aggregate Calculation**: Higher total power always wins—no randomness
@@ -35,6 +46,7 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 - 🗺️ **Territory Mathematics**: Holdings create exponential power advantages
 - 🏰 **Strategic Positioning**: Border/central bonuses, predictable outcomes
 - 🏆 **Power Rankings**: Real-time leaderboards
+- ⚔️ **SBT Battle Bonuses**: Role-based power multipliers (Veteran +20%, Commander +30%)
 </details>
 
 <details>
@@ -83,6 +95,8 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 | **Backend**  | Node.js, Express, TypeScript, PostgreSQL, Drizzle ORM, WebSocket Server, PostgreSQL-backed sessions |
 | **Database** | Modular schema (users, alliances, territories, battles, messages), Zod validation, Drizzle-kit migrations |
 | **Game Logic** | Pure math-based deterministic outcomes, alliance/territory scaling, zero randomness |
+| **Smart Contracts** | Solidity 0.8.21, OpenZeppelin, Hardhat, Ethers.js v6, ERC-721/ERC-5192 SBTs |
+| **Identity System** | Soulbound Tokens (ERC-5192), Ethereum Attestation Service (EAS), decay-weighted reputation |
 
 ---
 
@@ -92,6 +106,7 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 
 - [Node.js 18+](https://nodejs.org/)
 - [PostgreSQL](https://www.postgresql.org/)
+- [Ganache](https://trufflesuite.com/ganache/) or [Hardhat](https://hardhat.org/) for local blockchain
 - MetaMask or compatible Web3 wallet
 
 ### Installation
@@ -102,6 +117,19 @@ npm install
 
 # Set up database
 npm run db:push
+
+# Compile smart contracts
+npm run compile
+
+# Start local blockchain (choose one)
+npm run node:ganache    # Ganache on port 8545
+# OR
+npm run node:hardhat    # Hardhat on port 8545
+
+# Deploy contracts to local blockchain
+npm run deploy:ganache  # For Ganache
+# OR
+npm run deploy:testnet  # For Hardhat
 
 # Start development server
 npm run dev
@@ -116,7 +144,30 @@ PGPORT=5432
 PGUSER=username
 PGPASSWORD=password
 PGDATABASE=database_name
+
+# Blockchain Configuration
+GANACHE_RPC_URL=http://127.0.0.1:8545
+HARDHAT_RPC_URL=http://127.0.0.1:8545
+PRIVATE_KEY=your_private_key_here
 ```
+
+### Smart Contract Deployment
+
+The deployment scripts will automatically:
+
+1. Deploy EAS mock contract for local testing
+2. Deploy IdentitySBT contract with role configurations
+3. Deploy Eligibility contract for governance
+4. Deploy OCSH main contract with SBT integration
+5. Grant necessary permissions between contracts
+6. Save deployment addresses to `deployment-ganache.json`
+
+### SBT Role Configuration
+
+Default roles are automatically configured:
+- **VETERAN**: +20% battle power, 1-year expiry
+- **COMMANDER**: +30% battle power, alliance creation, 1-year expiry  
+- **TRADER**: Enhanced trading privileges, 1-year expiry
 
 ---
 
