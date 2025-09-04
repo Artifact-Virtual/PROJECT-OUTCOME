@@ -1,5 +1,6 @@
 // Isolated CommonJS Hardhat config for test runs
 require('@nomicfoundation/hardhat-toolbox');
+require('@openzeppelin/hardhat-upgrades');
 const path = require('path');
 
 /** @type {import('hardhat/config').HardhatUserConfig} */

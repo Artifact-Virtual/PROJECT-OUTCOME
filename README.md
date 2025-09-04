@@ -21,7 +21,7 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 
 - Hand-to-Hand Bribes (on-chain, opt-in): New BribeEscrow contract supports ETH, ERC20, and ERC721 “offers” that recipients can accept or decline. No global in-app notification is sent; offers are visible to the recipient UI only (still transparent on-chain).
 - Alliance visuals client-only: Alliance emblem/color/description remain frontend-defined; no on-chain storage to keep gas low and let communities theme freely.
-- Docs refresh: Gameplay guide, on-chain manual, and security posture updated for the new mechanics.
+
 
 
 ### Web3 Authentication & NFT Gating
