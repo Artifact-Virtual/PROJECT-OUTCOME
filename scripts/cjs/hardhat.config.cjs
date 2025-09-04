@@ -11,8 +11,14 @@ module.exports = {
     },
   },
   paths: {
-  artifacts: path.resolve(__dirname, '..', '..', 'artifacts'),
-  tests: path.resolve(__dirname, '..', '..', 'build-tests', 'test')
+    // Treat the repo root as the Hardhat project root even though this config is nested
+    root: path.resolve(__dirname, '..', '..'),
+    // Ensure sources point to the repo root 'contracts'
+    sources: path.resolve(__dirname, '..', '..', 'contracts'),
+    artifacts: path.resolve(__dirname, '..', '..', 'artifacts'),
+    // Use a dedicated cache folder for this isolated config to avoid cross-config interference
+    cache: path.resolve(__dirname, '..', '..', 'cache-cjs'),
+    tests: path.resolve(__dirname, '..', '..', 'build-tests', 'test')
   },
   networks: {
     hardhat: { type: 'edr-simulated' },

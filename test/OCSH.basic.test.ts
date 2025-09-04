@@ -15,7 +15,6 @@ describe("OCSH Contract - Basic Tests", function () {
     [owner, player1, player2] = await ethers.getSigners();
 
     // Deploy mock SBT and OCSH using named factories
-    await hardhat.run("compile");
     let mockSbtArtifact;
     try {
       mockSbtArtifact = await hardhat.artifacts.readArtifact("MockIdentitySBT");

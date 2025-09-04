@@ -23,7 +23,6 @@ describe("OCSH Edge Cases & Integration Tests", function () {
         owner = signers[0];
         players = signers.slice(1, 11); // Get 10 players for testing
         // Deploy mock SBT and OCSH
-        await hardhat_1.default.run("compile");
         let mockSbtArtifact;
         try {
             mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("MockIdentitySBT");

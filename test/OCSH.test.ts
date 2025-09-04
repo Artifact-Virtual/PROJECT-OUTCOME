@@ -16,7 +16,7 @@ describe("OCSH NFT Game Contract", function () {
     [owner, player1, player2, player3] = await ethers.getSigners();
 
     // Deploy mock SBT and OCSH
-  await hardhat.run("compile");
+  // artifacts are expected to be compiled before tests via npm scripts
     let mockSbtArtifact: any;
     try {
   mockSbtArtifact = await hardhat.artifacts.readArtifact("MockIdentitySBT");

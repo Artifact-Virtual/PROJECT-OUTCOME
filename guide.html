@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OCSH — Onchain Survival Chain — Game Guide</title>
+  <meta name="description" content="OCSH Game Guide — territory control, battles, alliances, progression, trading and more." />
+  <style>
+    :root{
+      --bg:#071014;
+      --panel:#0f1720;
+      --muted:#9aa6b2;
+      --accent:#ff8a33;
+      --accent-2:#7be0b9;
+      --glass: rgba(255,255,255,0.03);
+      --code-bg: #0b1220;
+      --max-width:1100px;
+      --radius:12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      color-scheme: dark;
+    }
+
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #041018 60%);font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    .wrap{max-width:var(--max-width);margin:36px auto;padding:28px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow: 0 8px 40px rgba(0,0,0,0.6);display:grid;grid-template-columns:260px 1fr;gap:20px;}
+    header.site-header{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ff5e5e);display:flex;align-items:center;justify-content:center;font-weight:800;color:#081018;box-shadow:0 6px 18px rgba(255,138,51,0.12)}
+    .title{color:#fff}
+    .title h1{margin:0;font-size:20px;letter-spacing:0.4px}
+    .title p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+
+    nav.toc{background:linear-gradient(180deg,var(--panel), rgba(255,255,255,0.01));padding:16px;border-radius:12px;height:calc(100% - 12px);overflow:auto;border:1px solid rgba(255,255,255,0.03)}
+    nav.toc h3{margin:0 0 8px;color:var(--accent-2);font-size:13px}
+    nav.toc ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+    nav.toc a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px;display:block;font-size:14px}
+    nav.toc a:hover{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#fff}
+
+    main.guide{padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border-radius:12px;min-height:480px;overflow:auto;border:1px solid rgba(255,255,255,0.03)}
+    main h2{color:var(--accent);margin-top:6px}
+    main h3{color:var(--accent-2);margin-top:12px}
+    .lead{color:var(--muted);margin-bottom:18px}
+    .section{margin-bottom:18px;padding:14px;background:var(--glass);border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .full{grid-column:1/-1}
+    .code{background:var(--code-bg);padding:12px;border-radius:8px;color:#d9e6f2;font-family:var(--mono);font-size:13px;overflow:auto;border:1px solid rgba(255,255,255,0.02)}
+    pre{margin:0;white-space:pre-wrap}
+    .meta{display:flex;gap:12px;color:var(--muted);font-size:13px}
+    .pill{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px}
+    .footer{grid-column:1/-1;border-top:1px dashed rgba(255,255,255,0.03);padding-top:12px;margin-top:12px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center}
+
+    button.theme-toggle{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer}
+    @media (max-width:900px){.wrap{grid-template-columns:1fr; padding:18px} nav.toc{order:2;height:auto} .grid{grid-template-columns:1fr} .logo{width:52px;height:52px}}
+
+    /* simple syntax-like highlighting for code blocks */
+    .tok-key{color:#7bdff1}
+    .tok-fn{color:#ffd580}
+    .tok-num{color:#9ad07f}
+    .tok-str{color:#ffb2c5}
+    .tok-comment{color:#50626e;font-style:italic}
+    .kw{color:#ffc58f}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <header class="site-header">
+      <div class="logo">OCSH</div>
+      <div class="title">
+        <h1>Onchain Survival Chain — Game Guide</h1>
+        <p class="lead">Territory control · Battles · Alliances · Reputation · Trading</p>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <button class="theme-toggle" id="toggle">Toggle Theme</button>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Contents">
+      <h3>Contents</h3>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#getting-started">Getting Started</a></li>
+        <li><a href="#territory">Territory Control</a></li>
+        <li><a href="#battle">Battle System</a></li>
+        <li><a href="#alliance">Alliance System</a></li>
+        <li><a href="#progression">Progression</a></li>
+        <li><a href="#communication">Communication</a></li>
+        <li><a href="#trading">Trading</a></li>
+        <li><a href="#win">How to Win</a></li>
+        <li><a href="#tips">Strategic Tips</a></li>
+        <li><a href="#offline">Offline Features</a></li>
+        <li><a href="#core-loop">Core Game Loop</a></li>
+        <li><a href="#metrics">Success Metrics</a></li>
+      </ul>
+    </nav>
+
+    <main class="guide">
+      <section id="overview" class="section">
+        <h2>🎮 Game Overview</h2>
+        <p class="lead">OCSH is a blockchain-based survival strategy game. Players control NFT characters to battle, claim territories, form alliances and build reputation via SBTs (soulbound tokens).</p>
+      </section>
+
+      <section id="getting-started" class="section">
+        <h2>🚀 Getting Started</h2>
+        <div class="grid">
+          <div>
+            <h3>Minting Your Character</h3>
+            <p>Each player receives an NFT character token when joining. Tokens are linked in an on-chain chain (each references the previous). Characters have level, XP and reputation.</p>
+          </div>
+          <div>
+            <h3>Understanding Core Mechanics</h3>
+            <ul>
+              <li><strong>Reputation System</strong>: Tracks achievements via SBTs.</li>
+              <li><strong>Leveling</strong>: Gain XP through battles, claims and achievements.</li>
+              <li><strong>Anti-Spam</strong>: Messaging cooldowns and fees.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="territory" class="section">
+        <h2>🏰 Territory Control System</h2>
+        <div class="grid">
+          <div class="full">
+            <h3>How Territories Work</h3>
+            <p>10 territories (0–9). Claim using your NFT token. Claims grant XP and territory associates with your alliance when applicable. 24-hour cooldown before reclaim.</p>
+          </div>
+
+          <div>
+            <h3>Claiming Territory</h3>
+            <pre class="code"><code><span class="tok-comment">// Solidity</span>
+<span class="tok-key">claimTerritory</span>(territoryId, tokenId)</code></pre>
+            <p class="meta"><span class="pill">Requires ownership</span><span class="pill">+50 XP base</span></p>
+          </div>
+
+          <div>
+            <h3>Territory Takeover</h3>
+            <p>Reputation-based: attacker must have ≥110% of current owner's reputation. 24-hour cooldown applies before takeover attempts.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="battle" class="section">
+        <h2>⚔️ Battle System</h2>
+        <p>Battles use a two-phase model: on-chain quick challenges and an off-chain advanced engine for complex territorial engagements.</p>
+
+        <h3>Phase 1: Challenge System (On-Chain)</h3>
+        <pre class="code"><code><span class="tok-comment">// Solidity</span>
+<span class="tok-key">issueChallenge</span>(challengerToken, opponentToken)
+<span class="tok-key">acceptChallenge</span>(challengeId)</code></pre>
+        <p>Random resolution using block randomness, winner gains +100 XP. First win grants FIRST_WIN SBT.</p>
+
+        <h3>Phase 2: Advanced Battle Engine (Off-Chain)</h3>
+        <p>More detailed calculation including base power, SBT bonuses, reputation and territorial advantages. The engine runs off-chain for complex simulations and syncs final outcomes on-chain.</p>
+
+        <h3>Battle Power Calculation</h3>
+        <pre class="code"><code>Total Power = (Base Power × SBT Multipliers + Reputation Bonus) / 1e18</code></pre>
+        <p>Base Power = Level × 100. Randomness still influences outcome; higher power increases win probability. Defenders and allied adjacent territories gain bonuses.</p>
+      </section>
+
+      <section id="alliance" class="section">
+        <h2>🤝 Alliance System</h2>
+        <div class="grid">
+          <div>
+            <h3>Creating Alliances</h3>
+            <pre class="code"><code><span class="tok-comment">// Solidity</span>
+<span class="tok-key">createAlliance</span>(memberTokenIds[])</code></pre>
+            <p>Requires COMMANDER SBT role. Creator becomes leader with ALLIANCE_LEADER_ROLE.</p>
+          </div>
+          <div>
+            <h3>Joining Alliances</h3>
+            <pre class="code"><code><span class="tok-comment">// Solidity</span>
+<span class="tok-key">joinAlliance</span>(allianceId, tokenId)</code></pre>
+            <p>Alliances are open to join. Allied territories grant intersupport and combat bonuses.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="progression" class="section">
+        <h2>📈 Progression System</h2>
+        <div class="grid">
+          <div>
+            <h3>Experience Points (XP)</h3>
+            <ul>
+              <li>Battle Wins: +100 XP</li>
+              <li>Territory Claims: +50 XP (+rep bonuses)</li>
+              <li>Achievements: Various XP rewards</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Reputation & SBTs</h3>
+            <p>Soulbound Tokens are non-transferable and confer permanent role bonuses (VETERAN +20%, COMMANDER +30%, TRADER features).</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="communication" class="section">
+        <h2>💬 Communication System</h2>
+        <pre class="code"><code><span class="tok-comment">// Solidity</span>
+<span class="tok-key">sendMessage</span>(tokenId, "message")</code></pre>
+        <p>10-block cooldown between messages, dynamic fee structure starting small, messages capped at 64 characters and tied to character tokens.</p>
+      </section>
+
+      <section id="trading" class="section">
+        <h2>🔄 Trading System</h2>
+        <div class="grid">
+          <div>
+            <h3>Token Trading</h3>
+            <pre class="code"><code><span class="tok-comment">// Solidity</span>
+<span class="tok-key">proposeTrade</span>(fromToken, toToken)
+<span class="tok-key">acceptTrade</span>(fromToken, toToken)</code></pre>
+            <p>Atomic swaps of NFT characters via proposal/accept pattern.</p>
+          </div>
+
+          <div>
+            <h3>Hand-to-Hand Bribes</h3>
+            <pre class="code"><code><span class="tok-comment">/* Contract: BribeEscrow (on-chain)
+Assets: ETH, ERC20, ERC721
+Flow: Sender -> create offer; Recipient -> accept/decline; Sender can cancel while pending */</span></code></pre>
+            <p>Offers are discreet (not broadcast in global channels), enabling private diplomacy and roleplay mechanics.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="win" class="section">
+        <h2>🏆 How to Win</h2>
+        <p>Multiple routes to dominance: territorial control, alliance leadership, combat mastery, reputation leadership, and strategic control of key territories.</p>
+
+        <h3>Losing Scenarios</h3>
+        <ul>
+          <li>Territory loss to higher-reputation players</li>
+          <li>Battle defeats (no XP)</li>
+          <li>Alliance collapse</li>
+          <li>Reputation decline</li>
+        </ul>
+      </section>
+
+      <section id="tips" class="section">
+        <h2>🛡️ Strategic Tips</h2>
+        <h3>Early Game</h3>
+        <ol>
+          <li>Claim territory fast</li>
+          <li>Engage in battles for XP</li>
+          <li>Use messaging wisely</li>
+          <li>Aim for Commander role</li>
+        </ol>
+        <h3>Mid / Late Game</h3>
+        <p>Form alliances, focus reputation and control adjacent territories to create defensive networks and coordinated attacks.</p>
+      </section>
+
+      <section id="offline" class="section">
+        <h2>🌐 Offline / Resilient Features</h2>
+        <p>Mesh networks, SMS transactions, sneakernet (USB), ham radio and satellite relays allow resilient transaction relay in degraded networks.</p>
+      </section>
+
+      <section id="core-loop" class="section">
+        <h2>🎯 Core Game Loop</h2>
+        <p>Mint → Claim → XP → Battle → Level → Reputation → Alliances → Territory → Repeat.</p>
+      </section>
+
+      <section id="metrics" class="section">
+        <h2>📊 Success Metrics</h2>
+        <ul>
+          <li>Territory Count</li>
+          <li>Alliance Size</li>
+          <li>Battle Record</li>
+          <li>Reputation Score</li>
+          <li>Achievement SBTs</li>
+          <li>Character Level</li>
+        </ul>
+      </section>
+
+      <div class="footer">
+        <div>Guide generated from GAME_GUIDE.md</div>
+        <div style="opacity:0.8">OCSH — Onchain Survival Chain</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // small enhancements: smooth scroll and theme toggle
+    document.documentElement.style.scrollBehavior = 'smooth';
+    document.getElementById('toggle').addEventListener('click', () => {
+      const root = document.documentElement;
+      if(root.style.getPropertyValue('--bg') === '#071014'){
+        root.style.setProperty('--bg','#f7f9fb');
+        root.style.setProperty('--panel','#ffffff');
+        root.style.setProperty('--muted','#4a5566');
+        root.style.setProperty('--accent','#ff6b2d');
+        root.style.setProperty('--accent-2','#0f9d7a');
+        root.style.setProperty('--glass','rgba(0,0,0,0.03)');
+        root.style.setProperty('--code-bg','#f1f5f9');
+        document.body.style.color = '#071018';
+      } else {
+        root.style.setProperty('--bg','#071014');
+        root.style.setProperty('--panel','#0f1720');
+        root.style.setProperty('--muted','#9aa6b2');
+        root.style.setProperty('--accent','#ff8a33');
+        root.style.setProperty('--accent-2','#7be0b9');
+        root.style.setProperty('--glass','rgba(255,255,255,0.03)');
+        root.style.setProperty('--code-bg','#0b1220');
+        document.body.style.color = '';
+      }
+    });
+
+    // optional: add copy-to-clipboard for code blocks when clicked
+    document.querySelectorAll('.code').forEach(cb => {
+      cb.addEventListener('click', () => {
+        const t = cb.innerText;
+        navigator.clipboard?.writeText(t).then(()=> {
+          cb.style.boxShadow = '0 0 0 3px rgba(123,224,185,0.08)';
+          setTimeout(()=> cb.style.boxShadow = '', 900);
+        }).catch(()=>{/* ignore */});
+      });
+    });
+  </script>
+</body>
+
