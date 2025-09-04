@@ -14,15 +14,22 @@ describe("OCSH NFT Game Contract", function () {
     // Get signers
     [owner, player1, player2, player3] = await ethers.getSigners();
 
-    // Deploy OSCHLib first (if needed as a library)
-    // Note: OCSHLib is used as a library, not deployed separately
+    // Deploy mock SBT and OCSH
+    const MockSBT = await ethers.getContractFactory("MockIdentitySBT");
+    const mockSbt = await MockSBT.deploy();
+    await mockSbt.waitForDeployment();
 
-    // Deploy OCSH contract
-  // Load compiled artifacts directly to avoid HH700 artifact lookup issues
-  const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
-  const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
-  ocsh = (await OCShFactory.deploy()) as unknown as OCSH;
-  await (ocsh as any).waitForDeployment?.();
+    const OCSHFactory = await ethers.getContractFactory("OCSH");
+    ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress())) as unknown as OCSH;
+    await (ocsh as any).waitForDeployment?.();
+
+    // Seed SBT roles/weights used in tests
+    const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
+    const SBT_ROLE_VETERAN = await ocsh.SBT_ROLE_VETERAN();
+    await mockSbt.setRole(owner.address, SBT_ROLE_COMMANDER, true);
+    await mockSbt.setRole(player1.address, SBT_ROLE_COMMANDER, true);
+    await mockSbt.setRole(player1.address, SBT_ROLE_VETERAN, true);
+    await mockSbt.setWeight(player1.address, ethers.parseEther("6"));
   });
 
   describe("Deployment", function () {
@@ -66,7 +73,7 @@ describe("OCSH NFT Game Contract", function () {
       expect(chainLink.timestamp).to.be.greaterThan(0);
     });
 
-    it("Should only allow owner to mint", async function () {
+  it("Should only allow owner to mint", async function () {
       await expect(
         ocsh.connect(player1).mint(player1.address, customData)
       ).to.be.revertedWith("Ownable: caller is not the owner");
@@ -464,12 +471,7 @@ describe("OCSH NFT Game Contract", function () {
     });
   });
 
-  describe("Token URI", function () {
-    it("Should return embedded image data for any token", async function () {
-      const tokenURI = await ocsh.tokenURI(0);
-      expect(tokenURI).to.include("data:image/png;base64");
-    });
-  });
+  // tokenURI embedded image was removed from contract; test removed
 
   // Helper function to mine blocks (for cooldown testing)
   async function mine(blocks: number) {

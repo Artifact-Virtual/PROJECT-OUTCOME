@@ -18,10 +18,18 @@ describe("OCSH Edge Cases & Integration Tests", function () {
         const signers = await ethers.getSigners();
         owner = signers[0];
         players = signers.slice(1, 11); // Get 10 players for testing
-        const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
-        const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
-        ocsh = await OCShFactory.deploy();
-        await ocsh.waitForDeployment();
+        // Deploy mock SBT and OCSH
+        const MockSBT = await ethers.getContractFactory("MockIdentitySBT");
+        const mockSbt = await MockSBT.deploy();
+        await mockSbt.waitForDeployment();
+        const OCSHFactory = await ethers.getContractFactory("OCSH");
+        ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress()));
+        await ocsh.waitForDeployment?.();
+        // Grant commander role to all players for alliance actions
+        const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
+        for (const p of players) {
+            await mockSbt.setRole(p.address, SBT_ROLE_COMMANDER, true);
+        }
         // Mint tokens for all players
         for (let i = 0; i < players.length; i++) {
             await ocsh.mint(players[i].address, ethers.encodeBytes32String(`player${i}`));

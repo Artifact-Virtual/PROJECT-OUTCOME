@@ -10,7 +10,7 @@
     "db:push": "drizzle-kit push",
     "test:mocha-esm": "node --loader ts-node/esm ./node_modules/.bin/mocha --exit 'test/**/*.test.ts'",
     "build-tests": "tsc -p tsconfig.test.json",
-  "test:compiled": "npm run build-tests && npx hardhat test --config scripts/cjs/hardhat.config.cjs --network hardhat build-tests/test/*.js",
+  "test:compiled": "npm run build-tests && npx hardhat test --config scripts/cjs/hardhat.config.cjs --network hardhat",
     "deploy:ganache": "npx hardhat run scripts/deploy-ganache.ts --network ganache",
     "deploy:testnet": "npx hardhat run scripts/deploy-testnet.ts --network hardhat",
     "compile": "npx hardhat compile",

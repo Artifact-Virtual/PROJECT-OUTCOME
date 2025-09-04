@@ -5,13 +5,14 @@ const path = require('path');
 /** @type {import('hardhat/config').HardhatUserConfig} */
 module.exports = {
   solidity: {
-    version: '0.8.21',
+    version: '0.8.22',
     settings: {
       optimizer: { enabled: true, runs: 200 },
     },
   },
   paths: {
-    artifacts: path.resolve(__dirname, '..', '..', 'artifacts')
+  artifacts: path.resolve(__dirname, '..', '..', 'artifacts'),
+  tests: path.resolve(__dirname, '..', '..', 'build-tests', 'test')
   },
   networks: {
     hardhat: { type: 'edr-simulated' },
