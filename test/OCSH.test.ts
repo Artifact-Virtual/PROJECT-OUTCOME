@@ -103,9 +103,11 @@ describe("OCSH NFT Game Contract", function () {
 
       expect(await ocsh.msgCount(0)).to.equal(1);
       
-      const [storedMessage] = await ocsh.messages(0, 0);
-      expect(storedMessage.from).to.equal(player1.address);
-      expect(storedMessage.textHash).to.equal(ethers.keccak256(ethers.toUtf8Bytes(message)));
+    const storedMessage = await ocsh.messages(0, 0);
+    const msgFrom = storedMessage[0];
+    const msgTextHash = storedMessage[1];
+    expect(msgFrom).to.equal(player1.address);
+    expect(msgTextHash).to.equal(ethers.keccak256(ethers.toUtf8Bytes(message)));
     });
 
     it("Should reject insufficient fee", async function () {
@@ -192,10 +194,10 @@ describe("OCSH NFT Game Contract", function () {
       ).to.emit(ocsh, "AllianceCreated")
         .withArgs(0, memberTokens, player1.address);
 
-      const alliance = await ocsh.alliances(0);
-      expect(alliance.exists).to.be.true;
-      expect(alliance.leader).to.equal(player1.address);
-      expect(alliance.members).to.deep.equal(memberTokens);
+  const alliance: any = await ocsh.alliances(0);
+  expect(alliance.exists).to.be.true;
+  expect(alliance.leader).to.equal(player1.address);
+  expect(alliance.members).to.deep.equal(memberTokens);
       
       // Check alliance membership
       expect(await ocsh.allianceOf(0)).to.equal(0);
@@ -223,8 +225,8 @@ describe("OCSH NFT Game Contract", function () {
       expect(await ocsh.allianceOf(2)).to.equal(0);
       
       // Check updated alliance membership
-      const alliance = await ocsh.alliances(0);
-      expect(alliance.members.length).to.equal(3);
+  const alliance: any = await ocsh.alliances(0);
+  expect(alliance.members.length).to.equal(3);
     });
 
     it("Should reject joining non-existent alliance", async function () {

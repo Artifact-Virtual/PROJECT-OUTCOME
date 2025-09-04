@@ -3,7 +3,14 @@ const hardhat = require("hardhat");
 const { ethers } = hardhat;
 import { OCSH } from "../typechain-types";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
-import { time } from "@nomicfoundation/hardhat-toolbox-mocha-ethers/network-helpers";
+
+// Local helper: simple time advance wrapper when network-helpers is unavailable
+const time = {
+  async increase(seconds: number) {
+    await ethers.provider.send("evm_increaseTime", [seconds]);
+    await ethers.provider.send("evm_mine", []);
+  }
+};
 
 describe("OCSH Edge Cases & Integration Tests", function () {
   let ocsh: OCSH;
@@ -36,8 +43,8 @@ describe("OCSH Edge Cases & Integration Tests", function () {
         await ocsh.connect(players[i]).joinAlliance(0, i);
       }
       
-      const alliance = await ocsh.alliances(0);
-      expect(alliance.members.length).to.equal(8);
+  const allianceRaw: any = await ocsh.alliances(0);
+  expect(allianceRaw.members.length).to.equal(8);
       
       // Verify all members are correctly assigned
       for (let i = 0; i < 8; i++) {
@@ -69,7 +76,7 @@ describe("OCSH Edge Cases & Integration Tests", function () {
   describe("Territory Control Race Conditions", function () {
     it("Should handle rapid territory claims", async function () {
       // Multiple players try to claim the same territory rapidly
-      const promises = [];
+  const promises: Promise<any>[] = [];
       
       // Only one should succeed
       promises.push(ocsh.connect(players[0]).claimTerritory(0, 0));
@@ -79,7 +86,7 @@ describe("OCSH Edge Cases & Integration Tests", function () {
       // Wait for all transactions to be mined
       await Promise.allSettled(promises);
       
-      const territory = await ocsh.territories(0);
+  const territory = await ocsh.territories(0);
       // Territory should be claimed by one of the players
       expect([0, 1, 2]).to.include(Number(territory.ownerTokenId));
     });
@@ -180,8 +187,8 @@ describe("OCSH Edge Cases & Integration Tests", function () {
       expect(await ocsh.ownerOf(0)).to.equal(players[1].address);
       expect(await ocsh.ownerOf(1)).to.equal(players[0].address);
       
-      const alliance = await ocsh.alliances(0);
-      expect(alliance.members.length).to.equal(2);
+  const allianceRaw2: any = await ocsh.alliances(0);
+  expect(allianceRaw2.members.length).to.equal(2);
       
       const territory0 = await ocsh.territories(0);
       const territory1 = await ocsh.territories(1);
@@ -270,8 +277,8 @@ describe("OCSH Edge Cases & Integration Tests", function () {
       const endGas = await ethers.provider.getBalance(owner.address);
       
       // Verify operations completed (gas usage is informational)
-      const alliance = await ocsh.alliances(0);
-      expect(alliance.members.length).to.equal(5);
+  const allianceRaw3: any = await ocsh.alliances(0);
+  expect(allianceRaw3.members.length).to.equal(5);
       
       for (let i = 0; i < 5; i++) {
         const territory = await ocsh.territories(i);
