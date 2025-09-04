@@ -75,3 +75,5 @@ Broadcast transactions directly into space using a satellite dish. The satellite
 The true essence of blockchain is independent of the internet; instead, the internet serves as a useful transport layer. If one route fails, a resilient network seeks another path. As long as data can be transferred, value can be transferred.
 {% endhint %}
 
+> Operational note: The hand-to-hand bribe mechanic uses standard Ethereum transactions. In degraded networks, creation/acceptance of bribe offers can be relayed via any of the above protocols (mesh/SMS/USB/ham/satellite), preserving gameplay even during outages.
+

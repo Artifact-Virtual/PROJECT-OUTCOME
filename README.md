@@ -1,9 +1,11 @@
-# PROJECT: OUTCOME 
+# PROJECT: OUTCOME
 
 > **Onchain Survival Handbook - Social Gaming Platform**  
 > *A post-apocalyptic web3 strategy game where alliances, territory, and mathematics rule the wasteland.*
 
+
 [**→ Read the OCS Field Manual**](README-ONCHAIN.md)
+
 ---
 
 ![OCSH Banner](https://user-images.githubusercontent.com/placeholder/ocsh-banner.png)
@@ -14,21 +16,22 @@
 
 OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience deterministic territorial control, alliance-based warfare, and offline blockchain transactions—all wrapped in authentic military-industrial aesthetics for deep, strategic multiplayer gameplay.
 
----
 
-## 🎯 Core Features
+## ✨ What's New (September 2025)
 
-<details>
-   <summary><strong>Web3 Authentication & NFT Gating</strong></summary>
+- Hand-to-Hand Bribes (on-chain, opt-in): New BribeEscrow contract supports ETH, ERC20, and ERC721 “offers” that recipients can accept or decline. No global in-app notification is sent; offers are visible to the recipient UI only (still transparent on-chain).
+- Alliance visuals client-only: Alliance emblem/color/description remain frontend-defined; no on-chain storage to keep gas low and let communities theme freely.
+- Docs refresh: Gameplay guide, on-chain manual, and security posture updated for the new mechanics.
+
+
+### Web3 Authentication & NFT Gating
 
 - 🔑 **MetaMask Integration**: Seamless wallet connection (Base Network support)
 - 🪙 **NFT Minting System**: 1 NFT per wallet, territory selection at mint
 - 🏴 **Automatic Territory Claiming**: Ownership assigned on mint
 - 🚪 **Access Control**: OCSH NFT required for core gameplay
-</details>
 
-<details>
-   <summary><strong>Soulbound Identity System (SBT)</strong></summary>
+### Soulbound Identity System (SBT)
 
 - 🏷️ **Non-Transferable Identity Tokens**: ERC-5192 compliant SBTs proving roles and achievements
 - 🎖️ **Role-Based Access Control**: Veteran, Commander, Trader roles with game mechanics integration
@@ -36,10 +39,8 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 - 🏆 **Achievement System**: Automatic SBT minting for milestones (First Win, Territory Master, Alliance Builder)
 - ⚖️ **Governance Eligibility**: Topic-based voting power based on SBT roles and reputation
 - 🔐 **EAS Integration**: Ethereum Attestation Service for verifiable credentials
-</details>
 
-<details>
-   <summary><strong>Deterministic Battle System</strong></summary>
+### Deterministic Battle System
 
 - 🧮 **Pure Aggregate Calculation**: Higher total power always wins—no randomness
 - 🤝 **Alliance Supremacy**: Member stats sum directly, with coordination bonuses
@@ -47,43 +48,35 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 - 🏰 **Strategic Positioning**: Border/central bonuses, predictable outcomes
 - 🏆 **Power Rankings**: Real-time leaderboards
 - ⚔️ **SBT Battle Bonuses**: Role-based power multipliers (Veteran +20%, Commander +30%)
-</details>
 
-<details>
-   <summary><strong>Alliance & Territory Control</strong></summary>
+### Alliance & Territory Control
 
 - 👑 **Multi-role Alliance System**: Leader/member/invite management
 - ⏳ **24-hour Territory Claims**: Strategic adjacency bonuses
 - 🗺️ **Live Map**: Real-time territory updates
 - 🚚 **Supply Line Advantages**: Logistical multipliers
-</details>
 
-<details>
-   <summary><strong>Trading & Economy System</strong></summary>
+### Trading & Economy System
 
 - 🔄 **25+ Trading API Endpoints**: Full-featured marketplace
 - 💸 **NFT Trading Interface**: Buy, sell, transfer OCSH NFTs
 - 📈 **Real-time Price Feeds**: Live data & charts
 - 📊 **Portfolio Management**: Asset tracking & history
-</details>
+- 🤝 **Hand-to-Hand Bribes (New)**: Offer ETH/tokens/NFTs to another player via on-chain escrow; they must accept or can decline/cancel offers
 
-<details>
-   <summary><strong>Real-time Communication</strong></summary>
+### Real-time Communication
 
 - 🌐 **WebSocket Integration**: Live updates for battles, messages, territory
 - 💬 **Global Messaging**: Anti-spam, cooldowns
 - 🕵️ **Alliance Channels**: Private strategy rooms
 - ⚔️ **Battle Notifications**: Real-time alerts
-</details>
 
-<details>
-   <summary><strong>Offline-First Handheld Interface</strong></summary>
+### Offline-First Handheld Interface
 
 - 🕹️ **BLOKBOY 1000 Terminal**: PWA companion app
 - 📨 **Foundry Courier**: Python CLI for offline transactions
 - 🗃️ **Transaction Queuing**: Batch processing when online
 - 📡 **Frame Encoding**: Radio/mesh/SMS support
-</details>
 
 ---
 
@@ -131,6 +124,9 @@ npm run deploy:ganache  # For Ganache
 # OR
 npm run deploy:testnet  # For Hardhat
 
+# Deploy BribeEscrow (new)
+npx hardhat run scripts/deploy-bribe-escrow.ts --network hardhat
+
 # Start development server
 npm run dev
 ```
@@ -161,10 +157,12 @@ The deployment scripts will automatically:
 4. Deploy OCSH main contract with SBT integration
 5. Grant necessary permissions between contracts
 6. Save deployment addresses to `deployment-ganache.json`
+7. Deploy `BribeEscrow` and record its address for the client
 
 ### SBT Role Configuration
 
 Default roles are automatically configured:
+
 - **VETERAN**: +20% battle power, 1-year expiry
 - **COMMANDER**: +30% battle power, alliance creation, 1-year expiry  
 - **TRADER**: Enhanced trading privileges, 1-year expiry
@@ -173,18 +171,15 @@ Default roles are automatically configured:
 
 ## 📡 API Documentation
 
-<details>
-   <summary><strong>Authentication</strong></summary>
+### Authentication
 
 ```http
 POST   /api/auth/login           # User login
 POST   /api/auth/logout          # User logout  
 GET    /api/auth/session         # Get current session
 ```
-</details>
 
-<details>
-   <summary><strong>User Management</strong></summary>
+### User Management
 
 ```http
 GET    /api/users                # Get all users
@@ -193,10 +188,8 @@ GET    /api/users/:id            # Get user by ID
 PATCH  /api/users/:id            # Update user
 GET    /api/users/:id/alliance   # Get user's alliance
 ```
-</details>
 
-<details>
-   <summary><strong>Alliance System</strong></summary>
+### Alliance System
 
 ```http
 GET    /api/alliances                    # Get all alliances
@@ -209,20 +202,16 @@ GET    /api/alliances/power-rankings     # Alliance power leaderboard
 GET    /api/alliances/:id/power          # Detailed alliance power breakdown
 POST   /api/alliances/battle-prediction  # Predict battle outcome
 ```
-</details>
 
-<details>
-   <summary><strong>Territory Control</strong></summary>
+### Territory Control
 
 ```http
 GET    /api/territories             # Get all territories
 POST   /api/territories/claim       # Claim territory
 GET    /api/territories/user/:id    # Get user territories
 ```
-</details>
 
-<details>
-   <summary><strong>Battle System</strong></summary>
+### Battle System
 
 ```http
 GET    /api/battles                 # Get user battles
@@ -231,10 +220,8 @@ GET    /api/battles/:id             # Get battle details
 POST   /api/battles/:id/resolve     # Resolve battle
 GET    /api/users/:id/battles       # Get user battle history
 ```
-</details>
 
-<details>
-   <summary><strong>Trading Platform</strong></summary>
+### Trading Platform
 
 ```http
 GET    /api/nft/marketplace         # Get marketplace listings
@@ -244,26 +231,21 @@ POST   /api/nft/buy                 # Purchase NFT
 POST   /api/nft/transfer            # Transfer NFT
 GET    /api/nft/history/:tokenId    # NFT transaction history
 ```
-</details>
 
-<details>
-   <summary><strong>Communication</strong></summary>
+### Communication
 
 ```http
 GET    /api/messages/global         # Get global messages
 POST   /api/messages                # Send message
 GET    /api/messages/alliance/:id   # Get alliance messages
 ```
-</details>
 
-<details>
-   <summary><strong>Leaderboards</strong></summary>
+### Leaderboards
 
 ```http
 GET    /api/leaderboard             # Player rankings
 GET    /api/leaderboard/alliances   # Alliance rankings
 ```
-</details>
 
 ---
 
@@ -275,10 +257,10 @@ Battles are resolved using pure mathematical calculations:
 
 | Component             | Calculation Details                                                                 |
 |-----------------------|------------------------------------------------------------------------------------|
-| **Individual Power**  | Base Level × 50<br>√(XP) × 2<br>Reputation × 5<br>Win Ratio × 200                 |
-| **Alliance Power**    | Sum of all member levels × 40<br>√(Total XP) + Total Reputation × 3<br>Member count multiplier (1 + count × 0.1)<br>Coordination bonus from collective wins × 2 |
-| **Territory Power**   | Personal territories × 40<br>Adjacent allied territories × 25<br>Logistical advantage for 3+ territories × 10<br>Defensive bonus (+80 for defenders) |
-| **Strategic Position**| Border territory bonus (+30)<br>Central territory bonus (+20)                     |
+| **Individual Power**  | Base Level × 50; √(XP) × 2; Reputation × 5; Win Ratio × 200 |
+| **Alliance Power**    | Sum of all member levels × 40; √(Total XP) + Total Reputation × 3; Member count multiplier (1 + count × 0.1); Coordination bonus from collective wins × 2 |
+| **Territory Power**   | Personal territories × 40; Adjacent allied territories × 25; Logistical advantage for 3+ territories × 10; Defensive bonus (+80 for defenders) |
+| **Strategic Position**| Border territory bonus (+30); Central territory bonus (+20) |
 
 > **Winner:** The participant with higher total aggregate power always wins.
 
@@ -299,6 +281,34 @@ Battles are resolved using pure mathematical calculations:
 - **Territory Selection:** Strategic choice at mint
 - **Market Dynamics:** Player-driven economy
 - **Scarcity Value:** Limited NFTs = genuine ownership
+
+---
+
+### 🫱🏻‍🫲 Hand-to-Hand Bribes (New)
+
+- Contract: `BribeEscrow` (on-chain)
+- Asset types: ETH, ERC20, ERC721
+- Flow: Sender creates an offer → recipient accepts (funds/NFT transfer) or declines (refund to sender) → sender can cancel if still pending
+- Visibility: The app does not broadcast offers in global channels; however, all transactions remain visible on-chain
+- Use cases: Side payments for ceasefires, allegiance shifts, recruitment incentives, tribute, reparations
+
+Ethers v6 examples:
+
+```ts
+const escrow = new Contract(escrowAddress, abi, signer);
+// Offer 0.1 ETH
+await (await escrow.createEthBribe(recipient, { value: parseEther("0.1") })).wait();
+// Recipient
+await (await escrow.acceptBribe(offerId)).wait(); // or declineBribe/cancelBribe
+```
+
+Game impact:
+
+- Diplomacy at speed: Players can quickly propose incentives without public fanfare
+- Roleplay lever: Accept/decline conveys inclination; leaders can test loyalties
+- Still fair: On-chain transparency ensures post-hoc auditability
+
+See also: `client/integration.md` for frontend wiring and UX notes, and `docs/SECURITY.md` for the bribe escrow threat model.
 
 ---
 
@@ -331,6 +341,7 @@ Battles are resolved using pure mathematical calculations:
 - **realistic-wasteland.tsx**: Core UI component library
 - **battle-engine.ts**: Deterministic combat calculations
 - **alliance-power-calculator.ts**: Alliance strength mathematics
+- **BribeEscrow.sol**: On-chain bribe offers (ETH/ERC20/ERC721) with accept/decline/cancel
 
 ### 🗄️ Database Schema
 
@@ -361,6 +372,13 @@ npm run build
 # Start production server
 npm start
 ```
+
+
+### Client wiring for BribeEscrow
+
+- Store the deployed `BribeEscrow` address in your client env and initialize a contract instance
+- Add a simple “Offers” inbox UI that only the recipient sees (no global broadcast)
+- Optionally index `BribeCreated` events off-chain to display pending offers without full-chain scans
 
 ---
 
@@ -396,5 +414,3 @@ npm run db:migrate
 ---
 
 > *"In the wasteland, only the strongest alliances survive. Mathematics, not luck, determines who controls the territories."*
-
----

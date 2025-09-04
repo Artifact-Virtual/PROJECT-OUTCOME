@@ -16,7 +16,9 @@ Core Services:
 Battle Engine: Calculates power and outcomes of battles
 Marketplace: Handles trading of items
 Courier Service: Manages offline transaction encoding/decoding
+
 # BribeEscrow integration (hand-to-hand bribes)
+
 Database Schema
 Key tables in the PostgreSQL database include:
 Users: Store user information

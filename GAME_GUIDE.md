@@ -153,6 +153,22 @@ acceptTrade(fromToken, toToken)
 - **Proposal System**: Must propose before accepting
 - **Strategic Value**: Trade characters with different levels/positions
 
+### **Hand-to-Hand Bribes (New)**
+
+Bribes are simple offers that must be accepted by the recipient before funds/NFTs move. They enable discreet diplomacy without global notifications.
+
+```text
+Contract: BribeEscrow (on-chain)
+Assets: ETH, ERC20, ERC721
+Flow: Sender -> create offer; Recipient -> accept or decline; Sender can cancel while pending
+Visibility: Offers are not broadcast in global channels; transactions are still on-chain
+```
+
+Gameplay impact:
+- "Under the table" diplomacy: Reward ceasefires, recruit members, offer tribute
+- Social signaling: Accept/decline communicates inclination and loyalty
+- Roleplay depth: Leaders can nudge outcomes without explicit declarations
+
 ## 🏆 How to Win
 
 ### **Victory Conditions**
