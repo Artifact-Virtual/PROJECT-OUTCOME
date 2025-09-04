@@ -12,6 +12,8 @@
     "build-tests": "tsc -p tsconfig.test.json",
     "test:compiled": "npm run build-tests && npx hardhat compile --config scripts/cjs/hardhat.config.cjs && npx hardhat test --config scripts/cjs/hardhat.config.cjs --network hardhat",
     "deploy:ganache": "npx hardhat run scripts/deploy-ganache.ts --network ganache",
+    "deploy:proxy": "npx hardhat run scripts/deploy-proxy.js --network hardhat",
+    "upgrade:proxy": "npx hardhat run scripts/upgrade-proxy.js --network hardhat",
     "deploy:testnet": "npx hardhat run scripts/deploy-testnet.ts --network hardhat",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
