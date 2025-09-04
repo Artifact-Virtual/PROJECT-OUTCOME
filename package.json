@@ -1,5 +1,8 @@
 {
-  "  "scripts": {
+  "name": "ocsh-blockchain-game",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
@@ -12,26 +15,16 @@
     "deploy:testnet": "npx hardhat run scripts/deploy-testnet.ts --network hardhat",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
+    "test:e2e": "npx hardhat run scripts/comprehensive-e2e-test.ts --network hardhat",
     "node:ganache": "npx ganache --port 8545 --deterministic",
     "node:hardhat": "npx hardhat node"
-  },st-express",
-  "version": "1.0.0",
-  "type": "module",
-  "license": "MIT",
-  "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "NODE_ENV=production node dist/index.js",
-    "check": "tsc",
-    "db:push": "drizzle-kit push",
-  "test:mocha-esm": "node --loader ts-node/esm ./node_modules/.bin/mocha --exit 'test/**/*.test.ts'",
-  "build-tests": "tsc -p tsconfig.test.json",
-  "test:compiled": "npm run build-tests && npx hardhat test --config scripts/cjs/hardhat.config.cjs --network hardhat build-tests/**/*.test.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
+    "@prb/math": "^4.1.0",
     "@radix-ui/react-accordion": "^1.2.4",
     "@radix-ui/react-alert-dialog": "^1.1.7",
     "@radix-ui/react-aspect-ratio": "^1.1.3",
@@ -102,7 +95,8 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.1.0",
     "@nomicfoundation/hardhat-toolbox": "6.1.0",
     "@nomicfoundation/hardhat-verify": "^2.1.1",
-    "@openzeppelin/contracts": "5.4.0",
+    "@openzeppelin/contracts": "^5.4.0",
+    "@openzeppelin/hardhat-upgrades": "^3.9.1",
     "@replit/vite-plugin-cartographer": "^0.2.8",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
     "@tailwindcss/typography": "^0.5.15",

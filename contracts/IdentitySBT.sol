@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.22;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@prb/math/src/UD60x18.sol";
 import { wrap, unwrap } from "@prb/math/src/ud60x18/Casting.sol";
 import { exp } from "@prb/math/src/ud60x18/Math.sol";
@@ -34,7 +34,7 @@ contract ARC_IdentitySBT is
     ERC721Upgradeable
 {
     // using UD60x18 for uint256;
-    using ECDSAUpgradeable for bytes32;
+    using ECDSA for bytes32;
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant ISSUER_ROLE = keccak256("ISSUER_ROLE");
@@ -65,13 +65,13 @@ contract ARC_IdentitySBT is
     address public safeExecutor;
     address public eas;
 
-    uint64 public epochSeconds = 86400;      // 1 day
-    uint32 public maxIssuesPerEpoch = 50;
-    uint256 public maxRolesPerAddress = 16;
+    uint64 public epochSeconds;      // 1 day
+    uint32 public maxIssuesPerEpoch;
+    uint256 public maxRolesPerAddress;
 
     // Decay parameters (90 days, 25% floor)
-    uint256 public decay_T_seconds = 7776000;  // 90 days
-    uint256 public decay_floorWad = 0.25e18;   // 25%
+    uint256 public decay_T_seconds;  // 90 days
+    uint256 public decay_floorWad;   // 25%
 
     // Role data
     struct RoleRec {
@@ -132,6 +132,13 @@ contract ARC_IdentitySBT is
         safeExecutor = _safeExecutor;
         eas = _eas;
         schemaId_IdentityRole = _schemaId;
+
+        // Initialize configuration values
+        epochSeconds = 86400;      // 1 day
+        maxIssuesPerEpoch = 50;
+        maxRolesPerAddress = 16;
+        decay_T_seconds = 7776000;  // 90 days
+        decay_floorWad = 0.25e18;   // 25%
 
         // Initialize default role configurations
         _initializeDefaultRoles();
@@ -475,12 +482,16 @@ contract ARC_IdentitySBT is
     /**
      * @dev Override transfers to prevent them
      */
-    function _transfer(
-        address from,
+    function _update(
         address to,
-        uint256 tokenId
-    ) internal pure override {
-        revert TransferDisabled();
+        uint256 tokenId,
+        address auth
+    ) internal override returns (address) {
+        address from = _ownerOf(tokenId);
+        if (from != address(0) && to != address(0)) {
+            revert TransferDisabled();
+        }
+        return super._update(to, tokenId, auth);
     }
 
     /**

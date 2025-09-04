@@ -1,0 +1,123 @@
+{
+  "timestamp": "2025-09-04T07:12:19.890Z",
+  "network": "local",
+  "contracts": {
+    "identitySBT": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "eligibility": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "ocsh": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  },
+  "testResults": {
+    "passed": 24,
+    "failed": 1,
+    "tests": [
+      {
+        "name": "Mint NFT to Player 1",
+        "status": "PASSED"
+      },
+      {
+        "name": "Mint NFT to Player 2",
+        "status": "PASSED"
+      },
+      {
+        "name": "Mint NFT to Player 3",
+        "status": "PASSED"
+      },
+      {
+        "name": "Verify Chain Links",
+        "status": "PASSED"
+      },
+      {
+        "name": "Issue VETERAN role to Player 1",
+        "status": "PASSED"
+      },
+      {
+        "name": "Issue COMMANDER role to Player 2",
+        "status": "PASSED"
+      },
+      {
+        "name": "Issue TRADER role to Player 3",
+        "status": "PASSED"
+      },
+      {
+        "name": "Verify Player Stats with SBT Bonuses",
+        "status": "PASSED"
+      },
+      {
+        "name": "Send Message from Player 1",
+        "status": "PASSED"
+      },
+      {
+        "name": "Test Message Cooldown",
+        "status": "PASSED"
+      },
+      {
+        "name": "Test Message Fee Calculation",
+        "status": "PASSED"
+      },
+      {
+        "name": "Create Alliance (Player 2 as Commander)",
+        "status": "FAILED",
+        "error": "Alliance not created"
+      },
+      {
+        "name": "Join Alliance (Player 1)",
+        "status": "PASSED"
+      },
+      {
+        "name": "Issue Challenge (Player 1 vs Player 3)",
+        "status": "PASSED"
+      },
+      {
+        "name": "Accept and Resolve Challenge",
+        "status": "PASSED"
+      },
+      {
+        "name": "Propose Trade (Player 1 → Player 3)",
+        "status": "PASSED"
+      },
+      {
+        "name": "Accept Trade",
+        "status": "PASSED"
+      },
+      {
+        "name": "Claim Territory (Player 1)",
+        "status": "PASSED"
+      },
+      {
+        "name": "Test Territory Cooldown",
+        "status": "PASSED"
+      },
+      {
+        "name": "Calculate Battle Power with SBT Bonuses",
+        "status": "PASSED"
+      },
+      {
+        "name": "Get Chain History",
+        "status": "PASSED"
+      },
+      {
+        "name": "Retrieve Darknet Guide",
+        "status": "PASSED"
+      },
+      {
+        "name": "Check Achievement SBT Issuance",
+        "status": "PASSED"
+      },
+      {
+        "name": "Test Admin Role Restrictions",
+        "status": "PASSED"
+      },
+      {
+        "name": "Test SBT Role Requirements",
+        "status": "PASSED"
+      }
+    ]
+  },
+  "summary": {
+    "totalTests": 25,
+    "passed": 24,
+    "failed": 1,
+    "successRate": "96.0%"
+  }
+}
