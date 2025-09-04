@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const hardhat_1 = require("hardhat");
+const hardhat = require("hardhat");
+const { ethers } = hardhat;
 describe("OCSH Contract - Basic Tests", function () {
     let ocsh;
     let owner;
@@ -9,9 +10,9 @@ describe("OCSH Contract - Basic Tests", function () {
     let player2;
     beforeEach(async function () {
         // Get signers
-        [owner, player1, player2] = await hardhat_1.ethers.getSigners();
-        // Deploy OCSH contract
-        const OCShFactory = await hardhat_1.ethers.getContractFactory("OCSH");
+        [owner, player1, player2] = await ethers.getSigners();
+        const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
+        const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
         ocsh = await OCShFactory.deploy();
         await ocsh.waitForDeployment();
     });
@@ -24,13 +25,13 @@ describe("OCSH Contract - Basic Tests", function () {
         });
         it("Should set correct constants", async function () {
             (0, chai_1.expect)(await ocsh.MAX_MSG_LEN()).to.equal(64);
-            (0, chai_1.expect)(await ocsh.BASE_MSG_FEE()).to.equal(hardhat_1.ethers.parseEther("0.00001"));
+            (0, chai_1.expect)(await ocsh.BASE_MSG_FEE()).to.equal(ethers.parseEther("0.00001"));
             (0, chai_1.expect)(await ocsh.MSG_COOLDOWN_BLOCKS()).to.equal(10);
             (0, chai_1.expect)(await ocsh.NUM_TERRITORIES()).to.equal(10);
         });
     });
     describe("Minting", function () {
-        const customData = hardhat_1.ethers.encodeBytes32String("test-data");
+        const customData = ethers.encodeBytes32String("test-data");
         it("Should mint NFT with correct data", async function () {
             await ocsh.mint(player1.address, customData);
             (0, chai_1.expect)(await ocsh.ownerOf(0)).to.equal(player1.address);
@@ -46,9 +47,9 @@ describe("OCSH Contract - Basic Tests", function () {
     describe("Basic Alliance System", function () {
         beforeEach(async function () {
             // Mint tokens for alliance testing
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1-2"));
-            await ocsh.mint(player2.address, hardhat_1.ethers.encodeBytes32String("player2"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1-2"));
+            await ocsh.mint(player2.address, ethers.encodeBytes32String("player2"));
         });
         it("Should create alliance with multiple tokens", async function () {
             const memberTokens = [0, 1]; // Player1's tokens
@@ -63,7 +64,7 @@ describe("OCSH Contract - Basic Tests", function () {
     });
     describe("Territory System", function () {
         beforeEach(async function () {
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
         });
         it("Should claim territory with valid token", async function () {
             await ocsh.connect(player1).claimTerritory(0, 0);

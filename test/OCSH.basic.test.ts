@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+const hardhat = require("hardhat");
+const { ethers } = hardhat;
 import { OCSH } from "../typechain-types";
 
 describe("OCSH Contract - Basic Tests", function () {

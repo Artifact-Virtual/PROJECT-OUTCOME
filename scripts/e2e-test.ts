@@ -1,4 +1,5 @@
-import { ethers } from "hardhat";
+import hardhat from "hardhat";
+const { ethers } = hardhat;
 import { Contract, Signer } from "ethers";
 import { expect } from "chai";
 

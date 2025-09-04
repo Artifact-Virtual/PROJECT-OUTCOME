@@ -21,8 +21,8 @@ describe("OCSH NFT Game Contract", function () {
   // Load compiled artifacts directly to avoid HH700 artifact lookup issues
   const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
   const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
-  ocsh = await OCShFactory.deploy();
-    await ocsh.waitForDeployment();
+  ocsh = (await OCShFactory.deploy()) as unknown as OCSH;
+  await (ocsh as any).waitForDeployment?.();
   });
 
   describe("Deployment", function () {

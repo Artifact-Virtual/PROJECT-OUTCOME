@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+const hardhat = require("hardhat");
+const { ethers } = hardhat;
 import { OCSH } from "../typechain-types";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { time } from "@nomicfoundation/hardhat-toolbox-mocha-ethers/network-helpers";

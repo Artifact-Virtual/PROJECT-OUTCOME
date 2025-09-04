@@ -1,21 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const hardhat_1 = require("hardhat");
+const hardhat = require("hardhat");
+const { ethers } = hardhat;
 describe("OCSH Edge Cases & Integration Tests", function () {
     let ocsh;
     let owner;
     let players;
     beforeEach(async function () {
-        const signers = await hardhat_1.ethers.getSigners();
+        const signers = await ethers.getSigners();
         owner = signers[0];
         players = signers.slice(1, 11); // Get 10 players for testing
-        const OCShFactory = await hardhat_1.ethers.getContractFactory("OCSH");
+        const OCShArtifact = require('../artifacts/contracts/OCSH.sol/OCSH.json');
+        const OCShFactory = await ethers.getContractFactory(OCShArtifact.abi, OCShArtifact.bytecode);
         ocsh = await OCShFactory.deploy();
         await ocsh.waitForDeployment();
         // Mint tokens for all players
         for (let i = 0; i < players.length; i++) {
-            await ocsh.mint(players[i].address, hardhat_1.ethers.encodeBytes32String(`player${i}`));
+            await ocsh.mint(players[i].address, ethers.encodeBytes32String(`player${i}`));
         }
     });
     describe("Large Scale Alliance Management", function () {
@@ -98,7 +100,7 @@ describe("OCSH Edge Cases & Integration Tests", function () {
                 (0, chai_1.expect)(await ocsh.msgCount(0)).to.equal(i + 1);
             }
             // By the 5th message, fee should be very high
-            (0, chai_1.expect)(currentFee).to.be.greaterThan(hardhat_1.ethers.parseEther("0.0001"));
+            (0, chai_1.expect)(currentFee).to.be.greaterThan(ethers.parseEther("0.0001"));
         });
         it("Should enforce cooldown across multiple blocks", async function () {
             const message = "Test message";
@@ -188,7 +190,7 @@ describe("OCSH Edge Cases & Integration Tests", function () {
     });
     describe("Gas Optimization Testing", function () {
         it("Should efficiently handle bulk operations", async function () {
-            const startGas = await hardhat_1.ethers.provider.getBalance(owner.address);
+            const startGas = await ethers.provider.getBalance(owner.address);
             // Perform many operations in sequence
             for (let i = 0; i < 5; i++) {
                 await ocsh.connect(players[i]).claimTerritory(i, i);
@@ -199,7 +201,7 @@ describe("OCSH Edge Cases & Integration Tests", function () {
                     await ocsh.connect(players[i]).createAlliance([i]);
                 }
             }
-            const endGas = await hardhat_1.ethers.provider.getBalance(owner.address);
+            const endGas = await ethers.provider.getBalance(owner.address);
             // Verify operations completed (gas usage is informational)
             const alliance = await ocsh.alliances(0);
             (0, chai_1.expect)(alliance.members.length).to.equal(5);
@@ -233,7 +235,7 @@ describe("OCSH Edge Cases & Integration Tests", function () {
     // Helper function to mine blocks
     async function mine(blocks) {
         for (let i = 0; i < blocks; i++) {
-            await hardhat_1.ethers.provider.send("evm_mine", []);
+            await ethers.provider.send("evm_mine", []);
         }
     }
 });
