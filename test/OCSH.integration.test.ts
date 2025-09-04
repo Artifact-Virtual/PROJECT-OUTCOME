@@ -23,16 +23,22 @@ describe("OCSH Edge Cases & Integration Tests", function () {
     owner = signers[0];
     players = signers.slice(1, 11); // Get 10 players for testing
 
-    // Deploy mock SBT and OCSH
-    let mockSbtArtifact;
-    try {
-      mockSbtArtifact = await hardhat.artifacts.readArtifact("MockIdentitySBT");
-    } catch (_) {
-      mockSbtArtifact = await hardhat.artifacts.readArtifact("contracts/mocks/MockIdentitySBT.sol:MockIdentitySBT");
-    }
-    const MockSBT = await ethers.getContractFactory(mockSbtArtifact.abi, mockSbtArtifact.bytecode);
-  const mockSbt = await MockSBT.deploy();
-    await mockSbt.waitForDeployment();
+    // Deploy EASMock
+    const EASMockArtifact = await hardhat.artifacts.readArtifact("contracts/mocks/EASMock.sol:EASMock");
+    const EASMockFactory = await ethers.getContractFactory(EASMockArtifact.abi, EASMockArtifact.bytecode);
+    const easMock = await EASMockFactory.deploy();
+    await easMock.waitForDeployment();
+
+    // Deploy ARC_IdentitySBT proxy using upgrades
+    const IdentitySBTArtifact = await hardhat.artifacts.readArtifact("contracts/IdentitySBT.sol:ARC_IdentitySBT");
+    const IdentitySBTFactory = await ethers.getContractFactory(IdentitySBTArtifact.abi, IdentitySBTArtifact.bytecode);
+    const identitySBT = await hardhat.upgrades.deployProxy(IdentitySBTFactory, [
+      owner.address, // timelock
+      owner.address, // safeExecutor
+      await easMock.getAddress(), // eas
+      ethers.keccak256(ethers.toUtf8Bytes("IdentityRole(uint256 role,uint256 weight,address recipient)")) // schemaId
+    ], { kind: 'uups' });
+    await identitySBT.waitForDeployment();
 
     let ocshArtifact;
     try {
@@ -41,13 +47,14 @@ describe("OCSH Edge Cases & Integration Tests", function () {
       ocshArtifact = await hardhat.artifacts.readArtifact("contracts/OCSH.sol:OCSH");
     }
     const OCSHFactory = await ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
-  ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress())) as unknown as OCSH;
+    ocsh = (await OCSHFactory.deploy(await identitySBT.getAddress())) as unknown as OCSH;
     await (ocsh as any).waitForDeployment?.();
 
-    // Grant commander role to all players for alliance actions
-    const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
+    // Issue SBT roles for all players
+    const COMMANDER_ROLE = ethers.keccak256(ethers.toUtf8Bytes("COMMANDER"));
     for (const p of players) {
-      await mockSbt.setRole(p.address, SBT_ROLE_COMMANDER, true);
+      await identitySBT.issue(p.address, COMMANDER_ROLE, ethers.randomBytes(32));
+      await identitySBT.setWeight(p.address, 50 + Math.floor(Math.random() * 50)); // Random weight 50-100
     }
 
     // Mint tokens for all players

@@ -169,9 +169,61 @@ Gameplay impact:
 - Social signaling: Accept/decline communicates inclination and loyalty
 - Roleplay depth: Leaders can nudge outcomes without explicit declarations
 
+#### How Bribes Work
+
+- **Offer Creation**: Players can create bribe offers using ETH, ERC20 tokens, or ERC721 NFTs
+- **Recipient Control**: The recipient must explicitly accept the bribe for funds/NFTs to transfer
+- **Cancellation**: Senders can cancel pending offers before acceptance
+- **Decline Option**: Recipients can decline offers, returning assets to the sender
+- **On-Chain Transparency**: All transactions are recorded on-chain, but not globally announced in-game
+- **No Global Notifications**: Offers are private between sender and recipient
+
+#### Bribe Types
+
+1. **ETH Bribes**: Direct Ether transfers
+2. **ERC20 Bribes**: Token-based incentives (e.g., stablecoins, game tokens)
+3. **ERC721 Bribes**: NFT offers for character trades or special items
+
+#### Strategic Uses
+
+- **Alliance Recruitment**: Offer tokens to recruit players to your alliance
+- **Ceasefire Negotiations**: Pay tribute to avoid conflicts
+- **Territory Trades**: Bribe for territory control without public bidding
+- **Social Signaling**: Use accept/decline as diplomatic communication
+
+#### Contract Functions
+
+```solidity
+// Create an ETH bribe
+createEthBribe(address recipient, uint256 amount)
+
+// Create an ERC20 bribe
+createErc20Bribe(address recipient, address token, uint256 amount)
+
+// Create an ERC721 bribe
+createErc721Bribe(address recipient, address token, uint256 tokenId)
+
+// Accept a bribe
+acceptBribe(uint256 bribeId)
+
+// Decline a bribe
+declineBribe(uint256 bribeId)
+
+// Cancel a pending bribe
+cancelBribe(uint256 bribeId)
+```
+
+#### Security Features
+
+- **Reentrancy Protection**: Uses OpenZeppelin's ReentrancyGuard
+- **Safe Token Handling**: ERC20 transfers use SafeERC20
+- **Event Logging**: All actions emit events for transparency
+- **Access Control**: Only sender/recipient can interact with their offers
+
 ## 🏆 How to Win
 
 ### **Victory Conditions**
+
 OCSH doesn't have a single "win condition" but multiple paths to dominance:
 
 1. **Territorial Dominance**: Control multiple territories simultaneously
@@ -181,6 +233,7 @@ OCSH doesn't have a single "win condition" but multiple paths to dominance:
 5. **Strategic Control**: Control key territories that provide maximum strategic advantage
 
 ### **Losing Scenarios**
+
 - **Territory Loss**: Territories can be claimed by higher-reputation players
 - **Battle Defeats**: Losing battles means no XP gain for that engagement
 - **Alliance Collapse**: Poor leadership can lead to alliance fragmentation
@@ -189,18 +242,21 @@ OCSH doesn't have a single "win condition" but multiple paths to dominance:
 ## 🛡️ Strategic Tips
 
 ### **Early Game**
+
 1. **Claim Territory Quickly**: Get established in the world
 2. **Engage in Battles**: Build XP and potentially get early wins
 3. **Send Messages**: Build social connections (mind the anti-spam costs)
 4. **Work Toward Commander Role**: Unlock alliance creation
 
 ### **Mid Game**
+
 1. **Form/Join Strategic Alliances**: Coordinate with other players
 2. **Focus on Reputation**: Build SBT achievements for permanent bonuses
 3. **Control Adjacent Territories**: Create defensive networks
 4. **Balance Offense/Defense**: Don't overextend your territorial control
 
 ### **Late Game**
+
 1. **Master Territory Control**: Use reputation advantages to claim key territories
 2. **Leverage Alliance Networks**: Coordinate large-scale strategic moves
 3. **Optimize Battle Power**: Maximize SBT bonuses and territorial advantages
@@ -209,7 +265,9 @@ OCSH doesn't have a single "win condition" but multiple paths to dominance:
 ## 🌐 Offline/Resilient Features
 
 ### **Darknet Continuum Protocols**
+
 The game includes revolutionary offline transaction methods:
+
 - **Mesh Networking**: Peer-to-peer transaction relay
 - **SMS Transactions**: Cellular-based blockchain interaction
 - **Physical Handshake**: Manual transaction delivery

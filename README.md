@@ -64,6 +64,61 @@ OCSH is a cutting-edge, post-apocalyptic web3 social gaming platform. Experience
 - 📊 **Portfolio Management**: Asset tracking & history
 - 🤝 **Hand-to-Hand Bribes (New)**: Offer ETH/tokens/NFTs to another player via on-chain escrow; they must accept or can decline/cancel offers
 
+### Bribe System (Detailed)
+
+The BribeEscrow contract enables players to offer discreet incentives to other players without broadcasting to the entire game world. This adds a layer of strategic diplomacy and social engineering to the gameplay.
+
+#### How Bribes Work
+
+- **Offer Creation**: Players can create bribe offers using ETH, ERC20 tokens, or ERC721 NFTs
+- **Recipient Control**: The recipient must explicitly accept the bribe for funds/NFTs to transfer
+- **Cancellation**: Senders can cancel pending offers before acceptance
+- **Decline Option**: Recipients can decline offers, returning assets to the sender
+- **On-Chain Transparency**: All transactions are recorded on-chain, but not globally announced in-game
+- **No Global Notifications**: Offers are private between sender and recipient
+
+#### Bribe Types
+
+1. **ETH Bribes**: Direct Ether transfers
+2. **ERC20 Bribes**: Token-based incentives (e.g., stablecoins, game tokens)
+3. **ERC721 Bribes**: NFT offers for character trades or special items
+
+#### Strategic Uses
+
+- **Alliance Recruitment**: Offer tokens to recruit players to your alliance
+- **Ceasefire Negotiations**: Pay tribute to avoid conflicts
+- **Territory Trades**: Bribe for territory control without public bidding
+- **Social Signaling**: Use accept/decline as diplomatic communication
+
+#### Contract Functions
+
+```solidity
+// Create an ETH bribe
+createEthBribe(address recipient, uint256 amount)
+
+// Create an ERC20 bribe
+createErc20Bribe(address recipient, address token, uint256 amount)
+
+// Create an ERC721 bribe
+createErc721Bribe(address recipient, address token, uint256 tokenId)
+
+// Accept a bribe
+acceptBribe(uint256 bribeId)
+
+// Decline a bribe
+declineBribe(uint256 bribeId)
+
+// Cancel a pending bribe
+cancelBribe(uint256 bribeId)
+```
+
+#### Security Features
+
+- **Reentrancy Protection**: Uses OpenZeppelin's ReentrancyGuard
+- **Safe Token Handling**: ERC20 transfers use SafeERC20
+- **Event Logging**: All actions emit events for transparency
+- **Access Control**: Only sender/recipient can interact with their offers
+
 ### Real-time Communication
 
 - 🌐 **WebSocket Integration**: Live updates for battles, messages, territory
