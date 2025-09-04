@@ -39,4 +39,8 @@ module.exports = {
     },
   },
   mocha: { timeout: 40000 },
+  typechain: {
+    outDir: path.resolve(__dirname, '..', '..', 'typechain-types'),
+    target: 'ethers-v6',
+  },
 };

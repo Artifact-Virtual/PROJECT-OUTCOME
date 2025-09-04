@@ -2,6 +2,32 @@
   "version": "3.4",
   "log": [
     {
+      "contracts/mocks/EASMock.sol:EASMock": {
+        "src": "contracts\\mocks\\EASMock.sol:5",
+        "version": {
+          "withMetadata": "25f5e5bdf4b91d10f326e4f4ca3801dca69704cc80a9f5da45d2f300738a2a78",
+          "withoutMetadata": "50826072f0b6fa7ed90fad300b74c8151c9723aa4c0a26d3c60bf624ff978376",
+          "linkedWithoutMetadata": "50826072f0b6fa7ed90fad300b74c8151c9723aa4c0a26d3c60bf624ff978376"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "attest(bytes32,bytes32,address,bytes32)",
+          "getAttestation(bytes32)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.22"
+      }
+    },
+    {
       "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol:AccessControlUpgradeable": {
         "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlUpgradeable.sol:51",
         "inherit": [
