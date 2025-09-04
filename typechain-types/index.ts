@@ -82,6 +82,8 @@ export type { ARC_Eligibility } from "./contracts/Eligibility.sol/ARC_Eligibilit
 export { ARC_Eligibility__factory } from "./factories/contracts/Eligibility.sol/ARC_Eligibility__factory";
 export type { ARC_IdentitySBT } from "./contracts/IdentitySBT.sol/ARC_IdentitySBT";
 export { ARC_IdentitySBT__factory } from "./factories/contracts/IdentitySBT.sol/ARC_IdentitySBT__factory";
+export type { MockIdentitySBT } from "./contracts/mocks/MockIdentitySBT";
+export { MockIdentitySBT__factory } from "./factories/contracts/mocks/MockIdentitySBT__factory";
 export type { OCSH } from "./contracts/OCSH";
 export { OCSH__factory } from "./factories/contracts/OCSH__factory";
 export type { OCSHLib } from "./contracts/OSCHLib.sol/OCSHLib";

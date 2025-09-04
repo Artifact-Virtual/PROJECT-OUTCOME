@@ -166,6 +166,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ARC_IdentitySBT__factory>;
     getContractFactory(
+      name: "MockIdentitySBT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockIdentitySBT__factory>;
+    getContractFactory(
       name: "OCSH",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.OCSH__factory>;
@@ -365,6 +369,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ARC_IdentitySBT>;
     getContractAt(
+      name: "MockIdentitySBT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockIdentitySBT>;
+    getContractAt(
       name: "OCSH",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -528,6 +537,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ARC_IdentitySBT>;
     deployContract(
+      name: "MockIdentitySBT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockIdentitySBT>;
+    deployContract(
       name: "OCSH",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.OCSH>;
@@ -726,6 +739,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ARC_IdentitySBT>;
+    deployContract(
+      name: "MockIdentitySBT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.MockIdentitySBT>;
     deployContract(
       name: "OCSH",
       args: any[],

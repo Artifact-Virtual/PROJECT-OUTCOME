@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const hardhat = require("hardhat");
-const { ethers } = hardhat;
+const hardhat_1 = __importDefault(require("hardhat"));
+const { ethers } = hardhat_1.default;
+const path = require("path");
 describe("OCSH Contract - Basic Tests", function () {
     let ocsh;
     let owner;
@@ -12,10 +16,25 @@ describe("OCSH Contract - Basic Tests", function () {
         // Get signers
         [owner, player1, player2] = await ethers.getSigners();
         // Deploy mock SBT and OCSH using named factories
-        const MockSBT = await ethers.getContractFactory("MockIdentitySBT");
+        await hardhat_1.default.run("compile");
+        let mockSbtArtifact;
+        try {
+            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("MockIdentitySBT");
+        }
+        catch (_) {
+            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/mocks/MockIdentitySBT.sol:MockIdentitySBT");
+        }
+        const MockSBT = await ethers.getContractFactory(mockSbtArtifact.abi, mockSbtArtifact.bytecode);
         const mockSbt = await MockSBT.deploy();
         await mockSbt.waitForDeployment();
-        const OCSHFactory = await ethers.getContractFactory("OCSH");
+        let ocshArtifact;
+        try {
+            ocshArtifact = await hardhat_1.default.artifacts.readArtifact("OCSH");
+        }
+        catch (_) {
+            ocshArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/OCSH.sol:OCSH");
+        }
+        const OCSHFactory = await ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
         ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress()));
         await ocsh.waitForDeployment?.();
         // Grant commander role to owner for alliance creation tests

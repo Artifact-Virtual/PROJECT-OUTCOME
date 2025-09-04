@@ -1,7 +1,31 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const hardhat_1 = require("hardhat");
+const hardhat_1 = __importStar(require("hardhat"));
+const path = require("path");
 describe("OCSH NFT Game Contract", function () {
     let ocsh;
     let owner;
@@ -12,10 +36,25 @@ describe("OCSH NFT Game Contract", function () {
         // Get signers
         [owner, player1, player2, player3] = await hardhat_1.ethers.getSigners();
         // Deploy mock SBT and OCSH
-        const MockSBT = await hardhat_1.ethers.getContractFactory("MockIdentitySBT");
+        await hardhat_1.default.run("compile");
+        let mockSbtArtifact;
+        try {
+            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("MockIdentitySBT");
+        }
+        catch (_) {
+            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/mocks/MockIdentitySBT.sol:MockIdentitySBT");
+        }
+        const MockSBT = await hardhat_1.ethers.getContractFactory(mockSbtArtifact.abi, mockSbtArtifact.bytecode);
         const mockSbt = await MockSBT.deploy();
         await mockSbt.waitForDeployment();
-        const OCSHFactory = await hardhat_1.ethers.getContractFactory("OCSH");
+        let ocshArtifact;
+        try {
+            ocshArtifact = await hardhat_1.default.artifacts.readArtifact("OCSH");
+        }
+        catch (_) {
+            ocshArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/OCSH.sol:OCSH");
+        }
+        const OCSHFactory = await hardhat_1.ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
         ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress()));
         await ocsh.waitForDeployment?.();
         // Seed SBT roles/weights used in tests

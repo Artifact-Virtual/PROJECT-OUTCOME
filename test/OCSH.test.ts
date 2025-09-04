@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import hardhat, { ethers } from "hardhat";
 import { OCSH } from "../typechain-types";
+const path = require("path");
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 
 describe("OCSH NFT Game Contract", function () {
@@ -15,12 +16,25 @@ describe("OCSH NFT Game Contract", function () {
     [owner, player1, player2, player3] = await ethers.getSigners();
 
     // Deploy mock SBT and OCSH
-    const MockSBT = await ethers.getContractFactory("MockIdentitySBT");
-    const mockSbt = await MockSBT.deploy();
+  await hardhat.run("compile");
+    let mockSbtArtifact: any;
+    try {
+  mockSbtArtifact = await hardhat.artifacts.readArtifact("MockIdentitySBT");
+    } catch (_) {
+  mockSbtArtifact = await hardhat.artifacts.readArtifact("contracts/mocks/MockIdentitySBT.sol:MockIdentitySBT");
+    }
+    const MockSBT = await ethers.getContractFactory(mockSbtArtifact.abi, mockSbtArtifact.bytecode);
+  const mockSbt = await MockSBT.deploy();
     await mockSbt.waitForDeployment();
 
-    const OCSHFactory = await ethers.getContractFactory("OCSH");
-    ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress())) as unknown as OCSH;
+    let ocshArtifact: any;
+    try {
+  ocshArtifact = await hardhat.artifacts.readArtifact("OCSH");
+    } catch (_) {
+  ocshArtifact = await hardhat.artifacts.readArtifact("contracts/OCSH.sol:OCSH");
+    }
+    const OCSHFactory = await ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
+  ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress())) as unknown as OCSH;
     await (ocsh as any).waitForDeployment?.();
 
     // Seed SBT roles/weights used in tests

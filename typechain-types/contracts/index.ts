@@ -7,5 +7,7 @@ import type * as identitySbtSol from "./IdentitySBT.sol";
 export type { identitySbtSol };
 import type * as oschLibSol from "./OSCHLib.sol";
 export type { oschLibSol };
+import type * as mocks from "./mocks";
+export type { mocks };
 export type { BribeEscrow } from "./BribeEscrow";
 export type { OCSH } from "./OCSH";
