@@ -77,9 +77,11 @@ describe("OCSH NFT Game Contract", function () {
             await (0, chai_1.expect)(ocsh.connect(player1).sendMessage(0, message, { value: fee })).to.emit(ocsh, "MessageSent")
                 .withArgs(0, player1.address, anyValue, fee);
             (0, chai_1.expect)(await ocsh.msgCount(0)).to.equal(1);
-            const [storedMessage] = await ocsh.messages(0, 0);
-            (0, chai_1.expect)(storedMessage.from).to.equal(player1.address);
-            (0, chai_1.expect)(storedMessage.textHash).to.equal(hardhat_1.ethers.keccak256(hardhat_1.ethers.toUtf8Bytes(message)));
+            const storedMessage = await ocsh.messages(0, 0);
+            const msgFrom = storedMessage[0];
+            const msgTextHash = storedMessage[1];
+            (0, chai_1.expect)(msgFrom).to.equal(player1.address);
+            (0, chai_1.expect)(msgTextHash).to.equal(hardhat_1.ethers.keccak256(hardhat_1.ethers.toUtf8Bytes(message)));
         });
         it("Should reject insufficient fee", async function () {
             const message = "Hello World!";

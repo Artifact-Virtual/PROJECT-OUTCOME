@@ -3,6 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const hardhat = require("hardhat");
 const { ethers } = hardhat;
+// Local helper: simple time advance wrapper when network-helpers is unavailable
+const time = {
+    async increase(seconds) {
+        await ethers.provider.send("evm_increaseTime", [seconds]);
+        await ethers.provider.send("evm_mine", []);
+    }
+};
 describe("OCSH Edge Cases & Integration Tests", function () {
     let ocsh;
     let owner;
@@ -28,8 +35,8 @@ describe("OCSH Edge Cases & Integration Tests", function () {
             for (let i = 1; i < 8; i++) {
                 await ocsh.connect(players[i]).joinAlliance(0, i);
             }
-            const alliance = await ocsh.alliances(0);
-            (0, chai_1.expect)(alliance.members.length).to.equal(8);
+            const allianceRaw = await ocsh.alliances(0);
+            (0, chai_1.expect)(allianceRaw.members.length).to.equal(8);
             // Verify all members are correctly assigned
             for (let i = 0; i < 8; i++) {
                 (0, chai_1.expect)(await ocsh.allianceOf(i)).to.equal(0);
@@ -137,8 +144,8 @@ describe("OCSH Edge Cases & Integration Tests", function () {
             // Verify final state
             (0, chai_1.expect)(await ocsh.ownerOf(0)).to.equal(players[1].address);
             (0, chai_1.expect)(await ocsh.ownerOf(1)).to.equal(players[0].address);
-            const alliance = await ocsh.alliances(0);
-            (0, chai_1.expect)(alliance.members.length).to.equal(2);
+            const allianceRaw2 = await ocsh.alliances(0);
+            (0, chai_1.expect)(allianceRaw2.members.length).to.equal(2);
             const territory0 = await ocsh.territories(0);
             const territory1 = await ocsh.territories(1);
             (0, chai_1.expect)(territory0.ownerTokenId).to.equal(0);
@@ -203,8 +210,8 @@ describe("OCSH Edge Cases & Integration Tests", function () {
             }
             const endGas = await ethers.provider.getBalance(owner.address);
             // Verify operations completed (gas usage is informational)
-            const alliance = await ocsh.alliances(0);
-            (0, chai_1.expect)(alliance.members.length).to.equal(5);
+            const allianceRaw3 = await ocsh.alliances(0);
+            (0, chai_1.expect)(allianceRaw3.members.length).to.equal(5);
             for (let i = 0; i < 5; i++) {
                 const territory = await ocsh.territories(i);
                 (0, chai_1.expect)(territory.ownerTokenId).to.equal(i);
