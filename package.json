@@ -14,6 +14,7 @@
     "deploy:ganache": "npx hardhat run scripts/deploy-ganache.ts --network ganache",
     "deploy:proxy": "npx hardhat run scripts/deploy-proxy.js --network hardhat",
     "upgrade:proxy": "npx hardhat run scripts/upgrade-proxy.js --network hardhat",
+    "verify:deployment": "node verify-deployment.js",
     "deploy:testnet": "npx hardhat run scripts/deploy-testnet.ts --network hardhat",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
