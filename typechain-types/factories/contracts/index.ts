@@ -4,4 +4,5 @@
 export * as eligibilitySol from "./Eligibility.sol";
 export * as identitySbtSol from "./IdentitySBT.sol";
 export * as oschLibSol from "./OSCHLib.sol";
+export { BribeEscrow__factory } from "./BribeEscrow__factory";
 export { OCSH__factory } from "./OCSH__factory";

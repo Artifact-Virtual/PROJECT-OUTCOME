@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCSH - Onchain Survival Kit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cyber-blue': '#00ffff',
+                        'toxic-green': '#39ff14',
+                        'warning-orange': '#ff7700',
+                        'danger-red': '#ff0040',
+                        'dark-bg': '#0a0a0a',
+                        'darker-bg': '#050505',
+                        'card-bg': '#1a1a1a',
+                        'border-gray': '#333333',
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Courier New', 'monospace'],
+                        'cyber': ['Orbitron', 'monospace'],
+                    },
+                    animation: {
+                        'glitch': 'glitch 0.3s infinite',
+                        'scan': 'scan 2s linear infinite',
+                        'flicker': 'flicker 1.5s infinite alternate',
+                    },
+                    boxShadow: {
+                        'cyber': '0 0 20px rgba(0, 255, 255, 0.5)',
+                        'toxic': '0 0 20px rgba(57, 255, 20, 0.5)',
+                        'warning': '0 0 20px rgba(255, 119, 0, 0.5)',
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scan 2s linear infinite;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        
+        .text-shadow-cyber {
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        .bg-circuit {
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(57, 255, 20, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(255, 119, 0, 0.1) 0%, transparent 50%);
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-text::before {
+            animation: glitch 0.3s infinite;
+            color: #ff0040;
+            z-index: -1;
+        }
+        
+        .glitch-text::after {
+            animation: glitch 0.3s infinite reverse;
+            color: #00ffff;
+            z-index: -2;
+        }
+        
+        .terminal-border {
+            border: 2px solid #333;
+            border-image: linear-gradient(45deg, #00ffff, #39ff14, #ff7700) 1;
+            position: relative;
+        }
+        
+        .terminal-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffff, #39ff14, #ff7700);
+            z-index: -1;
+            border-radius: inherit;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-mono overflow-x-hidden">
+    <!-- Scan line effect -->
+    <div class="scan-line"></div>
+    
+    <!-- Background circuit pattern -->
+    <div class="fixed inset-0 bg-circuit opacity-30 pointer-events-none"></div>
+    
+    <!-- Header -->
+    <header class="relative z-10 border-b border-border-gray bg-darker-bg/90 backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo and branding -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-cyber-blue/20 border border-cyber-blue rounded-lg flex items-center justify-center">
+                        <i data-lucide="shield" class="w-6 h-6 text-cyber-blue"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-cyber font-bold text-cyber-blue text-shadow-cyber glitch-text relative" data-text="OCSH">
+                            OCSH
+                        </h1>
+                        <p class="text-sm text-gray-400">Onchain Survival Kit</p>
+                    </div>
+                </div>
+                
+                <!-- Connection status and wallet -->
+                <div class="flex items-center space-x-4">
+                    <!-- Network status -->
+                    <div class="hidden md:flex items-center space-x-2 px-3 py-2 bg-card-bg border border-toxic-green/30 rounded">
+                        <div class="w-2 h-2 bg-toxic-green rounded-full animate-pulse"></div>
+                        <span class="text-sm text-toxic-green">BASE NETWORK</span>
+                    </div>
+                    
+                    <!-- Wallet connection -->
+                    <button class="px-4 py-2 bg-cyber-blue/20 border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-black transition-all duration-300 rounded font-semibold">
+                        CONNECT WALLET
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="relative z-10 container mx-auto px-4 py-8">
+        
+        <!-- Hero section -->
+        <section class="mb-12 text-center">
+            <div class="mb-8">
+                <h2 class="text-5xl md:text-7xl font-cyber font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue via-toxic-green to-warning-orange animate-flicker">
+                    SURVIVAL PROTOCOL
+                </h2>
+                <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                    Enter the post-apocalyptic world where only the strongest survive. Control territories, forge alliances, and dominate the wasteland.
+                </p>
+            </div>
+            
+            <!-- Quick stats bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
+                    <div class="text-2xl font-bold text-cyber-blue">2,847</div>
+                    <div class="text-sm text-gray-400">SURVIVORS</div>
+                </div>
+                <div class="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
+                    <div class="text-2xl font-bold text-toxic-green">156</div>
+                    <div class="text-sm text-gray-400">TERRITORIES</div>
+                </div>
+                <div class="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
+                    <div class="text-2xl font-bold text-warning-orange">89</div>
+                    <div class="text-sm text-gray-400">ALLIANCES</div>
+                </div>
+                <div class="bg-card-bg border border-border-gray p-4 rounded-lg terminal-border">
+                    <div class="text-2xl font-bold text-danger-red">12,439</div>
+                    <div class="text-sm text-gray-400">BATTLES</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main dashboard grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left column - Player status and territory map -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Player status card -->
+                <!-- @COMPONENT: PlayerStatusCard [shows current player stats and level] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-cyber-blue">SURVIVOR STATUS</h3>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="user" class="w-5 h-5 text-toxic-green"></i>
+                            <span class="text-toxic-green font-semibold" data-bind="player.callSign">RUNNER-7749</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-warning-orange" data-bind="player.level">12</div>
+                            <div class="text-xs text-gray-400">LEVEL</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-cyber-blue" data-bind="player.xp">14,750</div>
+                            <div class="text-xs text-gray-400">XP</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-toxic-green" data-bind="player.winRate">78%</div>
+                            <div class="text-xs text-gray-400">WIN RATE</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-danger-red" data-bind="player.reputation">2,847</div>
+                            <div class="text-xs text-gray-400">REPUTATION</div>
+                        </div>
+                    </div>
+                    
+                    <!-- XP Progress bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-400">XP TO NEXT LEVEL</span>
+                            <span class="text-cyber-blue" data-bind="player.xpToNext">1,250 XP</span>
+                        </div>
+                        <div class="w-full bg-border-gray rounded-full h-2">
+                            <div class="bg-gradient-to-r from-cyber-blue to-toxic-green h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: PlayerStatusCard -->
+                
+                <!-- Territory control map -->
+                <!-- @COMPONENT: TerritoryMap [interactive map showing territory control] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-cyber-blue">TERRITORY CONTROL</h3>
+                        <div class="flex items-center space-x-4">
+                            <button class="px-3 py-1 bg-toxic-green/20 border border-toxic-green text-toxic-green text-sm rounded hover:bg-toxic-green hover:text-black transition-all">
+                                CLAIM TERRITORY
+                            </button>
+                            <i data-lucide="map" class="w-5 h-5 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Mock territory grid -->
+                    <!-- @FUNCTIONALITY: This should implement interactive territory map with hex grid -->
+                    <div class="grid grid-cols-8 gap-1 mb-4">
+                        <!-- @MAP: territories.map(territory => ( -->
+                        <div class="aspect-square bg-cyber-blue/20 border border-cyber-blue rounded hover:bg-cyber-blue/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-toxic-green/20 border border-toxic-green rounded hover:bg-toxic-green/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-warning-orange/20 border border-warning-orange rounded hover:bg-warning-orange/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-danger-red/20 border border-danger-red rounded hover:bg-danger-red/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-cyber-blue/20 border border-cyber-blue rounded hover:bg-cyber-blue/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-toxic-green/20 border border-toxic-green rounded hover:bg-toxic-green/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <!-- Repeat pattern for more rows -->
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-warning-orange/20 border border-warning-orange rounded hover:bg-warning-orange/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-cyber-blue/20 border border-cyber-blue rounded hover:bg-cyber-blue/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-toxic-green/20 border border-toxic-green rounded hover:bg-toxic-green/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-danger-red/20 border border-danger-red rounded hover:bg-danger-red/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-cyber-blue/20 border border-cyber-blue rounded hover:bg-cyber-blue/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-toxic-green/20 border border-toxic-green rounded hover:bg-toxic-green/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-warning-orange/20 border border-warning-orange rounded hover:bg-warning-orange/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-cyber-blue/20 border border-cyber-blue rounded hover:bg-cyber-blue/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-toxic-green/20 border border-toxic-green rounded hover:bg-toxic-green/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-danger-red/20 border border-danger-red rounded hover:bg-danger-red/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <div class="aspect-square bg-border-gray border border-gray-600 rounded hover:bg-gray-600/40 cursor-pointer transition-all" data-mock="true"></div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-cyber-blue rounded"></div>
+                            <span>Your Territory</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-toxic-green rounded"></div>
+                            <span>Alliance</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-warning-orange rounded"></div>
+                            <span>Neutral</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-danger-red rounded"></div>
+                            <span>Enemy</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-border-gray rounded"></div>
+                            <span>Unclaimed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: TerritoryMap -->
+                
+                <!-- Battle system -->
+                <!-- @COMPONENT: BattleInterface [battle challenges and history] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-cyber-blue">COMBAT PROTOCOL</h3>
+                        <button class="px-4 py-2 bg-danger-red/20 border border-danger-red text-danger-red hover:bg-danger-red hover:text-white transition-all rounded font-semibold">
+                            INITIATE BATTLE
+                        </button>
+                    </div>
+                    
+                    <!-- Recent battles -->
+                    <div class="space-y-3">
+                        <!-- @MAP: recentBattles.map(battle => ( -->
+                        <div class="flex items-center justify-between p-3 bg-darker-bg border border-border-gray rounded" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-toxic-green/20 border border-toxic-green rounded flex items-center justify-center">
+                                    <i data-lucide="trophy" class="w-4 h-4 text-toxic-green"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-sm" data-bind="battle.opponent">vs GHOST-3301</div>
+                                    <div class="text-xs text-gray-400" data-bind="battle.timestamp">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-toxic-green font-semibold">VICTORY</div>
+                                <div class="text-xs text-gray-400">+100 XP</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-darker-bg border border-border-gray rounded" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-danger-red/20 border border-danger-red rounded flex items-center justify-center">
+                                    <i data-lucide="x" class="w-4 h-4 text-danger-red"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-sm" data-bind="battle.opponent">vs VIPER-1337</div>
+                                    <div class="text-xs text-gray-400" data-bind="battle.timestamp">5 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-danger-red font-semibold">DEFEAT</div>
+                                <div class="text-xs text-gray-400">+25 XP</div>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: BattleInterface -->
+            </div>
+            
+            <!-- Right column - Alliance and messaging -->
+            <div class="space-y-8">
+                
+                <!-- Alliance status -->
+                <!-- @COMPONENT: AllianceCard [alliance membership and management] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-cyber-blue">ALLIANCE</h3>
+                        <i data-lucide="users" class="w-5 h-5 text-toxic-green"></i>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-toxic-green/20 border-2 border-toxic-green rounded-full mx-auto mb-3 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-toxic-green" data-bind="alliance.tag">WL</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-toxic-green" data-bind="alliance.name">WASTELAND</h4>
+                        <p class="text-sm text-gray-400" data-bind="alliance.memberCount">47 survivors</p>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Your Role:</span>
+                            <span class="text-warning-orange font-semibold" data-bind="alliance.userRole">MEMBER</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Territory Control:</span>
+                            <span class="text-cyber-blue" data-bind="alliance.territoryCount">23</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Alliance Rank:</span>
+                            <span class="text-toxic-green" data-bind="alliance.rank">#3</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full px-4 py-2 bg-toxic-green/20 border border-toxic-green text-toxic-green hover:bg-toxic-green hover:text-black transition-all rounded font-semibold">
+                        ALLIANCE COMMS
+                    </button>
+                </div>
+                <!-- @END_COMPONENT: AllianceCard -->
+                
+                <!-- Messaging system -->
+                <!-- @COMPONENT: MessagingInterface [on-chain messaging with anti-spam] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-cyber-blue">COMMS</h3>
+                        <div class="flex items-center space-x-2 text-sm text-gray-400">
+                            <i data-lucide="wifi" class="w-4 h-4"></i>
+                            <span>On-Chain</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Message history -->
+                    <!-- @STATE: messages:array = [] -->
+                    <div class="space-y-3 mb-4 h-48 overflow-y-auto">
+                        <!-- @MAP: messages.map(message => ( -->
+                        <div class="p-3 bg-darker-bg border border-border-gray rounded text-sm" data-mock="true">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-toxic-green font-semibold" data-bind="message.sender">GHOST-3301</span>
+                                <span class="text-xs text-gray-500" data-bind="message.timestamp">3m ago</span>
+                            </div>
+                            <p class="text-gray-300" data-bind="message.content">Enemy alliance spotted in sector 7. Moving to intercept.</p>
+                        </div>
+                        
+                        <div class="p-3 bg-darker-bg border border-border-gray rounded text-sm" data-mock="true">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-cyber-blue font-semibold" data-bind="message.sender">VIPER-1337</span>
+                                <span class="text-xs text-gray-500" data-bind="message.timestamp">7m ago</span>
+                            </div>
+                            <p class="text-gray-300" data-bind="message.content">Territory claim successful. Coordinates locked in.</p>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                    
+                    <!-- Message input -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <span>Next msg cost: <span class="text-warning-orange" data-bind="messaging.nextCost">0.0011 ETH</span></span>
+                            <span>Cooldown: <span class="text-danger-red" data-bind="messaging.cooldown">45s</span></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                placeholder="Enter message..." 
+                                class="flex-1 px-3 py-2 bg-darker-bg border border-border-gray rounded text-white placeholder-gray-500 focus:border-cyber-blue focus:outline-none"
+                                data-implementation="Should validate message length and handle anti-spam logic"
+                            >
+                            <button 
+                                class="px-4 py-2 bg-cyber-blue/20 border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-black transition-all rounded font-semibold"
+                                data-event="click:sendMessage"
+                                data-implementation="Should validate and send on-chain message"
+                            >
+                                SEND
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: MessagingInterface -->
+                
+                <!-- Foundry Courier Integration -->
+                <!-- @COMPONENT: CourierInterface [offline transaction handling] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-cyber-blue">COURIER</h3>
+                        <div class="flex items-center space-x-2 text-sm text-warning-orange">
+                            <i data-lucide="radio" class="w-4 h-4"></i>
+                            <span>Offline Ready</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="p-3 bg-darker-bg border border-border-gray rounded">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold">Handheld Terminal</span>
+                                <div class="w-2 h-2 bg-toxic-green rounded-full animate-pulse"></div>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-3">Foundry Courier backend active. Ready for offline transactions.</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button class="px-3 py-2 bg-warning-orange/20 border border-warning-orange text-warning-orange text-xs rounded hover:bg-warning-orange hover:text-black transition-all">
+                                    ENCODE TX
+                                </button>
+                                <button class="px-3 py-2 bg-toxic-green/20 border border-toxic-green text-toxic-green text-xs rounded hover:bg-toxic-green hover:text-black transition-all">
+                                    DECODE FRAMES
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs text-gray-500 space-y-1">
+                            <div class="flex justify-between">
+                                <span>Supported channels:</span>
+                                <span class="text-cyber-blue">Radio, SMS, Mesh</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Error correction:</span>
+                                <span class="text-toxic-green">CRC32 + Parity</span>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full px-4 py-2 bg-cyber-blue/20 border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-black transition-all rounded font-semibold text-sm">
+                            LAUNCH HANDHELD
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: CourierInterface -->
+                
+                <!-- Leaderboard -->
+                <!-- @COMPONENT: Leaderboard [top players and alliances] -->
+                <div class="bg-card-bg border border-border-gray rounded-lg p-6 terminal-border">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-cyber-blue">LEADERBOARD</h3>
+                        <i data-lucide="crown" class="w-5 h-5 text-warning-orange"></i>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <!-- @MAP: leaderboard.map((player, index) => ( -->
+                        <div class="flex items-center justify-between p-2 bg-darker-bg border border-border-gray rounded text-sm" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-warning-orange font-bold w-6" data-bind="player.rank">1</span>
+                                <span class="text-gray-300" data-bind="player.callSign">APEX-0001</span>
+                            </div>
+                            <span class="text-toxic-green" data-bind="player.score">47,291</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-2 bg-darker-bg border border-border-gray rounded text-sm" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-gray-400 font-bold w-6" data-bind="player.rank">2</span>
+                                <span class="text-gray-300" data-bind="player.callSign">NOVA-2112</span>
+                            </div>
+                            <span class="text-toxic-green" data-bind="player.score">41,867</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-2 bg-darker-bg border border-border-gray rounded text-sm" data-mock="true">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-orange-600 font-bold w-6" data-bind="player.rank">3</span>
+                                <span class="text-gray-300" data-bind="player.callSign">ZERO-7777</span>
+                            </div>
+                            <span class="text-toxic-green" data-bind="player.score">38,203</span>
+                        </div>
+                        
+                        <div class="border-t border-border-gray pt-2">
+                            <div class="flex items-center justify-between p-2 bg-cyber-blue/10 border border-cyber-blue rounded text-sm">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-cyber-blue font-bold w-6" data-bind="currentPlayer.rank">47</span>
+                                    <span class="text-cyber-blue" data-bind="currentPlayer.callSign">RUNNER-7749</span>
+                                </div>
+                                <span class="text-cyber-blue" data-bind="currentPlayer.score">14,750</span>
+                            </div>
+                        </div>
+                        <!-- @END_MAP )) -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: Leaderboard -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-border-gray bg-darker-bg/90 backdrop-blur-sm mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-lg font-bold text-cyber-blue mb-4">SURVIVAL PROTOCOL</h4>
+                    <p class="text-gray-400 text-sm">
+                        The post-apocalyptic Web3 gaming experience where survival depends on strategy, alliances, and technological resilience.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-toxic-green mb-4">SYSTEMS</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li>Territory Control</li>
+                        <li>Alliance Formation</li>
+                        <li>Battle Mechanics</li>
+                        <li>On-Chain Messaging</li>
+                        <li>Offline Transactions</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-warning-orange mb-4">NETWORK</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li>Base Network</li>
+                        <li>Foundry Courier</li>
+                        <li>IPFS Storage</li>
+                        <li>ENS Domains</li>
+                        <li>Offline-First</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-border-gray mt-8 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 OCSH - Onchain Survival Kit. Built for the post-digital wasteland.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        (function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        })();
+
+        // Mock interactive elements for demo
+        (function() {
+            // Add click handlers for territory grid
+            document.querySelectorAll('[data-mock="true"]').forEach(element => {
+                if (element.classList.contains('aspect-square')) {
+                    element.addEventListener('click', function() {
+                        // TODO: Implement territory selection logic
+                        console.log('Territory clicked');
+                    });
+                }
+            });
+
+            // Mock wallet connection
+            const connectButton = document.querySelector('button:contains("CONNECT WALLET")');
+            if (connectButton) {
+                connectButton.addEventListener('click', function() {
+                    // TODO: Implement Web3 wallet connection
+                    console.log('Connecting wallet...');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
