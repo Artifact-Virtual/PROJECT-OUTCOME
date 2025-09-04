@@ -1,31 +1,11 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const hardhat_1 = __importStar(require("hardhat"));
-const path = require("path");
+const hardhat_1 = __importDefault(require("hardhat"));
+const { ethers } = hardhat_1.default;
 describe("OCSH NFT Game Contract", function () {
     let ocsh;
     let owner;
@@ -34,19 +14,26 @@ describe("OCSH NFT Game Contract", function () {
     let player3;
     beforeEach(async function () {
         // Get signers
-        [owner, player1, player2, player3] = await hardhat_1.ethers.getSigners();
-        // Deploy mock SBT and OCSH
-        // artifacts are expected to be compiled before tests via npm scripts
-        let mockSbtArtifact;
-        try {
-            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("MockIdentitySBT");
-        }
-        catch (_) {
-            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/mocks/MockIdentitySBT.sol:MockIdentitySBT");
-        }
-        const MockSBT = await hardhat_1.ethers.getContractFactory(mockSbtArtifact.abi, mockSbtArtifact.bytecode);
-        const mockSbt = await MockSBT.deploy();
-        await mockSbt.waitForDeployment();
+        [owner, player1, player2, player3] = await ethers.getSigners();
+        // Deploy real EAS
+        const SchemaRegistryArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/SchemaRegistry.sol:SchemaRegistry");
+        const SchemaRegistryFactory = await ethers.getContractFactory(SchemaRegistryArtifact.abi, SchemaRegistryArtifact.bytecode);
+        const schemaRegistry = await SchemaRegistryFactory.deploy();
+        await schemaRegistry.waitForDeployment();
+        const EASArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/EAS.sol:EAS");
+        const EASFactory = await ethers.getContractFactory(EASArtifact.abi, EASArtifact.bytecode);
+        const eas = await EASFactory.deploy(await schemaRegistry.getAddress());
+        await eas.waitForDeployment();
+        // Deploy ARC_IdentitySBT proxy using upgrades
+        const IdentitySBTArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/IdentitySBT.sol:ARC_IdentitySBT");
+        const IdentitySBTFactory = await ethers.getContractFactory(IdentitySBTArtifact.abi, IdentitySBTArtifact.bytecode);
+        const identitySBT = await hardhat_1.default.upgrades.deployProxy(IdentitySBTFactory, [
+            owner.address, // timelock
+            owner.address, // safeExecutor
+            await eas.getAddress(), // eas
+            ethers.keccak256(ethers.toUtf8Bytes("IdentityRole(uint256 role,uint256 weight,address recipient)")) // schemaId
+        ], { kind: 'uups' });
+        await identitySBT.waitForDeployment();
         let ocshArtifact;
         try {
             ocshArtifact = await hardhat_1.default.artifacts.readArtifact("OCSH");
@@ -54,16 +41,17 @@ describe("OCSH NFT Game Contract", function () {
         catch (_) {
             ocshArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/OCSH.sol:OCSH");
         }
-        const OCSHFactory = await hardhat_1.ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
-        ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress()));
+        const OCSHFactory = await ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
+        ocsh = (await OCSHFactory.deploy(await identitySBT.getAddress()));
         await ocsh.waitForDeployment?.();
         // Seed SBT roles/weights used in tests
         const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
         const SBT_ROLE_VETERAN = await ocsh.SBT_ROLE_VETERAN();
-        await mockSbt.setRole(owner.address, SBT_ROLE_COMMANDER, true);
-        await mockSbt.setRole(player1.address, SBT_ROLE_COMMANDER, true);
-        await mockSbt.setRole(player1.address, SBT_ROLE_VETERAN, true);
-        await mockSbt.setWeight(player1.address, hardhat_1.ethers.parseEther("6"));
+        await identitySBT.setRoleWeight(SBT_ROLE_COMMANDER, ethers.parseEther("1"));
+        await identitySBT.setRoleWeight(SBT_ROLE_VETERAN, ethers.parseEther("0.6"));
+        await identitySBT.issue(owner.address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("owner-commander"));
+        await identitySBT.issue(player1.address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("player1-commander"));
+        await identitySBT.issue(player1.address, SBT_ROLE_VETERAN, ethers.encodeBytes32String("player1-veteran"));
     });
     describe("Deployment", function () {
         it("Should set the right owner", async function () {
@@ -80,13 +68,13 @@ describe("OCSH NFT Game Contract", function () {
         });
         it("Should set correct constants", async function () {
             (0, chai_1.expect)(await ocsh.MAX_MSG_LEN()).to.equal(64);
-            (0, chai_1.expect)(await ocsh.BASE_MSG_FEE()).to.equal(hardhat_1.ethers.parseEther("0.00001"));
+            (0, chai_1.expect)(await ocsh.BASE_MSG_FEE()).to.equal(ethers.parseEther("0.00001"));
             (0, chai_1.expect)(await ocsh.MSG_COOLDOWN_BLOCKS()).to.equal(10);
             (0, chai_1.expect)(await ocsh.NUM_TERRITORIES()).to.equal(10);
         });
     });
     describe("Minting", function () {
-        const customData = hardhat_1.ethers.encodeBytes32String("test-data");
+        const customData = ethers.encodeBytes32String("test-data");
         it("Should mint NFT with correct data", async function () {
             await (0, chai_1.expect)(ocsh.mint(player1.address, customData))
                 .to.emit(ocsh, "Minted")
@@ -113,8 +101,8 @@ describe("OCSH NFT Game Contract", function () {
     describe("Messaging System", function () {
         beforeEach(async function () {
             // Mint tokens for players
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
-            await ocsh.mint(player2.address, hardhat_1.ethers.encodeBytes32String("player2"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player2.address, ethers.encodeBytes32String("player2"));
         });
         it("Should send message with correct fee", async function () {
             const message = "Hello World!";
@@ -126,11 +114,11 @@ describe("OCSH NFT Game Contract", function () {
             const msgFrom = storedMessage[0];
             const msgTextHash = storedMessage[1];
             (0, chai_1.expect)(msgFrom).to.equal(player1.address);
-            (0, chai_1.expect)(msgTextHash).to.equal(hardhat_1.ethers.keccak256(hardhat_1.ethers.toUtf8Bytes(message)));
+            (0, chai_1.expect)(msgTextHash).to.equal(ethers.keccak256(ethers.toUtf8Bytes(message)));
         });
         it("Should reject insufficient fee", async function () {
             const message = "Hello World!";
-            const insufficientFee = hardhat_1.ethers.parseEther("0.000005"); // Half the required fee
+            const insufficientFee = ethers.parseEther("0.000005"); // Half the required fee
             await (0, chai_1.expect)(ocsh.connect(player1).sendMessage(0, message, { value: insufficientFee })).to.be.revertedWith("Insufficient fee");
         });
         it("Should enforce message length limits", async function () {
@@ -171,10 +159,10 @@ describe("OCSH NFT Game Contract", function () {
     describe("Alliance System", function () {
         beforeEach(async function () {
             // Mint tokens for alliance testing
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1-2"));
-            await ocsh.mint(player2.address, hardhat_1.ethers.encodeBytes32String("player2"));
-            await ocsh.mint(player3.address, hardhat_1.ethers.encodeBytes32String("player3"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1-2"));
+            await ocsh.mint(player2.address, ethers.encodeBytes32String("player2"));
+            await ocsh.mint(player3.address, ethers.encodeBytes32String("player3"));
         });
         it("Should create alliance with multiple tokens", async function () {
             const memberTokens = [0, 1]; // Player1's tokens
@@ -214,8 +202,8 @@ describe("OCSH NFT Game Contract", function () {
     });
     describe("Challenge System", function () {
         beforeEach(async function () {
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
-            await ocsh.mint(player2.address, hardhat_1.ethers.encodeBytes32String("player2"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player2.address, ethers.encodeBytes32String("player2"));
         });
         it("Should issue challenge between tokens", async function () {
             await (0, chai_1.expect)(ocsh.connect(player1).issueChallenge(0, 1)).to.emit(ocsh, "ChallengeIssued")
@@ -239,7 +227,7 @@ describe("OCSH NFT Game Contract", function () {
                 .withArgs(0, anyValue);
             const challenge = await ocsh.challenges(0);
             (0, chai_1.expect)(challenge.status).to.equal(3); // Resolved
-            (0, chai_1.expect)(challenge.winner).to.not.equal(hardhat_1.ethers.ZeroAddress);
+            (0, chai_1.expect)(challenge.winner).to.not.equal(ethers.ZeroAddress);
         });
         it("Should only allow opponent to accept challenge", async function () {
             await ocsh.connect(player1).issueChallenge(0, 1);
@@ -259,8 +247,8 @@ describe("OCSH NFT Game Contract", function () {
     });
     describe("Trading System", function () {
         beforeEach(async function () {
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
-            await ocsh.mint(player2.address, hardhat_1.ethers.encodeBytes32String("player2"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player2.address, ethers.encodeBytes32String("player2"));
         });
         it("Should propose trade between tokens", async function () {
             await (0, chai_1.expect)(ocsh.connect(player1).proposeTrade(0, 1)).to.emit(ocsh, "TradeProposed")
@@ -288,8 +276,8 @@ describe("OCSH NFT Game Contract", function () {
     });
     describe("Territory System", function () {
         beforeEach(async function () {
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
-            await ocsh.mint(player2.address, hardhat_1.ethers.encodeBytes32String("player2"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player2.address, ethers.encodeBytes32String("player2"));
         });
         it("Should claim territory with valid token", async function () {
             await (0, chai_1.expect)(ocsh.connect(player1).claimTerritory(0, 0)).to.emit(ocsh, "TerritoryClaimed")
@@ -322,7 +310,7 @@ describe("OCSH NFT Game Contract", function () {
     });
     describe("Leveling System", function () {
         beforeEach(async function () {
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("player1"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("player1"));
         });
         it("Should start at level 1 with 0 XP", async function () {
             const level = await ocsh.levels(0);
@@ -342,9 +330,9 @@ describe("OCSH NFT Game Contract", function () {
     describe("Chain Traversal", function () {
         beforeEach(async function () {
             // Mint several tokens to create a chain
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("token0"));
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("token1"));
-            await ocsh.mint(player1.address, hardhat_1.ethers.encodeBytes32String("token2"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("token0"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("token1"));
+            await ocsh.mint(player1.address, ethers.encodeBytes32String("token2"));
         });
         it("Should return chain links with correct depth", async function () {
             const chainLinks = await ocsh.getChain(2, 3); // Get 3 links starting from token 2
@@ -367,7 +355,7 @@ describe("OCSH NFT Game Contract", function () {
     // Helper function to mine blocks (for cooldown testing)
     async function mine(blocks) {
         for (let i = 0; i < blocks; i++) {
-            await hardhat_1.ethers.provider.send("evm_mine", []);
+            await ethers.provider.send("evm_mine", []);
         }
     }
     // Helper for matching any value in events

@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import hardhat from "hardhat";
 const { ethers } = hardhat as any;
-const path = require("path");
+import path from "path";
 import { OCSH } from "../typechain-types";
 
 describe("OCSH Contract - Basic Tests", function () {
@@ -14,19 +14,24 @@ describe("OCSH Contract - Basic Tests", function () {
     // Get signers
     [owner, player1, player2] = await ethers.getSigners();
 
-    // Deploy EASMock
-    const EASMockArtifact = await hardhat.artifacts.readArtifact("contracts/mocks/EASMock.sol:EASMock");
-    const EASMockFactory = await ethers.getContractFactory(EASMockArtifact.abi, EASMockArtifact.bytecode);
-    const easMock = await EASMockFactory.deploy();
-    await easMock.waitForDeployment();
+    // Deploy real EAS
+    const SchemaRegistryArtifact = await hardhat.artifacts.readArtifact("contracts/SchemaRegistry.sol:SchemaRegistry");
+    const SchemaRegistryFactory = await ethers.getContractFactory(SchemaRegistryArtifact.abi, SchemaRegistryArtifact.bytecode);
+    const schemaRegistry = await SchemaRegistryFactory.deploy();
+    await schemaRegistry.waitForDeployment();
+
+    const EASArtifact = await hardhat.artifacts.readArtifact("contracts/EAS.sol:EAS");
+    const EASFactory = await ethers.getContractFactory(EASArtifact.abi, EASArtifact.bytecode);
+    const eas = await EASFactory.deploy(await schemaRegistry.getAddress());
+    await eas.waitForDeployment();
 
     // Deploy ARC_IdentitySBT proxy using upgrades
     const IdentitySBTArtifact = await hardhat.artifacts.readArtifact("contracts/IdentitySBT.sol:ARC_IdentitySBT");
     const IdentitySBTFactory = await ethers.getContractFactory(IdentitySBTArtifact.abi, IdentitySBTArtifact.bytecode);
-    const identitySBT = await hardhat.upgrades.deployProxy(IdentitySBTFactory, [
+    const identitySBT = await (hardhat as any).upgrades.deployProxy(IdentitySBTFactory, [
       owner.address, // timelock
       owner.address, // safeExecutor
-      await easMock.getAddress(), // eas
+      await eas.getAddress(), // eas
       ethers.keccak256(ethers.toUtf8Bytes("IdentityRole(uint256 role,uint256 weight,address recipient)")) // schemaId
     ], { kind: 'uups' });
     await identitySBT.waitForDeployment();
@@ -42,9 +47,10 @@ describe("OCSH Contract - Basic Tests", function () {
     await (ocsh as any).waitForDeployment?.();
 
     // Issue SBT roles for testing
-    const COMMANDER_ROLE = ethers.keccak256(ethers.toUtf8Bytes("COMMANDER"));
-    await identitySBT.issue(owner.address, COMMANDER_ROLE, ethers.randomBytes(32));
-    await identitySBT.issue(player1.address, COMMANDER_ROLE, ethers.randomBytes(32));
+    const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
+    await identitySBT.setRoleWeight(SBT_ROLE_COMMANDER, ethers.parseEther("1")); // Set default weight for commander role
+    await identitySBT.issue(owner.address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("commander-uid"));
+    await identitySBT.issue(player1.address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("player1-commander"));
   });
 
   describe("Deployment", function () {

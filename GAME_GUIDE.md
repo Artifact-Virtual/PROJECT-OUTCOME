@@ -286,6 +286,7 @@ The game includes revolutionary offline transaction methods:
 ## 📊 Success Metrics
 
 Track your progress through:
+
 - **Territory Count**: How many territories you control
 - **Alliance Size**: Number of members in your alliance
 - **Battle Record**: Win/loss ratio and total victories

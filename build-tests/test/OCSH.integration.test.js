@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const hardhat_1 = __importDefault(require("hardhat"));
 const { ethers } = hardhat_1.default;
-const path = require("path");
 // Local helper: simple time advance wrapper when network-helpers is unavailable
 const time = {
     async increase(seconds) {
@@ -22,17 +21,25 @@ describe("OCSH Edge Cases & Integration Tests", function () {
         const signers = await ethers.getSigners();
         owner = signers[0];
         players = signers.slice(1, 11); // Get 10 players for testing
-        // Deploy mock SBT and OCSH
-        let mockSbtArtifact;
-        try {
-            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("MockIdentitySBT");
-        }
-        catch (_) {
-            mockSbtArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/mocks/MockIdentitySBT.sol:MockIdentitySBT");
-        }
-        const MockSBT = await ethers.getContractFactory(mockSbtArtifact.abi, mockSbtArtifact.bytecode);
-        const mockSbt = await MockSBT.deploy();
-        await mockSbt.waitForDeployment();
+        // Deploy real EAS
+        const SchemaRegistryArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/SchemaRegistry.sol:SchemaRegistry");
+        const SchemaRegistryFactory = await ethers.getContractFactory(SchemaRegistryArtifact.abi, SchemaRegistryArtifact.bytecode);
+        const schemaRegistry = await SchemaRegistryFactory.deploy();
+        await schemaRegistry.waitForDeployment();
+        const EASArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/EAS.sol:EAS");
+        const EASFactory = await ethers.getContractFactory(EASArtifact.abi, EASArtifact.bytecode);
+        const eas = await EASFactory.deploy(await schemaRegistry.getAddress());
+        await eas.waitForDeployment();
+        // Deploy ARC_IdentitySBT proxy using upgrades
+        const IdentitySBTArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/IdentitySBT.sol:ARC_IdentitySBT");
+        const IdentitySBTFactory = await ethers.getContractFactory(IdentitySBTArtifact.abi, IdentitySBTArtifact.bytecode);
+        const identitySBT = await hardhat_1.default.upgrades.deployProxy(IdentitySBTFactory, [
+            owner.address, // timelock
+            owner.address, // safeExecutor
+            await eas.getAddress(), // eas
+            ethers.keccak256(ethers.toUtf8Bytes("IdentityRole(uint256 role,uint256 weight,address recipient)")) // schemaId
+        ], { kind: 'uups' });
+        await identitySBT.waitForDeployment();
         let ocshArtifact;
         try {
             ocshArtifact = await hardhat_1.default.artifacts.readArtifact("OCSH");
@@ -41,12 +48,13 @@ describe("OCSH Edge Cases & Integration Tests", function () {
             ocshArtifact = await hardhat_1.default.artifacts.readArtifact("contracts/OCSH.sol:OCSH");
         }
         const OCSHFactory = await ethers.getContractFactory(ocshArtifact.abi, ocshArtifact.bytecode);
-        ocsh = (await OCSHFactory.deploy(await mockSbt.getAddress()));
+        ocsh = (await OCSHFactory.deploy(await identitySBT.getAddress()));
         await ocsh.waitForDeployment?.();
-        // Grant commander role to all players for alliance actions
+        // Issue SBT roles for all players
         const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
-        for (const p of players) {
-            await mockSbt.setRole(p.address, SBT_ROLE_COMMANDER, true);
+        await identitySBT.setRoleWeight(SBT_ROLE_COMMANDER, ethers.parseEther("1")); // Set default weight
+        for (let i = 0; i < players.length; i++) {
+            await identitySBT.issue(players[i].address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("cmd" + i));
         }
         // Mint tokens for all players
         for (let i = 0; i < players.length; i++) {

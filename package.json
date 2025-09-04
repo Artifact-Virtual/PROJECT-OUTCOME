@@ -10,7 +10,7 @@
     "db:push": "drizzle-kit push",
     "test:mocha-esm": "node --loader ts-node/esm ./node_modules/.bin/mocha --exit 'test/**/*.test.ts'",
     "build-tests": "tsc -p tsconfig.test.json",
-  "test:compiled": "npm run build-tests && npx hardhat compile --config scripts/cjs/hardhat.config.cjs && npx hardhat test --config scripts/cjs/hardhat.config.cjs --network hardhat",
+    "test:compiled": "npm run build-tests && npx hardhat compile --config scripts/cjs/hardhat.config.cjs && npx hardhat test --config scripts/cjs/hardhat.config.cjs --network hardhat",
     "deploy:ganache": "npx hardhat run scripts/deploy-ganache.ts --network ganache",
     "deploy:testnet": "npx hardhat run scripts/deploy-testnet.ts --network hardhat",
     "compile": "npx hardhat compile",
@@ -20,6 +20,7 @@
     "node:hardhat": "npx hardhat node"
   },
   "dependencies": {
+    "@ethereum-attestation-service/eas-contracts": "^1.8.0",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",

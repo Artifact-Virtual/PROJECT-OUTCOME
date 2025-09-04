@@ -6,13 +6,13 @@
       "contentHash": "f0715a4b84b2d086c3a763c7155443e8",
       "sourceName": "contracts/BribeEscrow.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -48,13 +48,13 @@
       "contentHash": "190613e556d509d9e9a0ea43dc5d891d",
       "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -85,13 +85,13 @@
       "contentHash": "f62e11dbd302e17a5621a1438f4e054c",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -124,13 +124,13 @@
       "contentHash": "9261adf6457863de3e9892f51317ec89",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -161,13 +161,13 @@
       "contentHash": "1fb9edee1d763745a62d0b1954998792",
       "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -201,13 +201,13 @@
       "contentHash": "7074c93b1ea0a122063f26ddd1db1032",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -238,13 +238,13 @@
       "contentHash": "a7fd0f05e36b0d0a21c75340c9c639ec",
       "sourceName": "@openzeppelin/contracts/interfaces/IERC1363.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -278,13 +278,13 @@
       "contentHash": "947853028399b7de34bcc3704ee06e99",
       "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -315,13 +315,13 @@
       "contentHash": "68620db2da7583d9a4919096ac77f577",
       "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -352,13 +352,13 @@
       "contentHash": "0906d06dca25210d4696dcef6dad2909",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -391,13 +391,13 @@
       "contentHash": "522ec023bce510c30dfbf61584f5a190",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -436,13 +436,13 @@
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -473,13 +473,13 @@
       "contentHash": "d8f70caf0e0c77dc908176ed44812fb7",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -514,13 +514,13 @@
       "contentHash": "5041977bbe908de2e6ed0270447f79ad",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -553,13 +553,13 @@
       "contentHash": "136c64eca25bcb8a68f43ac6605559f9",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -592,13 +592,13 @@
       "contentHash": "4cefad279a37c895b709bce2b901816e",
       "sourceName": "@openzeppelin/contracts/token/ERC721/utils/ERC721Utils.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -632,13 +632,13 @@
       "contentHash": "5ec781e33d3a9ac91ffdc83d94420412",
       "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -672,13 +672,13 @@
       "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
       "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -709,13 +709,13 @@
       "contentHash": "ae3528afb8bdb0a7dcfba5b115ee8074",
       "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -748,13 +748,13 @@
       "contentHash": "2133dc13536b4a6a98131e431fac59e1",
       "sourceName": "@openzeppelin/contracts/utils/Panic.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -785,13 +785,13 @@
       "contentHash": "d61660a41ce200e99816e4734f7fd202",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -822,13 +822,13 @@
       "contentHash": "1c5851d32f3a9b29c8962274b38974a7",
       "sourceName": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -869,13 +869,13 @@
       "contentHash": "2acae54ad209714bca07edf4bae32f72",
       "sourceName": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -906,13 +906,13 @@
       "contentHash": "c28aaa25d083a9a55bd9ec9e0b785122",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -945,13 +945,13 @@
       "contentHash": "4d250f562322f9c023c5503064ffc12f",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -985,13 +985,13 @@
       "contentHash": "09d80d577d5abfc679455e7b67c5b537",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1024,13 +1024,13 @@
       "contentHash": "1e4b432e9069bd6f5935e071b74d180c",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1065,13 +1065,13 @@
       "contentHash": "16200d17ad615d2fab5427261dcb1391",
       "sourceName": "contracts/OCSH.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1108,13 +1108,13 @@
       "contentHash": "54587a4edefa322c93426411305b8a0a",
       "sourceName": "contracts/IdentitySBT.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1156,13 +1156,13 @@
       "contentHash": "6e84f2f9c1af23a4f13111ed67e29f29",
       "sourceName": "contracts/OSCHLib.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1193,13 +1193,13 @@
       "contentHash": "d0e2c05f09a3aea7cd299bbd4a435ee2",
       "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1234,13 +1234,13 @@
       "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1273,13 +1273,13 @@
       "contentHash": "24562076b21756e3358ede5e844008ce",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1312,13 +1312,13 @@
       "contentHash": "1460918cfe408f7a514ff980f638fecc",
       "sourceName": "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1355,13 +1355,13 @@
       "contentHash": "a77dad8312dfaddab72fab403ee0c0a6",
       "sourceName": "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1395,13 +1395,13 @@
       "contentHash": "55aeee8a1cf7cf9fd8a0176bd06b739f",
       "sourceName": "@prb/math/src/UD60x18.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1438,13 +1438,13 @@
       "contentHash": "08db0b4bea3d52072346c326c5b857b7",
       "sourceName": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1479,13 +1479,13 @@
       "contentHash": "81de029d56aa803972be03c5d277cb6c",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1516,13 +1516,13 @@
       "contentHash": "485389563d2dd0e4e4ebc5e4418f0205",
       "sourceName": "@prb/math/src/ud60x18/Casting.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1565,13 +1565,13 @@
       "contentHash": "d491556710d9524d337b2c39f5758535",
       "sourceName": "@prb/math/src/ud60x18/Math.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1606,13 +1606,13 @@
       "contentHash": "def1e8f7b6cac577cf2600655bf3bdf8",
       "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1643,13 +1643,13 @@
       "contentHash": "282d93a05c3ed412d5a3b74a4ad05d6d",
       "sourceName": "@prb/math/src/ud60x18/Constants.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1680,13 +1680,13 @@
       "contentHash": "03dbd4355311f501f43c11b8e221338e",
       "sourceName": "@prb/math/src/ud60x18/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1717,13 +1717,13 @@
       "contentHash": "8619b843b425aa037cc1e02864161c67",
       "sourceName": "@prb/math/src/ud60x18/Conversions.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1756,13 +1756,13 @@
       "contentHash": "f17f113af284236759bc9217ed544728",
       "sourceName": "@prb/math/src/ud60x18/Helpers.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1794,13 +1794,13 @@
       "contentHash": "139e189e4aa7006d4f1ac85ab574908b",
       "sourceName": "@prb/math/src/ud60x18/ValueType.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1833,13 +1833,13 @@
       "contentHash": "656474292aed84845ac83ba6b99c2cc3",
       "sourceName": "@prb/math/src/Common.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1868,13 +1868,13 @@
       "contentHash": "8eb37432e60f41cf0b519ac63ffacbbd",
       "sourceName": "@prb/math/src/sd1x18/Constants.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1905,13 +1905,13 @@
       "contentHash": "94eb5b205fcdee89d345a4e38911aa41",
       "sourceName": "@prb/math/src/sd1x18/ValueType.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1942,13 +1942,13 @@
       "contentHash": "9a64dc866ca207ee681e1212c520afac",
       "sourceName": "@prb/math/src/sd21x18/Constants.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -1979,13 +1979,13 @@
       "contentHash": "0f8a28d31d8909175de577729aecb181",
       "sourceName": "@prb/math/src/sd21x18/ValueType.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2016,13 +2016,13 @@
       "contentHash": "d383666e8856a993ff033f223b254bd8",
       "sourceName": "@prb/math/src/ud2x18/Constants.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2053,13 +2053,13 @@
       "contentHash": "7a72b652cd89801c03711b27e20b0232",
       "sourceName": "@prb/math/src/ud21x18/Constants.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2090,13 +2090,13 @@
       "contentHash": "4ef88efa44df582ee6d2ffb0b535f5fa",
       "sourceName": "@prb/math/src/ud21x18/ValueType.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2127,13 +2127,13 @@
       "contentHash": "24244ba2cbf5ed1c2e673875ac15d1b8",
       "sourceName": "@prb/math/src/ud2x18/ValueType.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2164,13 +2164,13 @@
       "contentHash": "70765f837748cf1d59701657902ac2d3",
       "sourceName": "@prb/math/src/sd59x18/ValueType.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2203,13 +2203,13 @@
       "contentHash": "a3d7a431fc72a78ab3dc148a43df09c2",
       "sourceName": "@prb/math/src/sd59x18/Constants.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2240,13 +2240,13 @@
       "contentHash": "bb183e368b9b353e30dbaf27644195f7",
       "sourceName": "@prb/math/src/sd1x18/Casting.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2281,13 +2281,13 @@
       "contentHash": "a04c8a0fabf4fb33ec8bf9ccb3f4e704",
       "sourceName": "@prb/math/src/sd1x18/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2318,13 +2318,13 @@
       "contentHash": "fdd037a992d1c24fdbd6ad576aba2e4d",
       "sourceName": "@prb/math/src/sd59x18/Casting.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2366,13 +2366,13 @@
       "contentHash": "7d1863a86f1dd22889ee2c28737b3456",
       "sourceName": "@prb/math/src/sd59x18/Helpers.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2404,13 +2404,13 @@
       "contentHash": "8d2b065a487e4a7857ac6eaf5b296d43",
       "sourceName": "@prb/math/src/sd59x18/Math.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2445,13 +2445,13 @@
       "contentHash": "c908e7ee3c46ff2dc5b3ff0fdf119ab0",
       "sourceName": "@prb/math/src/sd59x18/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2482,13 +2482,13 @@
       "contentHash": "3e4337606afdf59efa2f788a5a258e2e",
       "sourceName": "@prb/math/src/sd21x18/Casting.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2523,13 +2523,13 @@
       "contentHash": "307d34d7337ba2d57158c040677a9421",
       "sourceName": "@prb/math/src/sd21x18/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2560,13 +2560,13 @@
       "contentHash": "b731d568f652200e374ebfb6c479ae8f",
       "sourceName": "@prb/math/src/ud2x18/Casting.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2601,13 +2601,13 @@
       "contentHash": "a9254d2c7f6f1d3b3c5f5d14860d01e5",
       "sourceName": "@prb/math/src/ud2x18/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2638,13 +2638,13 @@
       "contentHash": "0c79aa95129981d93fedac6920aaf04e",
       "sourceName": "@prb/math/src/ud21x18/Casting.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2679,13 +2679,13 @@
       "contentHash": "e05dc6b916043a7b8377861c1496a58e",
       "sourceName": "@prb/math/src/ud21x18/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2716,13 +2716,13 @@
       "contentHash": "9b2cafd2153b51bcfd7f4cb4cfc975aa",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC1822.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2753,13 +2753,13 @@
       "contentHash": "2741625b983eb412cfdd8aa55a7671c1",
       "sourceName": "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2795,13 +2795,13 @@
       "contentHash": "3c9577899f440b0c66e880c96e9250bb",
       "sourceName": "@openzeppelin/contracts/interfaces/IERC1967.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2832,13 +2832,13 @@
       "contentHash": "2a06d82f31f75087bf90231599da4f1c",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2871,13 +2871,13 @@
       "contentHash": "ee2e46607ed2be58bd554306d068acba",
       "sourceName": "@openzeppelin/contracts/proxy/beacon/IBeacon.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2908,13 +2908,13 @@
       "contentHash": "e656d64c4ce918f3d13030b91c935134",
       "sourceName": "@openzeppelin/contracts/utils/StorageSlot.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2945,13 +2945,13 @@
       "contentHash": "6b5eac2b85500c3012977849cfd633d8",
       "sourceName": "@openzeppelin/contracts/utils/Errors.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -2982,13 +2982,13 @@
       "contentHash": "5a722bc53a67d1e0e46b4b43b38cdd00",
       "sourceName": "contracts/Eligibility.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -3020,18 +3020,18 @@
         "ARC_Eligibility"
       ]
     },
-    "L:\\worxpace\\OCSH\\contracts\\mocks\\MockIdentitySBT.sol": {
-      "lastModificationDate": 1756975662193,
-      "contentHash": "0a9658416eb84f65420c875e58e42b55",
-      "sourceName": "contracts/mocks/MockIdentitySBT.sol",
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\utils\\ShortStrings.sol": {
+      "lastModificationDate": 1755329283176,
+      "contentHash": "c1be9487e5a64acf23b5d8028482e748",
+      "sourceName": "@openzeppelin/contracts/utils/ShortStrings.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -3049,26 +3049,69 @@
           }
         }
       },
-      "imports": [],
+      "imports": [
+        "./StorageSlot.sol"
+      ],
       "versionPragmas": [
-        "^0.8.22"
+        "^0.8.20"
       ],
       "artifacts": [
-        "MockIdentitySBT"
+        "ShortStrings"
       ]
     },
-    "L:\\worxpace\\OCSH\\contracts\\mocks\\EASMock.sol": {
-      "lastModificationDate": 1756978808642,
-      "contentHash": "73e771af705014e93ed1bdf74351b99d",
-      "sourceName": "contracts/mocks/EASMock.sol",
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\EIP712.sol": {
+      "lastModificationDate": 1755329283043,
+      "contentHash": "d67dfba302ed2489324d7584625c3bde",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/EIP712.sol",
       "solcConfig": {
-        "version": "0.8.22",
+        "version": "0.8.27",
         "settings": {
           "optimizer": {
             "enabled": true,
             "runs": 200
           },
-          "evmVersion": "paris",
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./MessageHashUtils.sol",
+        "../ShortStrings.sol",
+        "../../interfaces/IERC5267.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "EIP712"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\interfaces\\IERC5267.sol": {
+      "lastModificationDate": 1755329283138,
+      "contentHash": "6e00d2fe4bc0d5f1add753824498bb35",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC5267.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
           "outputSelection": {
             "*": {
               "*": [
@@ -3088,10 +3131,1057 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.22"
+        ">=0.4.16"
       ],
       "artifacts": [
-        "EASMock"
+        "IERC5267"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\MessageHashUtils.sol": {
+      "lastModificationDate": 1755329283160,
+      "contentHash": "260f3968eefa3bbd30520cff5384cd93",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Strings.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MessageHashUtils"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\utils\\Bytes.sol": {
+      "lastModificationDate": 1755329283010,
+      "contentHash": "62cf590c82c84688c7271f98842cf8f3",
+      "sourceName": "@openzeppelin/contracts/utils/Bytes.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./math/Math.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "Bytes"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\SignatureChecker.sol": {
+      "lastModificationDate": 1755329283178,
+      "contentHash": "baa80edaa1f29dd1b855e91b2bd7e0f2",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ECDSA.sol",
+        "../../interfaces/IERC1271.sol",
+        "../../interfaces/IERC7913.sol",
+        "../../utils/Bytes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "SignatureChecker"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\interfaces\\IERC1271.sol": {
+      "lastModificationDate": 1755329283125,
+      "contentHash": "97c727fa357056eddfe826ab58943611",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC1271.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.5.0"
+      ],
+      "artifacts": [
+        "IERC1271"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\node_modules\\@openzeppelin\\contracts\\interfaces\\IERC7913.sol": {
+      "lastModificationDate": 1755329283150,
+      "contentHash": "a051a14c8a262117cb4c5f4cbd13ed95",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC7913.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.5.0"
+      ],
+      "artifacts": [
+        "IERC7913SignatureVerifier"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\eip712\\proxy\\EIP712Proxy.sol": {
+      "lastModificationDate": 1756983110451,
+      "contentHash": "a549f12a8c7b200d975b5ad7e6c168e1",
+      "sourceName": "contracts/eip712/proxy/EIP712Proxy.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/cryptography/EIP712.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "../../Common.sol",
+        "../../IEAS.sol",
+        "../../Semver.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "EIP712Proxy"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\Common.sol": {
+      "lastModificationDate": 1756983110447,
+      "contentHash": "d3e979b50e242fd0f5e6d126d4fb039d",
+      "sourceName": "contracts/Common.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": []
+    },
+    "L:\\worxpace\\OCSH\\contracts\\IEAS.sol": {
+      "lastModificationDate": 1756983110452,
+      "contentHash": "f5a5f039361aa072a288f6c5458b1b0d",
+      "sourceName": "contracts/IEAS.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ISchemaRegistry.sol",
+        "./ISemver.sol",
+        "./Common.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IEAS"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\Semver.sol": {
+      "lastModificationDate": 1756983110505,
+      "contentHash": "f7d0f1d795336a666be0998e3ee850bc",
+      "sourceName": "contracts/Semver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Strings.sol",
+        "./ISemver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Semver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\ISchemaRegistry.sol": {
+      "lastModificationDate": 1756983110453,
+      "contentHash": "6cb6125eaaa119d543a393397c884746",
+      "sourceName": "contracts/ISchemaRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ISemver.sol",
+        "./resolver/ISchemaResolver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ISchemaRegistry"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\ISemver.sol": {
+      "lastModificationDate": 1756983110454,
+      "contentHash": "4b1c3fc2aa462e4fd8b48c3d53b21b57",
+      "sourceName": "contracts/ISemver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ISemver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\ISchemaResolver.sol": {
+      "lastModificationDate": 1756983110453,
+      "contentHash": "a61482e9b0d552880ccf9452056ca98e",
+      "sourceName": "contracts/resolver/ISchemaResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./../Common.sol",
+        "./../ISemver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ISchemaResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\eip712\\proxy\\examples\\PermissionedEIP712Proxy.sol": {
+      "lastModificationDate": 1756983110503,
+      "contentHash": "e2b4245291ce877545599099c8f94fc8",
+      "sourceName": "contracts/eip712/proxy/examples/PermissionedEIP712Proxy.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "../EIP712Proxy.sol",
+        "../../../IEAS.sol",
+        "../../../Common.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "PermissionedEIP712Proxy"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\SchemaRegistry.sol": {
+      "lastModificationDate": 1756983110504,
+      "contentHash": "b2c6aa8680dd5ecfd3e0887d2f58b7bc",
+      "sourceName": "contracts/SchemaRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./resolver/ISchemaResolver.sol",
+        "./Common.sol",
+        "./Semver.sol",
+        "./ISchemaRegistry.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "SchemaRegistry"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\SchemaResolver.sol": {
+      "lastModificationDate": 1756983110505,
+      "contentHash": "d73647a662678259a40aed7faea546b9",
+      "sourceName": "contracts/resolver/SchemaResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./../Common.sol",
+        "./../IEAS.sol",
+        "./../Semver.sol",
+        "./ISchemaResolver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "SchemaResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\ValueResolver.sol": {
+      "lastModificationDate": 1756983110506,
+      "contentHash": "6ef626d947f57637ed659b8e97100a77",
+      "sourceName": "contracts/resolver/examples/ValueResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "ValueResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\TokenResolver.sol": {
+      "lastModificationDate": 1756983110505,
+      "contentHash": "dd32207b6f4d98450ef834035dc8fb74",
+      "sourceName": "contracts/resolver/examples/TokenResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "TokenResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\RevocationResolver.sol": {
+      "lastModificationDate": 1756983110504,
+      "contentHash": "7a49bcb7c9fc2d5bf1f5767c82b88be0",
+      "sourceName": "contracts/resolver/examples/RevocationResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "RevocationResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\RecipientResolver.sol": {
+      "lastModificationDate": 1756983110503,
+      "contentHash": "0ded1dec6e19bb1736352fd2d7ecfeef",
+      "sourceName": "contracts/resolver/examples/RecipientResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "RecipientResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\PayingResolver.sol": {
+      "lastModificationDate": 1756983110501,
+      "contentHash": "24272d7f59036442c15cb7ad5ab113fc",
+      "sourceName": "contracts/resolver/examples/PayingResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Address.sol",
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "PayingResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\eip1271\\EIP1271Verifier.sol": {
+      "lastModificationDate": 1756983110449,
+      "contentHash": "9fe21b4b0c8ff9683907fee01f4e62c2",
+      "sourceName": "contracts/eip1271/EIP1271Verifier.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Address.sol",
+        "@openzeppelin/contracts/utils/cryptography/EIP712.sol",
+        "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol",
+        "./../Common.sol",
+        "../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "EIP1271Verifier"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\EAS.sol": {
+      "lastModificationDate": 1756983110449,
+      "contentHash": "dad6afa9338ae92d65aed90fa68c852d",
+      "sourceName": "contracts/EAS.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/Address.sol",
+        "./eip1271/EIP1271Verifier.sol",
+        "./resolver/ISchemaResolver.sol",
+        "./Common.sol",
+        "./IEAS.sol",
+        "./Semver.sol",
+        "./ISchemaRegistry.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "EAS"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\ExpirationTimeResolver.sol": {
+      "lastModificationDate": 1756983110451,
+      "contentHash": "74acb43a69f10d4096ad57b4248238d9",
+      "sourceName": "contracts/resolver/examples/ExpirationTimeResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "ExpirationTimeResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\DataResolver.sol": {
+      "lastModificationDate": 1756983110448,
+      "contentHash": "64ef0fe962bbba45e7ab746c8ac2e8d4",
+      "sourceName": "contracts/resolver/examples/DataResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "DataResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\AttesterResolver.sol": {
+      "lastModificationDate": 1756983110447,
+      "contentHash": "b6e189e6dd6c10f27022094ca24a0f0e",
+      "sourceName": "contracts/resolver/examples/AttesterResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "AttesterResolver"
+      ]
+    },
+    "L:\\worxpace\\OCSH\\contracts\\resolver\\examples\\AttestationResolver.sol": {
+      "lastModificationDate": 1756983110446,
+      "contentHash": "301e9b3cd0bf9e24534b71bf66627589",
+      "sourceName": "contracts/resolver/examples/AttestationResolver.sol",
+      "solcConfig": {
+        "version": "0.8.27",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "cancun",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../SchemaResolver.sol",
+        "../../IEAS.sol"
+      ],
+      "versionPragmas": [
+        "0.8.27"
+      ],
+      "artifacts": [
+        "AttestationResolver"
       ]
     }
   }

@@ -1,7 +1,8 @@
 import { expect } from "chai";
-import hardhat, { ethers } from "hardhat";
+import hardhat from "hardhat";
+const { ethers } = hardhat as any;
 import { OCSH } from "../typechain-types";
-const path = require("path");
+import path from "path";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 
 describe("OCSH NFT Game Contract", function () {
@@ -15,19 +16,24 @@ describe("OCSH NFT Game Contract", function () {
     // Get signers
     [owner, player1, player2, player3] = await ethers.getSigners();
 
-    // Deploy EASMock
-    const EASMockArtifact = await hardhat.artifacts.readArtifact("contracts/mocks/EASMock.sol:EASMock");
-    const EASMockFactory = await ethers.getContractFactory(EASMockArtifact.abi, EASMockArtifact.bytecode);
-    const easMock = await EASMockFactory.deploy();
-    await easMock.waitForDeployment();
+    // Deploy real EAS
+    const SchemaRegistryArtifact = await hardhat.artifacts.readArtifact("contracts/SchemaRegistry.sol:SchemaRegistry");
+    const SchemaRegistryFactory = await ethers.getContractFactory(SchemaRegistryArtifact.abi, SchemaRegistryArtifact.bytecode);
+    const schemaRegistry = await SchemaRegistryFactory.deploy();
+    await schemaRegistry.waitForDeployment();
+
+    const EASArtifact = await hardhat.artifacts.readArtifact("contracts/EAS.sol:EAS");
+    const EASFactory = await ethers.getContractFactory(EASArtifact.abi, EASArtifact.bytecode);
+    const eas = await EASFactory.deploy(await schemaRegistry.getAddress());
+    await eas.waitForDeployment();
 
     // Deploy ARC_IdentitySBT proxy using upgrades
     const IdentitySBTArtifact = await hardhat.artifacts.readArtifact("contracts/IdentitySBT.sol:ARC_IdentitySBT");
     const IdentitySBTFactory = await ethers.getContractFactory(IdentitySBTArtifact.abi, IdentitySBTArtifact.bytecode);
-    const identitySBT = await hardhat.upgrades.deployProxy(IdentitySBTFactory, [
+    const identitySBT = await (hardhat as any).upgrades.deployProxy(IdentitySBTFactory, [
       owner.address, // timelock
       owner.address, // safeExecutor
-      await easMock.getAddress(), // eas
+      await eas.getAddress(), // eas
       ethers.keccak256(ethers.toUtf8Bytes("IdentityRole(uint256 role,uint256 weight,address recipient)")) // schemaId
     ], { kind: 'uups' });
     await identitySBT.waitForDeployment();
@@ -43,12 +49,13 @@ describe("OCSH NFT Game Contract", function () {
     await (ocsh as any).waitForDeployment?.();
 
     // Seed SBT roles/weights used in tests
-    const COMMANDER_ROLE = ethers.keccak256(ethers.toUtf8Bytes("COMMANDER"));
-    const VETERAN_ROLE = ethers.keccak256(ethers.toUtf8Bytes("VETERAN"));
-    await identitySBT.issue(owner.address, COMMANDER_ROLE, ethers.randomBytes(32));
-    await identitySBT.issue(player1.address, COMMANDER_ROLE, ethers.randomBytes(32));
-    await identitySBT.issue(player1.address, VETERAN_ROLE, ethers.randomBytes(32));
-    await identitySBT.setWeight(player1.address, ethers.parseEther("6"));
+    const SBT_ROLE_COMMANDER = await ocsh.SBT_ROLE_COMMANDER();
+    const SBT_ROLE_VETERAN = await ocsh.SBT_ROLE_VETERAN();
+    await identitySBT.setRoleWeight(SBT_ROLE_COMMANDER, ethers.parseEther("1"));
+    await identitySBT.setRoleWeight(SBT_ROLE_VETERAN, ethers.parseEther("0.6"));
+    await identitySBT.issue(owner.address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("owner-commander"));
+    await identitySBT.issue(player1.address, SBT_ROLE_COMMANDER, ethers.encodeBytes32String("player1-commander"));
+    await identitySBT.issue(player1.address, SBT_ROLE_VETERAN, ethers.encodeBytes32String("player1-veteran"));
   });
 
   describe("Deployment", function () {

@@ -2942,42 +2942,6 @@
       "artifacts": [
         "ARC_Eligibility"
       ]
-    },
-    "L:\\worxpace\\OCSH\\contracts\\mocks\\EASMock.sol": {
-      "lastModificationDate": 1756978808642,
-      "contentHash": "73e771af705014e93ed1bdf74351b99d",
-      "sourceName": "contracts/mocks/EASMock.sol",
-      "solcConfig": {
-        "version": "0.8.22",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "evmVersion": "paris",
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.22"
-      ],
-      "artifacts": [
-        "EASMock"
-      ]
     }
   }
 }
